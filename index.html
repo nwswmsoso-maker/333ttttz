@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>صوفي توك - مثل واتساب</title>
+    <title>صوفي توك - تواصل فوري</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +21,6 @@
             width: 100%;
         }
 
-        /* شاشة الدخول */
         .login-screen {
             position: fixed;
             top: 0;
@@ -84,7 +83,6 @@
             cursor: pointer;
         }
 
-        /* التطبيق الرئيسي */
         .app-container {
             display: none;
             flex-direction: column;
@@ -96,7 +94,6 @@
             display: flex;
         }
 
-        /* التبويب من فوق */
         .tabs {
             display: flex;
             background: #1a1a2e;
@@ -125,7 +122,6 @@
             color: #a855f7;
         }
 
-        /* محتوى التبويبات */
         .tab-content {
             display: none;
             flex: 1;
@@ -136,7 +132,6 @@
             display: block;
         }
 
-        /* Header لكل تبويب */
         .content-header {
             padding: 16px;
             background: #1a1a2e;
@@ -148,15 +143,14 @@
             color: white;
         }
 
-        /* قائمة المحادثات */
-        .chat-list {
+        .chat-list, .users-list, .requests-list {
             padding: 8px;
         }
 
-        .chat-item {
+        .chat-item, .user-item, .request-item {
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: space-between;
             padding: 12px;
             background: #1a1a2e;
             border-radius: 16px;
@@ -164,20 +158,9 @@
             cursor: pointer;
         }
 
-        .chat-avatar {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, #a855f7, #ec4899);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
         .chat-info {
             flex: 1;
+            margin-right: 12px;
         }
 
         .chat-name {
@@ -202,7 +185,6 @@
         .status-delivered { color: #a855f7; }
         .status-read { color: #34b7f1; }
 
-        /* حقل البحث في جهات الاتصال */
         .search-box {
             padding: 12px;
             background: #1a1a2e;
@@ -219,28 +201,7 @@
             outline: none;
         }
 
-        /* قائمة المستخدمين */
-        .users-list {
-            padding: 8px;
-        }
-
-        .user-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px;
-            background: #1a1a2e;
-            border-radius: 16px;
-            margin-bottom: 8px;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .add-friend-btn {
+        .add-friend-btn, .accept-btn {
             background: linear-gradient(45deg, #a855f7, #ec4899);
             border: none;
             padding: 8px 16px;
@@ -250,31 +211,10 @@
             cursor: pointer;
         }
 
-        /* طلبات الصداقة */
-        .requests-list {
-            padding: 8px;
-        }
-
-        .request-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px;
-            background: #1a1a2e;
-            border-radius: 16px;
-            margin-bottom: 8px;
-        }
-
         .accept-btn {
             background: #22c55e;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 20px;
-            color: white;
-            cursor: pointer;
         }
 
-        /* شاشة الدردشة */
         .chat-screen {
             display: none;
             flex-direction: column;
@@ -310,6 +250,7 @@
         .chat-header-name {
             font-weight: bold;
             color: white;
+            font-size: 1.1rem;
         }
 
         .messages-area {
@@ -350,10 +291,6 @@
             align-items: center;
             gap: 4px;
             justify-content: flex-end;
-        }
-
-        .message-status {
-            font-size: 0.65rem;
         }
 
         .media-message {
@@ -404,19 +341,11 @@
             font-size: 1.2rem;
             cursor: pointer;
         }
-
-        .user-badge {
-            background: #2d2d44;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-        }
     </style>
     <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
 </head>
 <body>
 
-<!-- شاشة الدخول -->
 <div class="login-screen" id="loginScreen">
     <div class="login-card">
         <h1>🪶 صوفي توك</h1>
@@ -426,16 +355,13 @@
     </div>
 </div>
 
-<!-- التطبيق الرئيسي -->
 <div class="app-container" id="appContainer">
-    <!-- التبويب من فوق -->
     <div class="tabs">
         <div class="tab active" data-tab="chats">💬 محادثات</div>
         <div class="tab" data-tab="contacts">👥 جهات الاتصال</div>
         <div class="tab" data-tab="requests">📨 الطلبات</div>
     </div>
 
-    <!-- تبويب المحادثات -->
     <div class="tab-content active" id="chatsTab">
         <div class="content-header">
             <h3>المحادثات</h3>
@@ -443,7 +369,6 @@
         <div class="chat-list" id="chatsList"></div>
     </div>
 
-    <!-- تبويب جهات الاتصال -->
     <div class="tab-content" id="contactsTab">
         <div class="content-header">
             <h3>جهات الاتصال</h3>
@@ -454,7 +379,6 @@
         <div class="users-list" id="usersList"></div>
     </div>
 
-    <!-- تبويب الطلبات -->
     <div class="tab-content" id="requestsTab">
         <div class="content-header">
             <h3>طلبات الصداقة</h3>
@@ -463,14 +387,12 @@
     </div>
 </div>
 
-<!-- شاشة الدردشة -->
 <div class="chat-screen" id="chatScreen">
     <div class="chat-header">
         <button class="back-btn" onclick="closeChat()">←</button>
         <div class="chat-header-info">
             <div class="chat-header-name" id="chatUserName">...</div>
         </div>
-        <div class="user-badge" id="chatUserBadge">✨</div>
     </div>
     <div class="messages-area" id="messagesArea"></div>
     <div class="input-area">
@@ -487,7 +409,7 @@
 
 <script>
     const ABLY_KEY = '_kLb1w.KqoPuA:o7et4-MjbXulWY3vGEsl_SbIS1Od7vX2MT0U6zpzrJA';
-    const ALL_USERS = ['Sufi', 'Baron', '3tx', '2tx', '4tx', 'Layla', 'Zain', 'Amir'];
+    const ALL_USERS = ['Sufi', 'Baron', '3tx', '2tx', '4tx', 'Layla', 'Zain', 'Amir', 'Hasan'];
 
     let currentUser = null;
     let friends = [];
@@ -495,9 +417,6 @@
     let activeChat = null;
     let ably = null;
     let channel = null;
-
-    // تخزين حالة الرسائل
-    let messageStatus = {}; // messageId -> { status: 'sent'/'delivered'/'read' }
 
     function login() {
         const user = document.getElementById('usernameInput').value.trim();
@@ -510,7 +429,7 @@
         initAbly();
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('appContainer').classList.add('active');
-        updateUI();
+        updateAllUI();
         setupTabs();
         setupSearch();
     }
@@ -529,54 +448,53 @@
         ably = new Ably.Realtime(ABLY_KEY);
         channel = ably.channels.get('sufi_chat');
         
-        channel.subscribe((msg) => {
-            const data = msg.data;
+        channel.subscribe((message) => {
+            const data = message.data;
             
-            // طلب صداقة
-            if(msg.name === 'friend_request' && data.to === currentUser) {
+            if(message.name === 'friend_request' && data.to === currentUser) {
                 if(!requests.includes(data.from) && !friends.includes(data.from)) {
                     requests.push(data.from);
                     saveData();
-                    updateUI();
+                    updateAllUI();
                 }
             }
             
-            // قبول طلب
-            if(msg.name === 'accept_request' && data.to === currentUser) {
+            if(message.name === 'accept_request' && data.to === currentUser) {
                 if(!friends.includes(data.from)) {
                     friends.push(data.from);
                     saveData();
-                    updateUI();
+                    updateAllUI();
                 }
             }
             
-            // رسالة خاصة
-            if(msg.name === 'private_message') {
-                const message = data;
-                if(message.to === currentUser || message.from === currentUser) {
-                    const other = message.from === currentUser ? message.to : message.from;
+            if(message.name === 'private_message') {
+                const msg = data;
+                if(msg.to === currentUser || msg.from === currentUser) {
+                    const other = msg.from === currentUser ? msg.to : msg.from;
                     
-                    // تحديث حالة الرسالة
-                    if(message.status === 'delivered' && message.to === currentUser) {
-                        updateMessageStatus(message.messageId, 'delivered');
-                        // إرسال إشعار قراءة إذا كانت الدردشة مفتوحة
-                        if(activeChat === message.from) {
-                            sendReadReceipt(message.messageId, message.from);
+                    // حفظ الرسالة
+                    saveMessageToStorage(other, msg);
+                    
+                    // تحديث حالة الرسالة إذا كانت واصلة
+                    if(msg.status === 'delivered' && msg.to === currentUser) {
+                        updateMessageStatusInStorage(msg.messageId, 'delivered');
+                        
+                        // إذا كانت الدردشة مفتوحة، أرسل إشعار قراءة
+                        if(activeChat === msg.from) {
+                            sendReadReceipt(msg.messageId, msg.from);
                         }
                     }
                     
-                    if(message.status === 'read' && message.to === currentUser) {
-                        updateMessageStatus(message.messageId, 'read');
+                    if(msg.status === 'read' && msg.to === currentUser) {
+                        updateMessageStatusInStorage(msg.messageId, 'read');
                     }
                     
-                    // حفظ الرسالة
-                    saveMessage(other, message);
-                    
-                    // عرض إذا كانت الدردشة مفتوحة
+                    // تحديث واجهة الدردشة إذا كانت مفتوحة
                     if(activeChat === other) {
-                        displayMessage(message, message.from === currentUser);
-                        scrollToBottom();
+                        refreshChatMessages();
                     }
+                    
+                    // تحديث قائمة المحادثات
                     updateChatsList();
                 }
             }
@@ -585,7 +503,7 @@
 
     function sendFriendRequest(to) {
         channel.publish('friend_request', { from: currentUser, to: to });
-        alert(`تم إرسال طلب صداقة إلى ${to}`);
+        alert(`✅ تم إرسال طلب صداقة إلى ${to}`);
     }
 
     function acceptRequest(from) {
@@ -595,7 +513,7 @@
         }
         saveData();
         channel.publish('accept_request', { from: currentUser, to: from });
-        updateUI();
+        updateAllUI();
     }
 
     function openChat(user) {
@@ -603,24 +521,14 @@
         document.getElementById('appContainer').classList.remove('active');
         document.getElementById('chatScreen').classList.add('active');
         document.getElementById('chatUserName').innerText = user;
+        refreshChatMessages();
         
-        // عرض الرسائل
-        const messages = getMessages(user);
-        const area = document.getElementById('messagesArea');
-        area.innerHTML = '';
-        if(messages.length === 0) {
-            area.innerHTML = '<div style="text-align:center;color:#888;margin-top:50px;">✨ ابدأ المحادثة الآن</div>';
-        } else {
-            messages.forEach(msg => {
-                displayMessage(msg, msg.from === currentUser);
-            });
-            scrollToBottom();
-        }
-        
-        // إرسال إشعارات تسليم لكل رسائل غير مسلمة
+        // إرسال إشعارات قراءة للرسائل غير المقروءة
+        const messages = getAllMessagesForChat(user);
         messages.forEach(msg => {
-            if(msg.to === currentUser && msg.status === 'delivered' && msg.messageId) {
+            if(msg.to === currentUser && msg.status !== 'read') {
                 sendReadReceipt(msg.messageId, msg.from);
+                updateMessageStatusInStorage(msg.messageId, 'read');
             }
         });
     }
@@ -629,7 +537,7 @@
         activeChat = null;
         document.getElementById('chatScreen').classList.remove('active');
         document.getElementById('appContainer').classList.add('active');
-        updateUI();
+        updateAllUI();
     }
 
     function sendMessage() {
@@ -647,23 +555,21 @@
             status: 'sent'
         };
         
-        // حفظ محلياً
-        saveMessage(activeChat, message);
-        displayMessage(message, true);
+        saveMessageToStorage(activeChat, message);
+        refreshChatMessages();
         document.getElementById('messageInput').value = '';
         
-        // إرسال عبر ably
         channel.publish('private_message', message);
         
-        // بعد 1 ثانية محاكاة التسليم
         setTimeout(() => {
+            updateMessageStatusInStorage(messageId, 'delivered');
             const deliveredMsg = {...message, status: 'delivered'};
-            updateMessageStatus(messageId, 'delivered');
             channel.publish('private_message', deliveredMsg);
+            refreshChatMessages();
         }, 500);
         
-        scrollToBottom();
         updateChatsList();
+        scrollToBottom();
     }
 
     function sendImage() {
@@ -682,18 +588,19 @@
                 time: Date.now(),
                 status: 'sent'
             };
-            saveMessage(activeChat, message);
-            displayMessage(message, true);
+            saveMessageToStorage(activeChat, message);
+            refreshChatMessages();
             channel.publish('private_message', message);
             
             setTimeout(() => {
-                updateMessageStatus(messageId, 'delivered');
+                updateMessageStatusInStorage(messageId, 'delivered');
                 const deliveredMsg = {...message, status: 'delivered'};
                 channel.publish('private_message', deliveredMsg);
+                refreshChatMessages();
             }, 500);
             
-            scrollToBottom();
             updateChatsList();
+            scrollToBottom();
         };
         reader.readAsDataURL(file);
         document.getElementById('imageInput').value = '';
@@ -715,18 +622,19 @@
                 time: Date.now(),
                 status: 'sent'
             };
-            saveMessage(activeChat, message);
-            displayMessage(message, true);
+            saveMessageToStorage(activeChat, message);
+            refreshChatMessages();
             channel.publish('private_message', message);
             
             setTimeout(() => {
-                updateMessageStatus(messageId, 'delivered');
+                updateMessageStatusInStorage(messageId, 'delivered');
                 const deliveredMsg = {...message, status: 'delivered'};
                 channel.publish('private_message', deliveredMsg);
+                refreshChatMessages();
             }, 500);
             
-            scrollToBottom();
             updateChatsList();
+            scrollToBottom();
         };
         reader.readAsDataURL(file);
         document.getElementById('videoInput').value = '';
@@ -737,48 +645,16 @@
             messageId: messageId,
             from: currentUser,
             to: fromUser,
-            status: 'read'
-        };
-        channel.publish('private_message', {
-            messageId: messageId,
-            from: fromUser,
-            to: currentUser,
             status: 'read',
             type: 'receipt'
-        });
-        updateMessageStatus(messageId, 'read');
+        };
+        channel.publish('private_message', receipt);
+        updateMessageStatusInStorage(messageId, 'read');
     }
 
-    function updateMessageStatus(messageId, status) {
-        // تحديث في localStorage
-        for(let friend of [...friends, ...requests]) {
-            const key = `chat_${currentUser}_${friend}`;
-            const msgs = JSON.parse(localStorage.getItem(key) || '[]');
-            let updated = false;
-            msgs.forEach(msg => {
-                if(msg.messageId === messageId && msg.status !== 'read') {
-                    msg.status = status;
-                    updated = true;
-                }
-            });
-            if(updated) {
-                localStorage.setItem(key, JSON.stringify(msgs));
-            }
-        }
-        updateChatsList();
-        if(activeChat) {
-            const area = document.getElementById('messagesArea');
-            const messages = getMessages(activeChat);
-            area.innerHTML = '';
-            messages.forEach(msg => {
-                displayMessage(msg, msg.from === currentUser);
-            });
-        }
-    }
-
-    function saveMessage(friend, message) {
+    function saveMessageToStorage(friend, message) {
         const key = `chat_${currentUser}_${friend}`;
-        const messages = JSON.parse(localStorage.getItem(key) || '[]');
+        let messages = JSON.parse(localStorage.getItem(key) || '[]');
         const existingIndex = messages.findIndex(m => m.messageId === message.messageId);
         if(existingIndex !== -1) {
             messages[existingIndex] = message;
@@ -788,9 +664,47 @@
         localStorage.setItem(key, JSON.stringify(messages));
     }
 
-    function getMessages(friend) {
+    function updateMessageStatusInStorage(messageId, newStatus) {
+        // البحث في جميع محادثات المستخدم
+        for(let friend of [...friends, ...requests]) {
+            const key = `chat_${currentUser}_${friend}`;
+            let messages = JSON.parse(localStorage.getItem(key) || '[]');
+            let updated = false;
+            messages.forEach(msg => {
+                if(msg.messageId === messageId && msg.status !== 'read') {
+                    msg.status = newStatus;
+                    updated = true;
+                }
+            });
+            if(updated) {
+                localStorage.setItem(key, JSON.stringify(messages));
+            }
+        }
+    }
+
+    function getAllMessagesForChat(friend) {
         const key = `chat_${currentUser}_${friend}`;
         return JSON.parse(localStorage.getItem(key) || '[]');
+    }
+
+    function getAllChats() {
+        const chats = new Set();
+        // جمع جميع الأصدقاء الذين لديهم محادثات
+        for(let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if(key && key.startsWith(`chat_${currentUser}_`)) {
+                const friend = key.replace(`chat_${currentUser}_`, '');
+                chats.add(friend);
+            }
+        }
+        // إضافة الأصدقاء الحاليين
+        friends.forEach(f => chats.add(f));
+        return Array.from(chats);
+    }
+
+    function getLastMessage(friend) {
+        const messages = getAllMessagesForChat(friend);
+        return messages[messages.length - 1];
     }
 
     function getStatusIcon(status) {
@@ -807,57 +721,80 @@
         return '#888';
     }
 
-    function displayMessage(msg, isOut) {
+    function refreshChatMessages() {
+        if(!activeChat) return;
+        const messages = getAllMessagesForChat(activeChat);
         const area = document.getElementById('messagesArea');
-        const div = document.createElement('div');
-        div.className = `message ${isOut ? 'message-out' : 'message-in'}`;
+        area.innerHTML = '';
         
-        if(msg.type === 'text') {
-            div.innerHTML = `${escapeHtml(msg.content)}`;
-        } else if(msg.type === 'image') {
-            div.innerHTML = `<img src="${msg.content}" class="media-message" style="max-width:200px;border-radius:12px;">`;
-        } else if(msg.type === 'video') {
-            div.innerHTML = `<video src="${msg.content}" controls class="media-message" style="max-width:200px;border-radius:12px;"></video>`;
+        if(messages.length === 0) {
+            area.innerHTML = '<div style="text-align:center;color:#888;margin-top:50px;">✨ ابدأ المحادثة الآن</div>';
+        } else {
+            messages.forEach(msg => {
+                const isOut = msg.from === currentUser;
+                const div = document.createElement('div');
+                div.className = `message ${isOut ? 'message-out' : 'message-in'}`;
+                
+                if(msg.type === 'text') {
+                    div.innerHTML = `${escapeHtml(msg.content)}`;
+                } else if(msg.type === 'image') {
+                    div.innerHTML = `<img src="${msg.content}" class="media-message" style="max-width:200px;border-radius:12px;">`;
+                } else if(msg.type === 'video') {
+                    div.innerHTML = `<video src="${msg.content}" controls class="media-message" style="max-width:200px;border-radius:12px;"></video>`;
+                }
+                
+                if(isOut) {
+                    const timeDiv = document.createElement('div');
+                    timeDiv.className = 'message-time';
+                    const statusIcon = getStatusIcon(msg.status);
+                    const statusColor = getStatusColor(msg.status);
+                    timeDiv.innerHTML = `<span style="color:${statusColor}">${statusIcon}</span>`;
+                    div.appendChild(timeDiv);
+                }
+                
+                area.appendChild(div);
+            });
         }
-        
-        if(isOut) {
-            const timeDiv = document.createElement('div');
-            timeDiv.className = 'message-time';
-            const statusIcon = getStatusIcon(msg.status);
-            const statusColor = getStatusColor(msg.status);
-            timeDiv.innerHTML = `<span class="message-status" style="color:${statusColor}">${statusIcon}</span>`;
-            div.appendChild(timeDiv);
-        }
-        
-        area.appendChild(div);
+        scrollToBottom();
     }
 
     function updateChatsList() {
         const container = document.getElementById('chatsList');
         if(!container) return;
-        container.innerHTML = '';
         
-        const allChats = [...friends];
+        const allChats = getAllChats();
         if(allChats.length === 0) {
             container.innerHTML = '<div style="text-align:center;color:#888;padding:40px;">لا توجد محادثات</div>';
             return;
         }
         
+        container.innerHTML = '';
         allChats.forEach(friend => {
-            const messages = getMessages(friend);
-            const lastMsg = messages[messages.length - 1];
-            const lastMsgText = lastMsg ? (lastMsg.type === 'text' ? lastMsg.content.substring(0,30) : (lastMsg.type === 'image' ? '📷 صورة' : '🎥 فيديو')) : 'لا توجد رسائل';
-            const lastMsgStatus = lastMsg && lastMsg.from === currentUser ? getStatusIcon(lastMsg.status) : '';
+            const lastMsg = getLastMessage(friend);
+            let lastMsgText = 'لا توجد رسائل';
+            let lastMsgStatus = '';
+            
+            if(lastMsg) {
+                if(lastMsg.type === 'text') lastMsgText = lastMsg.content.substring(0, 30);
+                else if(lastMsg.type === 'image') lastMsgText = '📷 صورة';
+                else if(lastMsg.type === 'video') lastMsgText = '🎥 فيديو';
+                
+                if(lastMsg.from === currentUser) {
+                    lastMsgStatus = getStatusIcon(lastMsg.status);
+                }
+            }
             
             const div = document.createElement('div');
             div.className = 'chat-item';
             div.innerHTML = `
-                <div class="chat-avatar">👤</div>
-                <div class="chat-info">
-                    <div class="chat-name">${escapeHtml(friend)}</div>
-                    <div class="chat-last-msg">
-                        <span>${escapeHtml(lastMsgText)}</span>
-                        <span class="status-icon">${lastMsgStatus}</span>
+                <div style="display:flex; align-items:center; gap:12px; flex:1;">
+                    <div style="width:48px;height:48px;background:linear-gradient(135deg,#a855f7,#ec4899);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">👤</div>
+                    <div class="chat-info">
+                        <div class="chat-name">${escapeHtml(friend)}</div>
+                        <div class="chat-last-msg">
+                            <span>${escapeHtml(lastMsgText)}</span>
+                            <span class="status-icon" style="color:${getStatusColor(lastMsg.status)}">${lastMsgStatus}</span>
+                        </div>
                     </div>
                 </div>
             `;
@@ -886,8 +823,8 @@
             const div = document.createElement('div');
             div.className = 'user-item';
             div.innerHTML = `
-                <div class="user-info">
-                    <div class="chat-avatar" style="width:40px;height:40px;">👤</div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="width:40px;height:40px;background:linear-gradient(135deg,#a855f7,#ec4899);border-radius:50%;display:flex;align-items:center;justify-content:center;">👤</div>
                     <span>${escapeHtml(user)}</span>
                 </div>
                 <button class="add-friend-btn" onclick="sendFriendRequest('${user}')">➕ إضافة</button>
@@ -910,8 +847,8 @@
             const div = document.createElement('div');
             div.className = 'request-item';
             div.innerHTML = `
-                <div class="user-info">
-                    <div class="chat-avatar" style="width:40px;height:40px;">👤</div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="width:40px;height:40px;background:linear-gradient(135deg,#a855f7,#ec4899);border-radius:50%;display:flex;align-items:center;justify-content:center;">👤</div>
                     <span>${escapeHtml(req)}</span>
                 </div>
                 <button class="accept-btn" onclick="acceptRequest('${req}')">قبول</button>
@@ -920,7 +857,7 @@
         });
     }
 
-    function updateUI() {
+    function updateAllUI() {
         updateChatsList();
         updateUsersList();
         updateRequestsList();
@@ -949,7 +886,7 @@
 
     function scrollToBottom() {
         const area = document.getElementById('messagesArea');
-        if(area) area.scrollTop = area.scrollHeight;
+        if(area) setTimeout(() => { area.scrollTop = area.scrollHeight; }, 100);
     }
 
     function escapeHtml(str) {
@@ -962,7 +899,6 @@
         });
     }
 
-    // Enter لإرسال الرسالة
     document.addEventListener('DOMContentLoaded', () => {
         const msgInput = document.getElementById('messageInput');
         if(msgInput) {
