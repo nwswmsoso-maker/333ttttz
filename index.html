@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق المحادثة</title>
+    <title>تطبيق المحادثة - مع نظام الأصدقاء</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap');
         
@@ -27,6 +27,8 @@
             --border: #e0e0e0;
             --shadow: rgba(0, 0, 0, 0.1);
             --accent: #FF6B6B;
+            --success: #4CAF50;
+            --warning: #FF9800;
         }
         
         body {
@@ -164,6 +166,22 @@
             animation: shake 0.5s ease;
         }
         
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: none;
+            border-right: 4px solid #2e7d32;
+        }
+        
+        .success-message.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+        
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-10px); }
@@ -186,7 +204,7 @@
         
         /* Sidebar */
         .sidebar {
-            width: 360px;
+            width: 380px;
             background: var(--bg-main);
             border-left: 1px solid var(--border);
             display: flex;
@@ -196,7 +214,7 @@
         
         .sidebar-header {
             padding: 1.2rem 1.5rem;
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             display: flex;
             align-items: center;
@@ -233,6 +251,29 @@
             opacity: 0.9;
         }
         
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .add-friend-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .add-friend-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
         .logout-btn {
             background: rgba(255, 255, 255, 0.2);
             border: none;
@@ -249,10 +290,40 @@
             background: rgba(255, 255, 255, 0.3);
         }
         
+        .search-friends {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.1);
+        }
+        
         .chat-list {
             flex: 1;
             overflow-y: auto;
             padding: 0.5rem 0;
+        }
+        
+        .chat-section-title {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .chat-item {
@@ -263,6 +334,7 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            position: relative;
         }
         
         .chat-item:hover {
@@ -286,6 +358,7 @@
             color: white;
             font-size: 1.2rem;
             flex-shrink: 0;
+            position: relative;
         }
         
         .chat-info {
@@ -318,12 +391,27 @@
             left: 2px;
         }
         
+        .unread-badge {
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-right: auto;
+        }
+        
         /* Main Chat Area */
         .main-chat {
             flex: 1;
             display: flex;
             flex-direction: column;
             background: var(--bg-chat);
+            position: relative;
         }
         
         .chat-header {
@@ -357,6 +445,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
         }
         
         .message {
@@ -366,6 +455,7 @@
             word-wrap: break-word;
             animation: messageSlide 0.3s ease-out;
             position: relative;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
         
         @keyframes messageSlide {
@@ -410,6 +500,7 @@
             max-width: 100%;
             border-radius: 8px;
             margin-top: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
         
         .message-image {
@@ -419,16 +510,18 @@
             margin-top: 0.5rem;
             cursor: pointer;
             transition: transform 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
         
         .message-image:hover {
-            transform: scale(1.02);
+            transform: scale(1.05);
         }
         
         .message-time {
             font-size: 0.7rem;
             color: var(--text-secondary);
             text-align: left;
+            margin-top: 0.2rem;
         }
         
         .message-out .message-time {
@@ -442,6 +535,7 @@
             display: flex;
             align-items: center;
             gap: 0.8rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
         }
         
         .file-input-label {
@@ -454,11 +548,13 @@
             justify-content: center;
             transition: all 0.3s ease;
             color: var(--text-secondary);
+            position: relative;
         }
         
         .file-input-label:hover {
             background: var(--border);
             color: var(--primary);
+            transform: scale(1.1);
         }
         
         .file-input {
@@ -480,6 +576,7 @@
         .message-input:focus {
             outline: none;
             border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.1);
         }
         
         .send-btn {
@@ -512,16 +609,69 @@
             justify-content: center;
             color: var(--text-secondary);
             gap: 1rem;
+            background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
         }
         
         .empty-chat-icon {
             font-size: 5rem;
             opacity: 0.3;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         
         .empty-chat-text {
             font-size: 1.2rem;
             font-weight: 600;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 90%;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .modal-close {
+            float: left;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            color: var(--accent);
         }
         
         /* Scrollbar */
@@ -530,7 +680,7 @@
         }
         
         ::-webkit-scrollbar-track {
-            background: var(--bg-chat);
+            background: transparent;
         }
         
         ::-webkit-scrollbar-thumb {
@@ -562,6 +712,15 @@
             .message {
                 max-width: 85%;
             }
+            
+            .input-container {
+                padding: 0.8rem;
+                gap: 0.5rem;
+            }
+            
+            .file-input-label {
+                padding: 0.6rem;
+            }
         }
     </style>
 </head>
@@ -575,6 +734,7 @@
         </div>
         
         <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
         
         <form id="loginForm">
             <div class="input-group">
@@ -591,6 +751,24 @@
         </form>
     </div>
 
+    <!-- Add Friend Modal -->
+    <div class="modal" id="addFriendModal">
+        <div class="modal-content">
+            <span class="modal-close" id="closeModal">&times;</span>
+            <h2 class="modal-title">إضافة صديق جديد</h2>
+            <div class="error-message" id="modalErrorMessage"></div>
+            <div class="success-message" id="modalSuccessMessage"></div>
+            <div class="input-group">
+                <label class="input-label" for="friendUsername">اسم المستخدم للصديق</label>
+                <input type="text" id="friendUsername" class="input-field" placeholder="أدخل اسم المستخدم" required>
+                <small style="color: var(--text-secondary); display: block; margin-top: 0.5rem;">
+                    المستخدمين المتاحين: 2tx, 3tx, 4tx
+                </small>
+            </div>
+            <button class="login-btn" id="addFriendSubmit">إضافة صديق</button>
+        </div>
+    </div>
+
     <!-- Chat Application -->
     <div class="chat-container" id="chatApp">
         <!-- Sidebar -->
@@ -603,7 +781,14 @@
                         <div class="user-status">متصل</div>
                     </div>
                 </div>
-                <button class="logout-btn" id="logoutBtn">تسجيل خروج</button>
+                <div class="header-actions">
+                    <button class="add-friend-btn" id="addFriendBtn">➕ صديق</button>
+                    <button class="logout-btn" id="logoutBtn">خروج</button>
+                </div>
+            </div>
+            
+            <div class="search-friends">
+                <input type="text" class="search-input" id="searchFriends" placeholder="🔍 بحث عن صديق...">
             </div>
             
             <div class="chat-list" id="chatList">
@@ -667,16 +852,26 @@
         let currentUser = null;
         let activeChat = null;
         let ably = null;
-        let channel = null;
+        let channels = {};
+        let friendsList = [];
 
         // DOM Elements
         const loginPage = document.getElementById('loginPage');
         const chatApp = document.getElementById('chatApp');
         const loginForm = document.getElementById('loginForm');
         const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
         const currentUsername = document.getElementById('currentUsername');
         const userAvatar = document.getElementById('userAvatar');
         const logoutBtn = document.getElementById('logoutBtn');
+        const addFriendBtn = document.getElementById('addFriendBtn');
+        const addFriendModal = document.getElementById('addFriendModal');
+        const closeModal = document.getElementById('closeModal');
+        const addFriendSubmit = document.getElementById('addFriendSubmit');
+        const friendUsernameInput = document.getElementById('friendUsername');
+        const modalErrorMessage = document.getElementById('modalErrorMessage');
+        const modalSuccessMessage = document.getElementById('modalSuccessMessage');
+        const searchFriends = document.getElementById('searchFriends');
         const chatList = document.getElementById('chatList');
         const emptyChat = document.getElementById('emptyChat');
         const activeChatArea = document.getElementById('activeChatArea');
@@ -691,6 +886,7 @@
             const savedUser = localStorage.getItem('chatAppUser');
             if (savedUser) {
                 currentUser = savedUser;
+                loadFriendsList();
                 showChatApp();
             }
         });
@@ -705,17 +901,26 @@
             if (USERS[username] && USERS[username].password === password) {
                 currentUser = username;
                 localStorage.setItem('chatAppUser', username);
+                loadFriendsList();
                 showChatApp();
             } else {
-                showError('اسم المستخدم أو كلمة المرور غير صحيحة');
+                showError(errorMessage, 'اسم المستخدم أو كلمة المرور غير صحيحة');
             }
         });
 
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.classList.add('show');
+        function showError(element, message) {
+            element.textContent = message;
+            element.classList.add('show');
             setTimeout(() => {
-                errorMessage.classList.remove('show');
+                element.classList.remove('show');
+            }, 3000);
+        }
+
+        function showSuccess(element, message) {
+            element.textContent = message;
+            element.classList.add('show');
+            setTimeout(() => {
+                element.classList.remove('show');
             }, 3000);
         }
 
@@ -726,15 +931,192 @@
             userAvatar.textContent = currentUser.charAt(0).toUpperCase();
             
             initializeAbly();
-            loadChatList();
+            renderFriendsList();
         }
+
+        // Friends Management
+        function loadFriendsList() {
+            const saved = localStorage.getItem(`friends_${currentUser}`);
+            friendsList = saved ? JSON.parse(saved) : [];
+            
+            // Add default friends if none exist
+            if (friendsList.length === 0) {
+                Object.keys(USERS).forEach(username => {
+                    if (username !== currentUser) {
+                        friendsList.push(username);
+                    }
+                });
+                saveFriendsList();
+            }
+        }
+
+        function saveFriendsList() {
+            localStorage.setItem(`friends_${currentUser}`, JSON.stringify(friendsList));
+        }
+
+        function addFriend(username) {
+            if (!USERS[username]) {
+                showError(modalErrorMessage, 'هذا المستخدم غير موجود');
+                return false;
+            }
+            
+            if (username === currentUser) {
+                showError(modalErrorMessage, 'لا يمكنك إضافة نفسك');
+                return false;
+            }
+            
+            if (friendsList.includes(username)) {
+                showError(modalErrorMessage, 'هذا الصديق موجود بالفعل في قائمتك');
+                return false;
+            }
+            
+            friendsList.push(username);
+            saveFriendsList();
+            
+            // Create private channel for this friend
+            createPrivateChannel(username);
+            
+            showSuccess(modalSuccessMessage, `تم إضافة ${USERS[username].name} بنجاح!`);
+            
+            setTimeout(() => {
+                addFriendModal.classList.remove('active');
+                friendUsernameInput.value = '';
+                modalSuccessMessage.classList.remove('show');
+                renderFriendsList();
+            }, 1500);
+            
+            return true;
+        }
+
+        function renderFriendsList() {
+            chatList.innerHTML = '';
+            
+            if (friendsList.length === 0) {
+                chatList.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">👥</div>
+                        <div>لا يوجد أصدقاء بعد</div>
+                        <div style="font-size: 0.85rem; margin-top: 0.5rem;">اضغط على زر "إضافة صديق" للبدء</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            const sectionTitle = document.createElement('div');
+            sectionTitle.className = 'chat-section-title';
+            sectionTitle.textContent = `الأصدقاء (${friendsList.length})`;
+            chatList.appendChild(sectionTitle);
+            
+            friendsList.forEach(username => {
+                const chatItem = createChatItem(username);
+                chatList.appendChild(chatItem);
+            });
+        }
+
+        function createChatItem(username) {
+            const item = document.createElement('div');
+            item.className = 'chat-item';
+            item.dataset.username = username;
+            
+            // Get last message for preview
+            const messages = JSON.parse(localStorage.getItem(getChatKey(username)) || '[]');
+            const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
+            let preview = 'انقر للمحادثة';
+            
+            if (lastMessage) {
+                if (lastMessage.text) {
+                    preview = lastMessage.text.substring(0, 30) + (lastMessage.text.length > 30 ? '...' : '');
+                } else if (lastMessage.image) {
+                    preview = '📷 صورة';
+                } else if (lastMessage.video) {
+                    preview = '🎥 فيديو';
+                }
+            }
+            
+            item.innerHTML = `
+                <div style="position: relative;">
+                    <div class="chat-avatar">${username.charAt(0).toUpperCase()}</div>
+                    <div class="online-indicator"></div>
+                </div>
+                <div class="chat-info">
+                    <div class="chat-name">${USERS[username].name}</div>
+                    <div class="chat-last-message">${preview}</div>
+                </div>
+            `;
+            
+            item.addEventListener('click', () => openChat(username));
+            
+            return item;
+        }
+
+        function getChatKey(otherUser) {
+            // Create consistent key regardless of order
+            const users = [currentUser, otherUser].sort();
+            return `chat_${users[0]}_${users[1]}`;
+        }
+
+        // Modal Handlers
+        addFriendBtn.addEventListener('click', () => {
+            addFriendModal.classList.add('active');
+            friendUsernameInput.focus();
+        });
+
+        closeModal.addEventListener('click', () => {
+            addFriendModal.classList.remove('active');
+            modalErrorMessage.classList.remove('show');
+            modalSuccessMessage.classList.remove('show');
+        });
+
+        addFriendModal.addEventListener('click', (e) => {
+            if (e.target === addFriendModal) {
+                addFriendModal.classList.remove('active');
+                modalErrorMessage.classList.remove('show');
+                modalSuccessMessage.classList.remove('show');
+            }
+        });
+
+        addFriendSubmit.addEventListener('click', () => {
+            const username = friendUsernameInput.value.trim().toLowerCase();
+            if (username) {
+                addFriend(username);
+            } else {
+                showError(modalErrorMessage, 'الرجاء إدخال اسم المستخدم');
+            }
+        });
+
+        friendUsernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const username = friendUsernameInput.value.trim().toLowerCase();
+                if (username) {
+                    addFriend(username);
+                }
+            }
+        });
+
+        // Search Friends
+        searchFriends.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.trim().toLowerCase();
+            const chatItems = chatList.querySelectorAll('.chat-item');
+            
+            chatItems.forEach(item => {
+                const username = item.dataset.username;
+                const name = USERS[username].name.toLowerCase();
+                
+                if (name.includes(searchTerm) || username.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
 
         // Logout Handler
         logoutBtn.addEventListener('click', () => {
             localStorage.removeItem('chatAppUser');
-            if (channel) {
+            // Unsubscribe from all channels
+            Object.values(channels).forEach(channel => {
                 channel.unsubscribe();
-            }
+            });
             if (ably) {
                 ably.close();
             }
@@ -744,61 +1126,45 @@
         // Initialize Ably
         function initializeAbly() {
             ably = new Ably.Realtime(ABLY_API_KEY);
-            channel = ably.channels.get('chat-room');
             
-            // Subscribe to messages
-            channel.subscribe('message', (message) => {
-                if (message.data.sender !== currentUser) {
-                    handleIncomingMessage(message.data);
-                }
-            });
-
-            // Subscribe to video messages
-            channel.subscribe('video', (message) => {
-                if (message.data.sender !== currentUser) {
-                    handleIncomingVideo(message.data);
-                }
-            });
-
-            // Subscribe to image messages
-            channel.subscribe('image', (message) => {
-                if (message.data.sender !== currentUser) {
-                    handleIncomingImage(message.data);
-                }
+            // Create private channels for all friends
+            friendsList.forEach(friend => {
+                createPrivateChannel(friend);
             });
         }
 
-        // Load Chat List
-        function loadChatList() {
-            chatList.innerHTML = '';
+        function createPrivateChannel(friend) {
+            const channelName = getPrivateChannelName(friend);
             
-            Object.keys(USERS).forEach(username => {
-                if (username !== currentUser) {
-                    const chatItem = createChatItem(username);
-                    chatList.appendChild(chatItem);
-                }
-            });
+            if (!channels[channelName]) {
+                channels[channelName] = ably.channels.get(channelName);
+                
+                // Subscribe to messages
+                channels[channelName].subscribe('message', (message) => {
+                    if (message.data.sender !== currentUser) {
+                        handleIncomingMessage(message.data, friend);
+                    }
+                });
+
+                // Subscribe to video messages
+                channels[channelName].subscribe('video', (message) => {
+                    if (message.data.sender !== currentUser) {
+                        handleIncomingVideo(message.data, friend);
+                    }
+                });
+
+                // Subscribe to image messages
+                channels[channelName].subscribe('image', (message) => {
+                    if (message.data.sender !== currentUser) {
+                        handleIncomingImage(message.data, friend);
+                    }
+                });
+            }
         }
 
-        function createChatItem(username) {
-            const item = document.createElement('div');
-            item.className = 'chat-item';
-            item.dataset.username = username;
-            
-            item.innerHTML = `
-                <div style="position: relative;">
-                    <div class="chat-avatar">${username.charAt(0).toUpperCase()}</div>
-                    <div class="online-indicator"></div>
-                </div>
-                <div class="chat-info">
-                    <div class="chat-name">${USERS[username].name}</div>
-                    <div class="chat-last-message">انقر للمحادثة</div>
-                </div>
-            `;
-            
-            item.addEventListener('click', () => openChat(username));
-            
-            return item;
+        function getPrivateChannelName(friend) {
+            const users = [currentUser, friend].sort();
+            return `private-chat-${users[0]}-${users[1]}`;
         }
 
         function openChat(username) {
@@ -808,7 +1174,11 @@
             document.querySelectorAll('.chat-item').forEach(item => {
                 item.classList.remove('active');
             });
-            document.querySelector(`[data-username="${username}"]`).classList.add('active');
+            
+            const activeItem = document.querySelector(`[data-username="${username}"]`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+            }
             
             emptyChat.style.display = 'none';
             activeChatArea.style.display = 'flex';
@@ -817,13 +1187,16 @@
             document.getElementById('activeChatName').textContent = USERS[username].name;
             
             loadMessages(username);
+            
+            // Focus on input
+            messageInput.focus();
         }
 
         function loadMessages(username) {
             messagesContainer.innerHTML = '';
             
             // Load messages from localStorage
-            const savedMessages = JSON.parse(localStorage.getItem(`chat_${currentUser}_${username}`) || '[]');
+            const savedMessages = JSON.parse(localStorage.getItem(getChatKey(username)) || '[]');
             savedMessages.forEach(msg => {
                 if (msg.text) {
                     addMessageToUI(msg);
@@ -857,8 +1230,14 @@
                 timestamp: new Date().toISOString()
             };
             
-            // Publish to Ably
-            channel.publish('message', message);
+            // Get the private channel
+            const channelName = getPrivateChannelName(activeChat);
+            const privateChannel = channels[channelName];
+            
+            if (privateChannel) {
+                // Publish to private channel
+                privateChannel.publish('message', message);
+            }
             
             // Add to UI
             addMessageToUI(message);
@@ -866,7 +1245,11 @@
             // Save to localStorage
             saveMessage(activeChat, message);
             
+            // Update chat list preview
+            updateChatPreview(activeChat, text);
+            
             messageInput.value = '';
+            messageInput.style.height = 'auto';
             scrollToBottom();
         }
 
@@ -875,7 +1258,14 @@
             const file = e.target.files[0];
             if (!file || !activeChat) return;
             
-            // Convert video to base64
+            // Check file size (max 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                showError(errorMessage, 'حجم الملف كبير جداً. الحد الأقصى 10 ميجابايت');
+                videoInput.value = '';
+                return;
+            }
+            
+            // Convert video to base64 with compression
             const reader = new FileReader();
             reader.onload = (event) => {
                 const videoData = event.target.result;
@@ -884,17 +1274,28 @@
                     sender: currentUser,
                     recipient: activeChat,
                     video: videoData,
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
+                    fileName: file.name,
+                    fileSize: file.size
                 };
                 
-                // Publish to Ably
-                channel.publish('video', videoMessage);
+                // Get the private channel
+                const channelName = getPrivateChannelName(activeChat);
+                const privateChannel = channels[channelName];
+                
+                if (privateChannel) {
+                    // Publish to private channel
+                    privateChannel.publish('video', videoMessage);
+                }
                 
                 // Add to UI
                 addVideoToUI(videoMessage);
                 
                 // Save to localStorage
                 saveMessage(activeChat, videoMessage);
+                
+                // Update chat list preview
+                updateChatPreview(activeChat, '🎥 فيديو');
                 
                 scrollToBottom();
             };
@@ -908,7 +1309,14 @@
             const file = e.target.files[0];
             if (!file || !activeChat) return;
             
-            // Convert image to base64
+            // Check file size (max 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                showError(errorMessage, 'حجم الملف كبير جداً. الحد الأقصى 10 ميجابايت');
+                imageInput.value = '';
+                return;
+            }
+            
+            // Convert image to base64 with compression
             const reader = new FileReader();
             reader.onload = (event) => {
                 const imageData = event.target.result;
@@ -917,17 +1325,28 @@
                     sender: currentUser,
                     recipient: activeChat,
                     image: imageData,
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
+                    fileName: file.name,
+                    fileSize: file.size
                 };
                 
-                // Publish to Ably
-                channel.publish('image', imageMessage);
+                // Get the private channel
+                const channelName = getPrivateChannelName(activeChat);
+                const privateChannel = channels[channelName];
+                
+                if (privateChannel) {
+                    // Publish to private channel
+                    privateChannel.publish('image', imageMessage);
+                }
                 
                 // Add to UI
                 addImageToUI(imageMessage);
                 
                 // Save to localStorage
                 saveMessage(activeChat, imageMessage);
+                
+                // Update chat list preview
+                updateChatPreview(activeChat, '📷 صورة');
                 
                 scrollToBottom();
             };
@@ -936,27 +1355,87 @@
             imageInput.value = '';
         });
 
-        function handleIncomingMessage(message) {
-            if (message.recipient === currentUser) {
-                addMessageToUI(message);
-                saveMessage(message.sender, message);
-                scrollToBottom();
+        function updateChatPreview(username, preview) {
+            const chatItem = document.querySelector(`[data-username="${username}"]`);
+            if (chatItem) {
+                const previewElement = chatItem.querySelector('.chat-last-message');
+                if (previewElement) {
+                    const shortPreview = preview.length > 30 ? preview.substring(0, 30) + '...' : preview;
+                    previewElement.textContent = shortPreview;
+                }
             }
         }
 
-        function handleIncomingVideo(message) {
+        function handleIncomingMessage(message, friend) {
             if (message.recipient === currentUser) {
-                addVideoToUI(message);
-                saveMessage(message.sender, message);
-                scrollToBottom();
+                // If chat is currently open with this friend
+                if (activeChat === friend) {
+                    addMessageToUI(message);
+                    scrollToBottom();
+                }
+                
+                saveMessage(friend, message);
+                updateChatPreview(friend, message.text);
+                
+                // If chat is not open, show notification
+                if (activeChat !== friend) {
+                    showNotification(`رسالة جديدة من ${USERS[friend].name}`);
+                }
             }
         }
 
-        function handleIncomingImage(message) {
+        function handleIncomingVideo(message, friend) {
             if (message.recipient === currentUser) {
-                addImageToUI(message);
-                saveMessage(message.sender, message);
-                scrollToBottom();
+                // If chat is currently open with this friend
+                if (activeChat === friend) {
+                    addVideoToUI(message);
+                    scrollToBottom();
+                }
+                
+                saveMessage(friend, message);
+                updateChatPreview(friend, '🎥 فيديو');
+                
+                // If chat is not open, show notification
+                if (activeChat !== friend) {
+                    showNotification(`فيديو جديد من ${USERS[friend].name}`);
+                }
+            }
+        }
+
+        function handleIncomingImage(message, friend) {
+            if (message.recipient === currentUser) {
+                // If chat is currently open with this friend
+                if (activeChat === friend) {
+                    addImageToUI(message);
+                    scrollToBottom();
+                }
+                
+                saveMessage(friend, message);
+                updateChatPreview(friend, '📷 صورة');
+                
+                // If chat is not open, show notification
+                if (activeChat !== friend) {
+                    showNotification(`صورة جديدة من ${USERS[friend].name}`);
+                }
+            }
+        }
+
+        function showNotification(message) {
+            // Check if browser supports notifications
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('تطبيق المحادثة', {
+                    body: message,
+                    icon: '💬'
+                });
+            } else if ('Notification' in window && Notification.permission !== 'denied') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        new Notification('تطبيق المحادثة', {
+                            body: message,
+                            icon: '💬'
+                        });
+                    }
+                });
             }
         }
 
@@ -971,8 +1450,8 @@
             });
             
             messageDiv.innerHTML = `
-                ${!isOutgoing ? `<div class="message-sender">${USERS[message.sender].name}</div>` : ''}
-                <div class="message-text">${message.text}</div>
+                ${!isOutgoing ? `<div class="message-sender">${USERS[message.sender]?.name || message.sender}</div>` : ''}
+                <div class="message-text">${escapeHtml(message.text)}</div>
                 <div class="message-time">${time}</div>
             `;
             
@@ -990,10 +1469,12 @@
             });
             
             messageDiv.innerHTML = `
-                ${!isOutgoing ? `<div class="message-sender">${USERS[message.sender].name}</div>` : ''}
-                <video class="message-video" controls>
+                ${!isOutgoing ? `<div class="message-sender">${USERS[message.sender]?.name || message.sender}</div>` : ''}
+                <video class="message-video" controls preload="metadata">
                     <source src="${message.video}" type="video/mp4">
+                    متصفحك لا يدعم تشغيل الفيديو
                 </video>
+                ${message.fileName ? `<div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem;">${message.fileName}</div>` : ''}
                 <div class="message-time">${time}</div>
             `;
             
@@ -1011,8 +1492,9 @@
             });
             
             messageDiv.innerHTML = `
-                ${!isOutgoing ? `<div class="message-sender">${USERS[message.sender].name}</div>` : ''}
-                <img class="message-image" src="${message.image}" alt="صورة" onclick="window.open(this.src, '_blank')">
+                ${!isOutgoing ? `<div class="message-sender">${USERS[message.sender]?.name || message.sender}</div>` : ''}
+                <img class="message-image" src="${message.image}" alt="صورة" onclick="window.open(this.src, '_blank')" loading="lazy">
+                ${message.fileName ? `<div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem;">${message.fileName}</div>` : ''}
                 <div class="message-time">${time}</div>
             `;
             
@@ -1020,20 +1502,47 @@
         }
 
         function saveMessage(otherUser, message) {
-            const key = `chat_${currentUser}_${otherUser}`;
+            const key = getChatKey(otherUser);
             const messages = JSON.parse(localStorage.getItem(key) || '[]');
             messages.push(message);
+            
+            // Limit messages to last 100 to prevent storage overflow
+            if (messages.length > 100) {
+                messages.splice(0, messages.length - 100);
+            }
+            
             localStorage.setItem(key, JSON.stringify(messages));
         }
 
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         function scrollToBottom() {
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            setTimeout(() => {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 100);
         }
 
         // Auto-resize textarea
         messageInput.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Request notification permission on load
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        // Handle page visibility for notifications
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && activeChat) {
+                // Refresh messages when tab becomes visible
+                loadMessages(activeChat);
+            }
         });
     </script>
 </body>
