@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم الإذاعية — إدارة البث والمكسر</title>
+<title>لوحة تحكم البث — المكسر الذكي</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
@@ -12,7 +12,6 @@ body { font-family: 'Tajawal', sans-serif; background: #06060c; color: #e1e1e6; 
 .studio-panel { background: #0d0d18; border: 1px solid #ff4757; width: 100%; max-width: 600px; border-radius: 12px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
 .panel-title { text-align: center; color: #ff4757; font-weight: 900; font-size: 1.3rem; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
-/* ستايل أقسام ميكسر الصوت */
 .section-box { background: #131324; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 15px; margin-bottom: 18px; }
 .section-title { font-size: 0.9rem; color: #ff4757; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 6px; }
 
@@ -29,58 +28,60 @@ body { font-family: 'Tajawal', sans-serif; background: #06060c; color: #e1e1e6; 
 
 .songs-list { max-height: 160px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 .song-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 4px; font-size: 0.82rem; }
-.toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: #2ed573; color: #fff; padding: 10px 25px; border-radius: 6px; font-weight: 700; display: none; }
+.toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: #2ed573; color: #fff; padding: 10px 25px; border-radius: 6px; font-weight: 700; display: none; z-index: 100; }
+.note { font-size: 0.75rem; color: #ffbc4b; margin-top: 5px; display: block; }
 </style>
 </head>
 <body>
 
 <div class="studio-panel">
-  <div class="panel-title"><i class="fa-solid fa-sliders"></i> غرفة تحكم ومكسر غيّر جوك TV</div>
+  <div class="panel-title"><i class="fa-solid fa-sliders"></i> مكسر وجدول غيّر جوك TV المطور</div>
   
   <!-- القسم 1: مكسر الصوت العام عن بعد -->
   <div class="section-box">
-    <div class="section-title"><i class="fa-solid fa-volume-high"></i> مكسر الصوت المباشر (التحكم عن بعد عند كل المشاهدين)</div>
+    <div class="section-title"><i class="fa-solid fa-volume-high"></i> مكسر الصوت المباشر (تعلية وتنصية الصوت عند الزوار فوراً)</div>
     <div class="mixer-container">
-      <i class="fa-solid fa-volume-xmark" style="color:#8a8a9e"></i>
+      <i class="fa-solid fa-volume-low"></i>
       <input type="range" id="volSlider" class="volume-slider" min="0" max="100" value="100" onchange="updateRemoteVolume(this.value)">
-      <span id="volNum" style="font-weight:700; font-family:monospace; width:30px;">100%</span>
+      <span id="volNum" style="font-weight:700; font-family:monospace; width:35px;">100%</span>
     </div>
   </div>
 
-  <!-- القسم 2: تشغيل شيء خاص (كبل يشتغل فوراً) -->
+  <!-- القسم 2: تشغيل شيء خاص كبل فوري -->
   <div class="section-box" style="border-color: rgba(255, 71, 87, 0.4);">
-    <div class="section-title" style="color:#ffbc4b;"><i class="fa-solid fa-bolt"></i> ميزة التشغيل الخاص المباشر (كبل واونلاين فوري)</div>
+    <div class="section-title" style="color:#ffbc4b;"><i class="fa-solid fa-bolt"></i> ميزة القطع والتشغيل الخاص (كِبل يشتغل فوري عند الكل)</div>
     <div style="display:flex; gap:8px;">
-      <input id="instantUrl" type="text" class="studio-input" placeholder="ضع رابط أغنية اليوتيوب الخاصة هنا المُراد تشغيلها فوراً...">
-      <button class="btn btn-danger" style="white-space:nowrap;" onclick="playInstant()">بث فوري كِبل 🔴</button>
+      <input id="instantUrl" type="text" class="studio-input" placeholder="ضع رابط اليوتيوب لتشغيله كِبل فوري الآن...">
+      <button class="btn btn-danger" style="white-space:nowrap;" onclick="playInstant()">بث فوري 🔴</button>
     </div>
-    <button class="btn btn-secondary" style="font-size:0.75rem; padding:5px;" onclick="cancelInstant()">إيقاف التشغيل الخاص والعودة للقائمة التلقائية 🤖</button>
+    <button class="btn btn-secondary" style="font-size:0.75rem; padding:6px;" onclick="cancelInstant()">إلغاء التشغيل الخاص والعودة للجدول التلقائي 🤖</button>
   </div>
 
   <!-- القسم 3: بناء وتغذية القائمة العراقية التلقائية -->
   <div class="section-box">
-    <div class="section-title"><i class="fa-solid fa-list-ul"></i> إدارة قائمتك العراقية التلقائية (الأوتو بايلوت الدائري)</div>
-    <div style="display:flex; gap:8px; margin-bottom:10px;">
-      <input id="playlistUrl" type="text" class="studio-input" placeholder="ضع رابط الأغنية العراقية لإضافتها للقائمة الدائرية...">
-      <button class="btn btn-success" style="white-space:nowrap;" onclick="addToRotation()">إضافة للقائمة ➕</button>
+    <div class="section-title"><i class="fa-solid fa-list-ul"></i> إدارة قائمتك العراقية الكاملة (التشغيل المتتابع)</div>
+    <div style="display:flex; gap:8px; margin-bottom:5px;">
+      <input id="playlistUrl" type="text" class="studio-input" placeholder="ضع رابط الأغنية العراقية (يوتيوب، موبايل، شورتس)...">
+      <button class="btn btn-success" style="white-space:nowrap;" onclick="addToRotation()">إضافة ➕</button>
     </div>
+    <small class="note">⚠️ ملاحظة: إذا ظهر فيديو "غير متوفر"، تأكد أن القناة الأصلية للأغنية لا تحظر التضمين الخارجي.</small>
     
-    <span style="font-size:0.75rem; color:#8a8a9e; font-weight:700;">الأغاني الحالية في الدوران التلقائي:</span>
-    <div class="songs-list" id="rotationContainer">جاري تحميل قائمتك...</div>
+    <div style="margin-top: 12px; font-size: 0.78rem; color:#8a8a9e; font-weight:700;">روابط القائمة المضافة حالياً:</div>
+    <div class="songs-list" id="rotationContainer">جاري قراءة القائمة...</div>
   </div>
 
   <!-- القسم 4: شريط الأخبار -->
   <div class="section-box">
-    <div class="section-title"><i class="fa-solid fa-bullhorn"></i> شريط الأخبار السفلي</div>
+    <div class="section-title"><i class="fa-solid fa-bullhorn"></i> كتابة نص شريط الأخبار السفلي</div>
     <div style="display:flex; gap:8px;">
-      <input id="tickerInput" type="text" class="studio-input" placeholder="اكتب نص شريط الأخبار...">
-      <button class="btn btn-danger" onclick="saveTicker()">تحديث 📢</button>
+      <input id="tickerInput" type="text" class="studio-input" placeholder="اكتب النص الجديد هنا للتحديث...">
+      <button class="btn btn-danger" onclick="saveTicker()">تحديث الشريط 📢</button>
     </div>
   </div>
 
 </div>
 
-<div class="toast" id="toast">تمت المزامنة بنجاح! 📡</div>
+<div class="toast" id="toast">تم الحفظ والمزامنة مع السيرفر! 📡</div>
 
 <script>
 const SB_URL = 'https://hvgtysuwzdtsgqjgsuhi.supabase.co';
@@ -98,40 +99,40 @@ async function loadStudio() {
   fetchRotationList();
 }
 
-// دالة تحديث مكسر الصوت عن بعد
+// تحديث المكسر الآمن بـ update لكي لا يمسح نص الشريط
 async function updateRemoteVolume(val) {
   document.getElementById('volNum').textContent = val + '%';
-  await sb.from('channel_settings').upsert({ id: 'live_stream', volume: parseInt(val) });
+  await sb.from('channel_settings').update({ volume: parseInt(val) }).eq('id', 'live_stream');
   triggerToast();
 }
 
-// دالة تشغيل كبل فوري
+// تشغيل فوري كبل
 async function playInstant() {
   const input = document.getElementById('instantUrl');
   const url = input.value.trim();
-  if(!url) return alert('ضع رابط أولاً!');
+  if(!url) return alert('يرجى إضافة الرابط أولاً!');
   
-  await sb.from('channel_settings').upsert({
-    id: 'live_stream',
+  await sb.from('channel_settings').update({
     override_url: url,
     override_start: Date.now()
-  });
+  }).eq('id', 'live_stream');
+  
   input.value = '';
   triggerToast();
 }
 
 async function cancelInstant() {
-  await sb.from('channel_settings').upsert({ id: 'live_stream', override_url: null, override_start: null });
+  await sb.from('channel_settings').update({ override_url: null, override_start: null }).eq('id', 'live_stream');
   triggerToast();
 }
 
-// إضافة أغانيك العراقية إلى مصفوفة التدوير التلقائي
+// إضافة الأغاني العراقية
 async function addToRotation() {
   const input = document.getElementById('playlistUrl');
   const url = input.value.trim();
-  if(!url) return alert('يرجى وضع رابط!');
+  if(!url) return alert('انسخ الرابط وضعه هنا!');
 
-  await sb.from('playlist').insert([{ title: 'أغنية عراقية مضافة', video_url: url }]);
+  await sb.from('playlist').insert([{ title: 'أغنية مضافة', video_url: url }]);
   input.value = '';
   triggerToast();
   fetchRotationList();
@@ -142,7 +143,7 @@ async function fetchRotationList() {
   const container = document.getElementById('rotationContainer');
   
   if(!songs || songs.length === 0) {
-    container.innerHTML = '<div style="color:#8a8a9e; font-size:0.8rem; text-align:center;">القائمة فارغة تماماً. ضع روابط أغانيك العراقية المفضلة بالأعلى لتشغيل التلقائي!</div>';
+    container.innerHTML = '<div style="color:#8a8a9e; font-size:0.8rem; text-align:center; padding:10px;">القائمة فارغة. أضف روابط أغانيك بالأعلى لتبدأ العمل تلقائياً!</div>';
     return;
   }
 
@@ -150,8 +151,8 @@ async function fetchRotationList() {
   songs.forEach((song, i) => {
     container.innerHTML += `
       <div class="song-row">
-        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:80%;">السلوت ${i+1}: ${song.video_url}</span>
-        <button onclick="deleteSong(${song.id})" style="background:none; border:none; color:#ff4757; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:85%;">فيديو ${i+1}: ${song.video_url}</span>
+        <button onclick="deleteSong(${song.id})" style="background:none; border:none; color:#ff4757; cursor:pointer; padding:2px 5px;"><i class="fa-solid fa-trash"></i></button>
       </div>`;
   });
 }
@@ -162,9 +163,10 @@ async function deleteSong(id) {
   fetchRotationList();
 }
 
+// تحديث نص شريط الأخبار بأمان دون التأثير على الصوت
 async function saveTicker() {
   const text = document.getElementById('tickerInput').value.trim();
-  await sb.from('channel_settings').upsert({ id: 'live_stream', ticker_text: text });
+  await sb.from('channel_settings').update({ ticker_text: text }).eq('id', 'live_stream');
   triggerToast();
 }
 
