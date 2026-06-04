@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>مكسر غيّر جوك TV</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<!-- استدعاء مكتبة Agora للبث الصوتي الفوري المباشر للمشاهدين -->
-<script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.18.0.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -189,7 +187,6 @@
           <input type="range" class="vertical" id="volSlider" min="0" max="100" value="100"
             oninput="onVolInput(this.value)" onchange="updateRemoteVolume(this.value)">
         </div>
-        <div class="fader-track">
         <div class="vol-display" id="volNum">100<small>%</small></div>
         <button class="mute-btn" id="muteBtn" onclick="toggleMute()">
           <i class="fa-solid fa-volume-xmark"></i> كتم
@@ -238,7 +235,7 @@
     <div id="mic-error" style="display:none; margin-top:10px; background:rgba(255,42,59,0.1); border:1px solid rgba(255,42,59,0.3); padding:10px; border-radius:6px; font-size:0.78rem; color:var(--red); text-align:center;"></div>
     <div style="margin-top:10px; font-size:0.72rem; color:var(--text-dim); text-align:center; display:flex; align-items:center; justify-content:center; gap:6px;">
       <i class="fa-solid fa-circle-info"></i>
-      المايك يشتغل فوري لايف للمشاهدين عبر سيرفر Agora الموحد
+      المايك يشتغل فوري من متصفحك — ما يحتاج برامج إضافية
     </div>
   </div>
 
@@ -275,7 +272,7 @@
 
 </div>
 
-<div class="toast" id="toast"><i class="fa-solid fa-check-circle"></i> <span id="toastMsg">تمت Mزامنة مع السيرفر!</span></div>
+<div class="toast" id="toast"><i class="fa-solid fa-check-circle"></i> <span id="toastMsg">تمت المزامنة مع السيرفر!</span></div>
 
 <script>
 // ─── Supabase ───────────────────────────────────────────────────────────────
@@ -353,12 +350,9 @@ function startVUIdle() {
 }
 startVUIdle();
 
-// ─── Agora Mic Config & Broadcasting ──────────────────────────────────────────
-const AGORA_APP_ID = 'Aa7e3be4fc9a40c3b43f0e47688977ce';
-const AGORA_CHANNEL = 'GyryokLiveVoice';
-
-let agoraClient = null;
-let localAudioTracks = {}; // لتخزين تراك كل مايك مستقل
+// ─── Mic ────────────────────────────────────────────────────────────────────
+let micStreams = {};
+let audioCtxs = {};
 
 async function toggleMic(n) {
   const btn = document.getElementById('mic' + n + '-btn');
@@ -367,26 +361,11 @@ async function toggleMic(n) {
   const icon = document.getElementById('mic' + n + '-icon');
   const errEl = document.getElementById('mic-error');
 
-  // إذا كان المايك شغال ونريد إطفاءه
-  if (localAudioTracks[n]) {
-    try {
-      if (agoraClient) {
-        // إلغاء النشر الفوري لهذا التراك من السيرفر
-        await agoraClient.unpublish([localAudioTracks[n]]);
-      }
-      localAudioTracks[n].stop();
-      localAudioTracks[n].close();
-      delete localAudioTracks[n];
-
-      // إذا كانت كل المايكات مغلقة، نغادر السيرفر الصوتي بالكامل لتوفير الطاقة
-      if (Object.keys(localAudioTracks).length === 0 && agoraClient) {
-        await agoraClient.leave();
-        agoraClient = null;
-      }
-    } catch (e) {
-      console.error("خطأ أثناء غلق ترك المايك المباشر:", e);
-    }
-    
+  if (micStreams[n]) {
+    // Stop mic
+    micStreams[n].getTracks().forEach(t => t.stop());
+    if (audioCtxs[n]) { audioCtxs[n].close(); delete audioCtxs[n]; }
+    delete micStreams[n];
     btn.className = 'mic-btn start';
     btn.innerHTML = `<i class="fa-solid fa-microphone"></i> تشغيل ${n === 2 ? 'مايك الضيف' : 'المايك'}`;
     status.className = 'mic-status off'; status.textContent = 'متوقف';
@@ -395,33 +374,20 @@ async function toggleMic(n) {
     errEl.style.display = 'none';
     toast('تم إيقاف المايك ' + n);
   } else {
-    // إذا كان المايك مطفأ ونريد تشغيله للبث المباشر
     try {
-      // 1. تشغيل العميل الموحد والاتصال بقناة البث الصوتي لأول مايك يفتح
-      if (!agoraClient) {
-        agoraClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
-        await agoraClient.setClientRole("host");
-        await agoraClient.join(AGORA_APP_ID, AGORA_CHANNEL, null, null);
-      }
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      micStreams[n] = stream;
 
-      // 2. التقاط صوت المايك من المتصفح بجودة عالية ستيريو
+      // Web Audio to control volume
+      const ctx = new AudioContext();
+      audioCtxs[n] = ctx;
+      const source = ctx.createMediaStreamSource(stream);
+      const gainNode = ctx.createGain();
       const volSlider = document.getElementById('mic' + n + '-vol');
-      const track = await AgoraRTC.createMicrophoneAudioTrack({
-        encoderConfig: "high_quality_stereo"
-      });
-      
-      localAudioTracks[n] = track;
-
-      // ضبط الصوت البدئي والتحكم اللحظي بحجم صوت المايك من السلايدر
-      track.setVolume(parseInt(volSlider.value));
-      volSlider.oninput = () => { 
-        if (localAudioTracks[n]) {
-          localAudioTracks[n].setVolume(parseInt(volSlider.value)); 
-        }
-      };
-
-      // 3. نشر ورفع الصوت فوراً إلى أجهزة المشاهدين المشتركين
-      await agoraClient.publish([track]);
+      gainNode.gain.value = parseInt(volSlider.value) / 100;
+      volSlider.oninput = () => { gainNode.gain.value = parseInt(volSlider.value) / 100; };
+      source.connect(gainNode);
+      gainNode.connect(ctx.destination);
 
       btn.className = 'mic-btn stop';
       btn.innerHTML = '<i class="fa-solid fa-microphone-slash"></i> إيقاف المايك';
@@ -430,10 +396,10 @@ async function toggleMic(n) {
       channel.classList.add('active');
       icon.innerHTML = '<i class="fa-solid fa-microphone" style="color:var(--green);"></i>';
       errEl.style.display = 'none';
-      toast('🎙️ المايك ' + n + ' شغال لايف — صوتك يوصل للكل!');
+      toast('🎙️ المايك ' + n + ' شغال — أنت على الهواء!');
     } catch (err) {
       errEl.style.display = 'block';
-      errEl.textContent = '⚠️ فشل تفعيل البث الصوتي المباشر: ' + (err.message || 'يرجى إعطاء صلاحية المايك للمتصفح.');
+      errEl.textContent = '⚠️ ما قدرنا نفتح المايك: ' + (err.message || 'تأكد إنك سمحت للمتصفح باستخدام المايك');
     }
   }
 }
