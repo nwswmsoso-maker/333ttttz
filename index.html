@@ -49,19 +49,19 @@ body { font-family: 'Tajawal', sans-serif; background: #06060c; color: #e1e1e6; 
   <div class="section-box" style="border-color: rgba(255, 71, 87, 0.4);">
     <div class="section-title" style="color:#ffbc4b;"><i class="fa-solid fa-bolt"></i> ميزة القطع والتشغيل الخاص (كِبل يشتغل فوري عند الكل)</div>
     <div style="display:flex; gap:8px;">
-      <input id="instantUrl" type="text" class="studio-input" placeholder="ضع رابط اليوتيوب لتشغيله كِبل فوري الآن...">
+      <input id="instantUrl" type="text" class="studio-input" placeholder="ضع رابط فيديو أو قائمة تشغيل للبث الفوري...">
       <button class="btn btn-danger" style="white-space:nowrap;" onclick="playInstant()">بث فوري 🔴</button>
     </div>
     <button class="btn btn-secondary" style="font-size:0.75rem; padding:6px;" onclick="cancelInstant()">إلغاء التشغيل الخاص والعودة للجدول التلقائي 🤖</button>
   </div>
 
   <div class="section-box">
-    <div class="section-title"><i class="fa-solid fa-list-ul"></i> إدارة قائمتك العراقية الكاملة (التشغيل المتتابع)</div>
+    <div class="section-title"><i class="fa-solid fa-list-ul"></i> إدارة قائمتك الكاملة (يقبل فيديوهات أو قوائم تشغيل)</div>
     <div style="display:flex; gap:8px; margin-bottom:5px;">
-      <input id="playlistUrl" type="text" class="studio-input" placeholder="ضع رابط الأغنية أو الألبوم...">
+      <input id="playlistUrl" type="text" class="studio-input" placeholder="ضع رابط الأغنية أو قائمة التشغيل الكاملة...">
       <button class="btn btn-success" style="white-space:nowrap;" onclick="addToRotation()">إضافة ➕</button>
     </div>
-    <small class="note">💡 حماية فائقة: اللوحة تنظف الرابط تلقائياً، والصفحة الرئيسية تتجاوز أي حظر بشكل آمن تماماً.</small>
+    <small class="note">💡 ميزة جديدة: يمكنك الآن وضع روابط قوائم التشغيل (Playlists) وسيتم قبولها فوراً والتعرف عليها.</small>
     
     <div style="margin-top: 12px; font-size: 0.78rem; color:#8a8a9e; font-weight:700;">روابط القائمة المضافة حالياً:</div>
     <div class="songs-list" id="rotationContainer">جاري قراءة القائمة...</div>
@@ -85,13 +85,18 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 const sb = window.supabase.createClient(SB_URL, SB_KEY);
 
 function extractYoutubeId(url) {
-  if (!url) return '';
+  if (!url) return null;
   url = url.trim();
-  if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
-  if(url.includes('/shorts/')) return url.split('/shorts/')[1].split(/[?#&]/)[0];
+  if (url.includes('list=')) {
+    const match = url.match(/[&?]list=([^#&?]+)/);
+    if (match && match[1]) return { id: match[1], type: 'playlist' };
+  }
+  if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return { id: url, type: 'video' };
+  if (url.includes('/shorts/')) return { id: url.split('/shorts/')[1].split(/[?#&]/)[0], type: 'video' };
+  
   const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch|\?vvi?=|\&vvi?=)(?:\?v=)?))([^#\&\?]*).*/;
   const match = url.match(regExp);
-  return (match && match[1] && match[1].trim().length === 11) ? match[1].trim() : '';
+  return (match && match[1] && match[1].trim().length === 11) ? { id: match[1].trim(), type: 'video' } : null;
 }
 
 async function loadStudio() {
@@ -113,11 +118,15 @@ async function updateRemoteVolume(val) {
 
 async function playInstant() {
   const input = document.getElementById('instantUrl');
-  const id = extractYoutubeId(input.value);
-  if(!id) return alert('رابط غير صحيح أو تالف!');
+  const res = extractYoutubeId(input.value);
+  if(!res) return alert('رابط غير صحيح أو تالف!');
+  
+  const cleanUrl = res.type === 'playlist' 
+    ? "https://www.youtube.com/playlist?list=" + res.id
+    : "https://www.youtube.com/watch?v=" + res.id;
   
   await sb.from('channel_settings').update({
-    override_url: "https://www.youtube.com/watch?v=" + id,
+    override_url: cleanUrl,
     override_start: Date.now()
   }).eq('id', 'live_stream');
   
@@ -132,11 +141,15 @@ async function cancelInstant() {
 
 async function addToRotation() {
   const input = document.getElementById('playlistUrl');
-  const id = extractYoutubeId(input.value);
-  if(!id) return alert('عذراً، هذا الرابط ليس رابط يوتيوب صحيح!');
+  const res = extractYoutubeId(input.value);
+  if(!res) return alert('عذراً، هذا الرابط ليس رابط يوتيوب (فيديو أو قائمة تشغيل) صحيح!');
 
-  const cleanUrl = "https://www.youtube.com/watch?v=" + id;
-  await sb.from('playlist').insert([{ title: 'أغنية عراقية معالجة', video_url: cleanUrl }]);
+  const cleanUrl = res.type === 'playlist' 
+    ? "https://www.youtube.com/playlist?list=" + res.id
+    : "https://www.youtube.com/watch?v=" + res.id;
+
+  const label = res.type === 'playlist' ? 'قائمة تشغيل معالجة' : 'أغنية عراقية معالجة';
+  await sb.from('playlist').insert([{ title: label, video_url: cleanUrl }]);
   input.value = '';
   triggerToast();
   fetchRotationList();
@@ -155,7 +168,7 @@ async function fetchRotationList() {
   songs.forEach((song, i) => {
     container.innerHTML += `
       <div class="song-row">
-        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:85%;">أغنية ${i+1}: ${song.video_url}</span>
+        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:85%; font-family:monospace;">[${song.title}] ${song.video_url}</span>
         <button onclick="deleteSong(${song.id})" style="background:none; border:none; color:#ff4757; cursor:pointer; padding:2px 5px;"><i class="fa-solid fa-trash"></i></button>
       </div>`;
   });
