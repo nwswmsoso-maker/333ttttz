@@ -3,178 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>غير جوك TV — البث المباشر</title>
+<title>لوحة تحكم البث — المكسر الذكي</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght=500;700;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #08080d; --panel: #0f0f18; --accent: #ff4757; --border: rgba(255, 255, 255, 0.06); --text: #f5f6fa;
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--text);
-  height: 100vh; display: flex; flex-direction: column; overflow: hidden;
-}
-.header {
-  background: var(--panel); border-bottom: 1px solid var(--border);
-  padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; height: 56px;
-}
-.logo { font-size: 1.3rem; font-weight: 900; color: #fff; }
-.logo span { color: var(--accent); }
-.live-badge {
-  background: rgba(255, 71, 87, 0.15); border: 1px solid var(--accent); color: var(--accent);
-  padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 6px;
-}
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+body { font-family: 'Tajawal', sans-serif; background: #06060c; color: #e1e1e6; padding: 20px; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.studio-panel { background: #0d0d18; border: 1px solid #ff4757; width: 100%; max-width: 600px; border-radius: 12px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
+.panel-title { text-align: center; color: #ff4757; font-weight: 900; font-size: 1.3rem; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
-.main-layout { flex: 1; display: flex; overflow: hidden; background: #000; }
-.player-container { flex: 3; display: flex; align-items: center; justify-content: center; background: #000; position: relative; }
-.screen-wrapper { width: 100%; aspect-ratio: 16/9; max-height: 100%; background: #000; position: relative; overflow: hidden; }
-#ytPlayer { width: 100%; height: 100%; border: none; transform: scale(1.01); }
-.click-blocker { position: absolute; inset: 0; z-index: 5; background: transparent; }
+.section-box { background: #131324; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 15px; margin-bottom: 18px; }
+.section-title { font-size: 0.9rem; color: #ff4757; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 6px; }
 
-.unmute-overlay {
-  position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: 15;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; cursor: pointer;
-}
-.unmute-btn {
-  background: var(--accent); color: #fff; border: none; width: 70px; height: 70px;
-  border-radius: 50%; font-size: 1.6rem; display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 30px var(--accent); animation: pulse 1.5s infinite;
-}
-@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+.mixer-container { display: flex; align-items: center; gap: 15px; background: #1a1a30; padding: 12px; border-radius: 8px; }
+.volume-slider { flex: 1; accent-color: #ff4757; cursor: pointer; height: 8px; }
 
-.embedded-ticker { position: absolute; bottom: 0; left: 0; right: 0; height: 45px; background: rgba(255, 71, 87, 0.9); backdrop-filter: blur(5px); color: #fff; display: flex; align-items: center; z-index: 10; overflow: hidden; }
-.ticker-tag { background: #b31020; height: 100%; padding: 0 16px; display: flex; align-items: center; font-weight: 900; font-size: 0.85rem; z-index: 12; white-space: nowrap; }
-.ticker-space { flex: 1; overflow: hidden; display: flex; align-items: center; }
-.ticker-move { display: inline-block; white-space: nowrap; padding-right: 100%; font-weight: 700; font-size: 1.05rem; animation: textRun 25s linear infinite; }
-@keyframes textRun { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(100%, 0, 0); } }
+.studio-input { width: 100%; padding: 12px; background: #1a1a30; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; color: #fff; font-family: inherit; font-size: 0.9rem; }
+.studio-input:focus { outline: none; border-color: #ff4757; }
 
-.youtube-chat-panel { flex: 1; min-width: 340px; max-width: 420px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-.chat-title { padding: 14px 16px; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 0.9rem; }
-.chat-body { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #0c0c14; }
-.yt-message { font-size: 0.88rem; display: flex; gap: 8px; margin-bottom: 4px; }
-.yt-author { font-weight: 700; color: #ffbc4b; }
-.yt-text { color: #e4e7eb; }
-.chat-inputs { padding: 14px; border-top: 1px solid var(--border); background: var(--panel); }
-.input-style { width: 100%; padding: 10px 12px; background: #161622; border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.88rem; margin-bottom: 8px; }
-.send-row { display: flex; justify-content: space-between; align-items: center; }
-.send-btn { background: var(--accent); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 700; cursor: pointer; }
+.btn { padding: 11px 18px; border: none; border-radius: 6px; font-weight: 700; font-size: 0.88rem; cursor: pointer; color: #fff; transition: background 0.2s; }
+.btn-danger { background: #ff4757; } .btn-danger:hover { background: #ff2a3b; }
+.btn-success { background: #2ed573; } .btn-success:hover { background: #22c15f; }
+.btn-secondary { background: #1e90ff; width: 100%; margin-top: 5px; }
 
-@media(max-width: 900px) { body { height: auto; overflow: auto; } .main-layout { flex-direction: column; } .youtube-chat-panel { max-width: 100%; min-width: 100%; height: 400px; } }
+.songs-list { max-height: 160px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.song-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 4px; font-size: 0.82rem; }
+.toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: #2ed573; color: #fff; padding: 10px 25px; border-radius: 6px; font-weight: 700; display: none; z-index: 100; }
+.note { font-size: 0.75rem; color: #ffbc4b; margin-top: 5px; display: block; }
 </style>
 </head>
 <body>
 
-<header class="header">
-  <div class="logo">غير جوك <span>TV</span></div>
-  <div>
-    <div class="live-badge"><i class="fa-solid fa-circle" style="font-size:7px; animation: blink 1.2s infinite; color:#fff;"></i> مباشر</div>
-  </div>
-</header>
-
-<div class="main-layout">
-  <div class="player-container">
-    <div class="screen-wrapper">
-      
-      <div class="unmute-overlay" id="unmuteOverlay" onclick="enableSound()">
-        <button class="unmute-btn"><i class="fa-solid fa-volume-high"></i></button>
-        <span style="font-weight:700; font-size:0.95rem;">اضغط لتشغيل الصوت والمزامنة 🔊</span>
-      </div>
-
-      <div class="click-blocker"></div>
-      <div id="ytPlayer"></div>
-
-      <div class="embedded-ticker">
-        <div class="ticker-tag"><i class="fa-solid fa-bullhorn"></i> شريط القناة</div>
-        <div class="ticker-space">
-          <div class="ticker-move" id="tickerText">أهلاً بكم في بث غيّر جوك TV المباشر...</div>
-        </div>
-      </div>
-
+<div class="studio-panel">
+  <div class="panel-title"><i class="fa-solid fa-sliders"></i> مكسر وجدول غيّر جوك TV المطور</div>
+  
+  <div class="section-box">
+    <div class="section-title"><i class="fa-solid fa-volume-high"></i> مكسر الصوت المباشر (التحكم في الصوت عند المشاهدين فوراً)</div>
+    <div class="mixer-container">
+      <i class="fa-solid fa-volume-low"></i>
+      <input type="range" id="volSlider" class="volume-slider" min="0" max="100" value="100" onchange="updateRemoteVolume(this.value)">
+      <span id="volNum" style="font-weight:700; font-family:monospace; width:35px;">100%</span>
     </div>
   </div>
 
-  <div class="youtube-chat-panel">
-    <div class="chat-title"><span><i class="fa-regular fa-comments" style="color:var(--accent)"></i> المحادثة المباشرة</span></div>
-    <div class="chat-body" id="chatBox"></div>
-    <div class="chat-inputs">
-      <input type="text" id="chatUser" class="input-style" placeholder="اسمك المستعار...">
-      <div class="send-row">
-        <input type="text" id="chatMsg" class="input-style" style="margin-bottom:0; width:75%;" placeholder="اكتب رسالة...">
-        <button class="send-btn" onclick="sendChat()"><i class="fa-solid fa-paper-plane"></i></button>
-      </div>
+  <div class="section-box" style="border-color: rgba(255, 71, 87, 0.4);">
+    <div class="section-title" style="color:#ffbc4b;"><i class="fa-solid fa-bolt"></i> ميزة القطع والتشغيل الخاص (كِبل يشتغل فوري عند الكل)</div>
+    <div style="display:flex; gap:8px;">
+      <input id="instantUrl" type="text" class="studio-input" placeholder="ضع رابط اليوتيوب لتشغيله كِبل فوري الآن...">
+      <button class="btn btn-danger" style="white-space:nowrap;" onclick="playInstant()">بث فوري 🔴</button>
+    </div>
+    <button class="btn btn-secondary" style="font-size:0.75rem; padding:6px;" onclick="cancelInstant()">إلغاء التشغيل الخاص والعودة للجدول التلقائي 🤖</button>
+  </div>
+
+  <div class="section-box">
+    <div class="section-title"><i class="fa-solid fa-list-ul"></i> إدارة قائمتك العراقية الكاملة (التشغيل المتتابع)</div>
+    <div style="display:flex; gap:8px; margin-bottom:5px;">
+      <input id="playlistUrl" type="text" class="studio-input" placeholder="ضع رابط الأغنية أو الألبوم...">
+      <button class="btn btn-success" style="white-space:nowrap;" onclick="addToRotation()">إضافة ➕</button>
+    </div>
+    <small class="note">💡 حماية فائقة: اللوحة تنظف الرابط تلقائياً، والصفحة الرئيسية تتجاوز أي حظر بشكل آمن تماماً.</small>
+    
+    <div style="margin-top: 12px; font-size: 0.78rem; color:#8a8a9e; font-weight:700;">روابط القائمة المضافة حالياً:</div>
+    <div class="songs-list" id="rotationContainer">جاري قراءة القائمة...</div>
+  </div>
+
+  <div class="section-box">
+    <div class="section-title"><i class="fa-solid fa-bullhorn"></i> كتابة نص شريط الأخبار السفلي</div>
+    <div style="display:flex; gap:8px;">
+      <input id="tickerInput" type="text" class="studio-input" placeholder="اكتب النص الجديد هنا لتحديث شريط المشاهدين...">
+      <button class="btn btn-danger" onclick="saveTicker()">تحديث الشريط 📢</button>
     </div>
   </div>
+
 </div>
 
-<script src="https://www.youtube.com/iframe_api"></script>
+<div class="toast" id="toast">تم الحفظ والمزامنة مع السيرفر! 📡</div>
+
 <script>
 const SB_URL = 'https://hvgtysuwzdtsgqjgsuhi.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2Z3R5c3V3emR0c2dxamdzdWhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NjgyNDIsImV4cCI6MjA5NjE0NDI0Mn0.YjlcTIO_uycIolB3N2dkw0U76iJ76G57uhwpuTavrSM';
 const sb = window.supabase.createClient(SB_URL, SB_KEY);
-
-let player, currentVideoId = '', isUnmuted = false, currentVolume = 100;
-let localIndexOffset = 0; 
-let lastSlot = -1;
-let watchdogTimer = null;
-const SONG_DURATION_MS = 4 * 60 * 1000;
-
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player('ytPlayer', {
-    playerVars: { 
-      'autoplay': 1, 'controls': 0, 'rel': 0, 'loop': 1, 
-      'modestbranding': 1, 'disablekb': 1, 'enablejsapi': 1,
-      'origin': window.location.origin 
-    },
-    events: { 
-      'onReady': () => { player.mute(); player.playVideo(); controlCenterLoop(); },
-      'onStateChange': onPlayerStateChange,
-      'onError': onPlayerError
-    }
-  });
-}
-
-function onPlayerStateChange(event) {
-  // إذا بدأ الفيديو بالعمل بنجاح، نلغي مؤقت الرقابة فوراً
-  if (event.data === YT.PlayerState.PLAYING) {
-    clearTimeout(watchdogTimer);
-  }
-}
-
-function startWatchdog() {
-  clearTimeout(watchdogTimer);
-  // إذا مرت 4 ثوانٍ والفيديو لم يشتغل (بقي معلقاً أو أسود)، نتخطاه فوراً
-  watchdogTimer = setTimeout(() => {
-    if (player && player.getPlayerState) {
-      const state = player.getPlayerState();
-      if (state === -1 || state === 3 || state === 5) {
-        console.warn("نظام الرقابة رصد فيديو معلق! جاري التخطّي التلقائي الحتمي...");
-        handleVideoFailure();
-      }
-    }
-  }, 4000);
-}
-
-function onPlayerError(event) {
-  console.warn("تم رصد خطأ في مشغل يوتيوب، الرمز:", event.data);
-  handleVideoFailure();
-}
-
-function handleVideoFailure() {
-  localIndexOffset++;
-  controlCenterLoop();
-}
-
-function enableSound() {
-  if(player && player.unMute) {
-    player.unMute(); isUnmuted = true;
-    player.setVolume(currentVolume);
-    document.getElementById('unmuteOverlay').style.opacity = '0';
-    setTimeout(()=> document.getElementById('unmuteOverlay').style.display = 'none', 300);
-  }
-}
 
 function extractYoutubeId(url) {
   if (!url) return '';
@@ -186,78 +94,91 @@ function extractYoutubeId(url) {
   return (match && match[1] && match[1].trim().length === 11) ? match[1].trim() : '';
 }
 
-async function controlCenterLoop() {
+async function loadStudio() {
   const { data: config } = await sb.from('channel_settings').select('*').eq('id', 'live_stream').single();
-  if(!config) return;
-
-  const t = document.getElementById('tickerText');
-  t.textContent = (config.ticker_text && config.ticker_text.trim() !== '') ? config.ticker_text : "أهلاً بكم في إذاعة غيّر جوك TV البث المباشر المستمر";
-
-  currentVolume = config.volume !== undefined ? config.volume : 100;
-  if(player && player.setVolume && isUnmuted) player.setVolume(currentVolume);
-
-  let targetUrl = '';
-  let startSeconds = 0;
-  const now = Date.now();
-
-  if (config.override_url && config.override_start && (now - config.override_start < SONG_DURATION_MS)) {
-    targetUrl = config.override_url;
-    startSeconds = Math.floor((now - config.override_start) / 1000);
-  } else {
-    const { data: songs } = await sb.from('playlist').select('*').order('id', { ascending: true });
-    if(songs && songs.length > 0) {
-      const currentSlot = Math.floor(now / SONG_DURATION_MS);
-      
-      // التطهير الذاتي: إذا انتقل الوقت لـ Slot جديد، نلغي التخطي المحلي ليعود البث متزامن تماماً للكل
-      if (currentSlot !== lastSlot) {
-        localIndexOffset = 0;
-        lastSlot = currentSlot;
-      }
-
-      const songIndex = (currentSlot + localIndexOffset) % songs.length;
-      targetUrl = songs[songIndex].video_url;
-      
-      // إذا تخطينا محلياً فيديو معطوب، نشغل البديل من البداية 0 لمنع انهيار يوتيوب بسبب فروق الوقت
-      if (localIndexOffset > 0) {
-        startSeconds = 0;
-      } else {
-        const slotStartTime = currentSlot * SONG_DURATION_MS;
-        startSeconds = Math.floor((now - slotStartTime) / 1000);
-      }
-    } else {
-      targetUrl = 'dQw4w9WgXcQ'; 
-    }
+  if(config) {
+    document.getElementById('tickerInput').value = config.ticker_text || '';
+    const vol = config.volume !== undefined ? config.volume : 100;
+    document.getElementById('volSlider').value = vol;
+    document.getElementById('volNum').textContent = vol + '%';
   }
-
-  const nId = extractYoutubeId(targetUrl);
-  if(player && player.loadVideoById && currentVideoId !== nId && nId) {
-    currentVideoId = nId;
-    player.loadVideoById({ videoId: nId, startSeconds: Math.max(0, startSeconds) });
-    startWatchdog(); // تشغيل الرقيب فوراً لحماية الشاشة من التجميد
-  }
+  fetchRotationList();
 }
 
-async function fetchLiveChat() {
-  const { data } = await sb.from('channel_chat').select('*').order('id', { ascending: false }).limit(30);
-  if(data) {
-    const box = document.getElementById('chatBox'); box.innerHTML = '';
-    data.reverse().forEach(m => {
-      box.innerHTML += `<div class="yt-message"><span class="yt-author">${m.username}:</span> <span class="yt-text">${m.message}</span></div>`;
-    });
-    box.scrollTop = box.scrollHeight;
+async function updateRemoteVolume(val) {
+  document.getElementById('volNum').textContent = val + '%';
+  await sb.from('channel_settings').update({ volume: parseInt(val) }).eq('id', 'live_stream');
+  triggerToast();
+}
+
+async function playInstant() {
+  const input = document.getElementById('instantUrl');
+  const id = extractYoutubeId(input.value);
+  if(!id) return alert('رابط غير صحيح أو تالف!');
+  
+  await sb.from('channel_settings').update({
+    override_url: "https://www.youtube.com/watch?v=" + id,
+    override_start: Date.now()
+  }).eq('id', 'live_stream');
+  
+  input.value = '';
+  triggerToast();
+}
+
+async function cancelInstant() {
+  await sb.from('channel_settings').update({ override_url: null, override_start: null }).eq('id', 'live_stream');
+  triggerToast();
+}
+
+async function addToRotation() {
+  const input = document.getElementById('playlistUrl');
+  const id = extractYoutubeId(input.value);
+  if(!id) return alert('عذراً، هذا الرابط ليس رابط يوتيوب صحيح!');
+
+  const cleanUrl = "https://www.youtube.com/watch?v=" + id;
+  await sb.from('playlist').insert([{ title: 'أغنية عراقية معالجة', video_url: cleanUrl }]);
+  input.value = '';
+  triggerToast();
+  fetchRotationList();
+}
+
+async function fetchRotationList() {
+  const { data: songs } = await sb.from('playlist').select('*').order('id', { ascending: true });
+  const container = document.getElementById('rotationContainer');
+  
+  if(!songs || songs.length === 0) {
+    container.innerHTML = '<div style="color:#8a8a9e; font-size:0.8rem; text-align:center; padding:10px;">القائمة فارغة حالياً.</div>';
+    return;
   }
+
+  container.innerHTML = '';
+  songs.forEach((song, i) => {
+    container.innerHTML += `
+      <div class="song-row">
+        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:85%;">أغنية ${i+1}: ${song.video_url}</span>
+        <button onclick="deleteSong(${song.id})" style="background:none; border:none; color:#ff4757; cursor:pointer; padding:2px 5px;"><i class="fa-solid fa-trash"></i></button>
+      </div>`;
+  });
 }
 
-async function sendChat() {
-  const u = document.getElementById('chatUser').value.trim();
-  const m = document.getElementById('chatMsg');
-  if(!u || !m.value.trim()) return;
-  await sb.from('channel_chat').insert([{ username: u, message: m.value.trim() }]);
-  m.value = ''; fetchLiveChat();
+async function deleteSong(id) {
+  await sb.from('playlist').delete().eq('id', id);
+  triggerToast();
+  fetchRotationList();
 }
 
-setInterval(() => { controlCenterLoop(); fetchLiveChat(); }, 2500);
-fetchLiveChat();
+async function saveTicker() {
+  const text = document.getElementById('tickerInput').value.trim();
+  await sb.from('channel_settings').update({ ticker_text: text }).eq('id', 'live_stream');
+  triggerToast();
+}
+
+function triggerToast() {
+  const toast = document.getElementById('toast'); toast.style.display = 'block';
+  setTimeout(()=> toast.style.display = 'none', 1500);
+}
+
+loadStudio();
 </script>
 </body>
 </html>
