@@ -39,7 +39,7 @@ body { font-family: 'Tajawal', sans-serif; background: #06060c; color: #e1e1e6; 
   
   <!-- القسم 1: مكسر الصوت العام عن بعد -->
   <div class="section-box">
-    <div class="section-title"><i class="fa-solid fa-volume-high"></i> مكسر الصوت المباشر (تعلية وتنصية الصوت عند الزوار فوراً)</div>
+    <div class="section-title"><i class="fa-solid fa-volume-high"></i> مكسر الصوت المباشر (التحكم في الصوت عند المشاهدين فوراً)</div>
     <div class="mixer-container">
       <i class="fa-solid fa-volume-low"></i>
       <input type="range" id="volSlider" class="volume-slider" min="0" max="100" value="100" onchange="updateRemoteVolume(this.value)">
@@ -61,10 +61,10 @@ body { font-family: 'Tajawal', sans-serif; background: #06060c; color: #e1e1e6; 
   <div class="section-box">
     <div class="section-title"><i class="fa-solid fa-list-ul"></i> إدارة قائمتك العراقية الكاملة (التشغيل المتتابع)</div>
     <div style="display:flex; gap:8px; margin-bottom:5px;">
-      <input id="playlistUrl" type="text" class="studio-input" placeholder="ضع رابط الأغنية العراقية (يوتيوب، موبايل، شورتس)...">
+      <input id="playlistUrl" type="text" class="studio-input" placeholder="ضع رابط الأغنية العراقية...">
       <button class="btn btn-success" style="white-space:nowrap;" onclick="addToRotation()">إضافة ➕</button>
     </div>
-    <small class="note">⚠️ ملاحظة: إذا ظهر فيديو "غير متوفر"، تأكد أن القناة الأصلية للأغنية لا تحظر التضمين الخارجي.</small>
+    <small class="note">💡 ميزة ذكية: إذا كانت الأغنية محظورة التضمين من قِبل شركتها، سيقوم الموقع بتخطيتها تلقائياً عند المشاهدين.</small>
     
     <div style="margin-top: 12px; font-size: 0.78rem; color:#8a8a9e; font-weight:700;">روابط القائمة المضافة حالياً:</div>
     <div class="songs-list" id="rotationContainer">جاري قراءة القائمة...</div>
@@ -74,7 +74,7 @@ body { font-family: 'Tajawal', sans-serif; background: #06060c; color: #e1e1e6; 
   <div class="section-box">
     <div class="section-title"><i class="fa-solid fa-bullhorn"></i> كتابة نص شريط الأخبار السفلي</div>
     <div style="display:flex; gap:8px;">
-      <input id="tickerInput" type="text" class="studio-input" placeholder="اكتب النص الجديد هنا للتحديث...">
+      <input id="tickerInput" type="text" class="studio-input" placeholder="اكتب النص الجديد هنا لتحديث شريط المشاهدين...">
       <button class="btn btn-danger" onclick="saveTicker()">تحديث الشريط 📢</button>
     </div>
   </div>
@@ -99,14 +99,12 @@ async function loadStudio() {
   fetchRotationList();
 }
 
-// تحديث المكسر الآمن بـ update لكي لا يمسح نص الشريط
 async function updateRemoteVolume(val) {
   document.getElementById('volNum').textContent = val + '%';
   await sb.from('channel_settings').update({ volume: parseInt(val) }).eq('id', 'live_stream');
   triggerToast();
 }
 
-// تشغيل فوري كبل
 async function playInstant() {
   const input = document.getElementById('instantUrl');
   const url = input.value.trim();
@@ -126,7 +124,6 @@ async function cancelInstant() {
   triggerToast();
 }
 
-// إضافة الأغاني العراقية
 async function addToRotation() {
   const input = document.getElementById('playlistUrl');
   const url = input.value.trim();
@@ -163,7 +160,6 @@ async function deleteSong(id) {
   fetchRotationList();
 }
 
-// تحديث نص شريط الأخبار بأمان دون التأثير على الصوت
 async function saveTicker() {
   const text = document.getElementById('tickerInput').value.trim();
   await sb.from('channel_settings').update({ ticker_text: text }).eq('id', 'live_stream');
