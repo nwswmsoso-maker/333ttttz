@@ -3,202 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>غرفة التحكم والـ MCR الرئيسية — غير جوك TV</title>
+<title>لوحة التحكم الإذاعية — إدارة البث والمكسر</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
-body {
-  font-family: 'Tajawal', sans-serif; background: #050508; color: #e1e1e6; padding: 20px; min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-}
-.mcr-station {
-  background: #0b0b12; border: 2px solid #ff4757; width: 100%; max-width: 650px;
-  border-radius: 16px; padding: 25px; box-shadow: 0 25px 60px rgba(0,0,0,0.8);
-}
-.mcr-header {
-  text-align: center; color: #ff4757; font-weight: 900; font-size: 1.5rem; margin-bottom: 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;
-}
-.input-block { margin-bottom: 15px; }
-label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: #8a8a9e; font-weight: 700; }
-.mcr-input {
-  width: 100%; padding: 12px; background: #12121f; border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 8px; color: #fff; font-family: inherit; font-size: 0.9rem;
-}
-.mcr-input:focus { outline: none; border-color: #ff4757; }
+body { font-family: 'Tajawal', sans-serif; background: #06060c; color: #e1e1e6; padding: 20px; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.studio-panel { background: #0d0d18; border: 1px solid #ff4757; width: 100%; max-width: 600px; border-radius: 12px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); }
+.panel-title { text-align: center; color: #ff4757; font-weight: 900; font-size: 1.3rem; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
-.btn {
-  padding: 10px 18px; border: none; border-radius: 6px; font-weight: 700; font-size: 0.9rem;
-  cursor: pointer; transition: all 0.2s; color: #fff;
-}
-.btn-accent { background: #ff4757; }
-.btn-accent:hover { background: #ff2a3b; }
-.btn-magic { background: #2ed573; box-shadow: 0 0 15px rgba(46, 213, 115, 0.3); }
-.btn-magic:hover { background: #26af5f; }
-.btn-live { background: #eccc68; color: #12121f; font-size: 0.8rem; padding: 6px 12px; }
-.btn-live:hover { background: #ffa502; }
-.btn-back-auto { background: #1e90ff; display: block; width: 100%; margin-top: 10px; padding: 12px; }
+/* ستايل أقسام ميكسر الصوت */
+.section-box { background: #131324; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 15px; margin-bottom: 18px; }
+.section-title { font-size: 0.9rem; color: #ff4757; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 6px; }
 
-.library-box {
-  background: #12121f; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px;
-  padding: 10px; max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
-}
-.song-row {
-  display: flex; justify-content: space-between; align-items: center;
-  background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: 6px; border-left: 3px solid #57606f;
-}
-.song-row.playing-now { border-left-color: #ff4757; background: rgba(255, 71, 87, 0.05); }
+.mixer-container { display: flex; align-items: center; gap: 15px; background: #1a1a30; padding: 12px; border-radius: 8px; }
+.volume-slider { flex: 1; accent-color: #ff4757; cursor: pointer; height: 8px; }
 
-.status-toast {
-  position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #2ecc71;
-  color: #fff; padding: 12px 30px; border-radius: 8px; font-weight: 700; display: none; z-index: 99;
-}
+.studio-input { width: 100%; padding: 12px; background: #1a1a30; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; color: #fff; font-family: inherit; font-size: 0.9rem; }
+.studio-input:focus { outline: none; border-color: #ff4757; }
+
+.btn { padding: 11px 18px; border: none; border-radius: 6px; font-weight: 700; font-size: 0.88rem; cursor: pointer; color: #fff; transition: background 0.2s; }
+.btn-danger { background: #ff4757; } .btn-danger:hover { background: #ff2a3b; }
+.btn-success { background: #2ed573; } .btn-success:hover { background: #22c15f; }
+.btn-secondary { background: #1e90ff; width: 100%; margin-top: 5px; }
+
+.songs-list { max-height: 160px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.song-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 4px; font-size: 0.82rem; }
+.toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: #2ed573; color: #fff; padding: 10px 25px; border-radius: 6px; font-weight: 700; display: none; }
 </style>
 </head>
 <body>
 
-<div class="mcr-station">
-  <div class="mcr-header"><i class="fa-solid fa-tower-broadcast"></i> لوحة التحكم الاحترافية والقطع الفوري</div>
+<div class="studio-panel">
+  <div class="panel-title"><i class="fa-solid fa-sliders"></i> غرفة تحكم ومكسر غيّر جوك TV</div>
   
-  <!-- التحكم بشريط الأخبار -->
-  <div class="input-block">
-    <label>نص شريط الأخبار المتحرك</label>
-    <div style="display:flex; gap:10px;">
-      <input id="tickerInput" type="text" class="mcr-input" placeholder="اكتب شريط الأخبار هنا...">
-      <button class="btn btn-accent" onclick="saveTicker()">تحديث 📢</button>
+  <!-- القسم 1: مكسر الصوت العام عن بعد -->
+  <div class="section-box">
+    <div class="section-title"><i class="fa-solid fa-volume-high"></i> مكسر الصوت المباشر (التحكم عن بعد عند كل المشاهدين)</div>
+    <div class="mixer-container">
+      <i class="fa-solid fa-volume-xmark" style="color:#8a8a9e"></i>
+      <input type="range" id="volSlider" class="volume-slider" min="0" max="100" value="100" onchange="updateRemoteVolume(this.value)">
+      <span id="volNum" style="font-weight:700; font-family:monospace; width:30px;">100%</span>
     </div>
   </div>
 
-  <hr style="border:0; border-top:1px solid rgba(255,255,255,0.05); margin:15px 0;">
-
-  <!-- إضافة الأغاني والميزة السحرية التلقائية -->
-  <div class="input-block">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-      <label style="margin-bottom:0;">إضافة أغنية يدوية للمكتبة</label>
-      <button class="btn btn-magic" style="padding:4px 10px; font-size:0.75rem;" onclick="injectDefaultPlaylist()">⚡ شحن المكتبة بأغاني مقترحة تلقائياً</button>
+  <!-- القسم 2: تشغيل شيء خاص (كبل يشتغل فوراً) -->
+  <div class="section-box" style="border-color: rgba(255, 71, 87, 0.4);">
+    <div class="section-title" style="color:#ffbc4b;"><i class="fa-solid fa-bolt"></i> ميزة التشغيل الخاص المباشر (كبل واونلاين فوري)</div>
+    <div style="display:flex; gap:8px;">
+      <input id="instantUrl" type="text" class="studio-input" placeholder="ضع رابط أغنية اليوتيوب الخاصة هنا المُراد تشغيلها فوراً...">
+      <button class="btn btn-danger" style="white-space:nowrap;" onclick="playInstant()">بث فوري كِبل 🔴</button>
     </div>
-    <div style="display:flex; gap:10px; margin-bottom:8px;">
-      <input id="songTitle" type="text" class="mcr-input" style="width:40%;" placeholder="اسم الأغنية / الفنان">
-      <input id="songUrl" type="text" class="mcr-input" style="width:60%;" placeholder="رابط اليوتيوب">
-    </div>
-    <button class="btn btn-accent" style="width:100%; padding:8px;" onclick="addSong()">حفظ الأغنية في المكتبة المجدولة ➕</button>
+    <button class="btn btn-secondary" style="font-size:0.75rem; padding:5px;" onclick="cancelInstant()">إيقاف التشغيل الخاص والعودة للقائمة التلقائية 🤖</button>
   </div>
 
-  <!-- مكتبة الأغاني والتحكم على الهواء -->
-  <div class="input-block">
-    <label>مكتبة القناة الذكية والأزرار الفورية للأدمن (<span id="count">0</span>)</label>
-    <div class="library-box" id="libraryContainer">جاري تحميل الأغاني الحالية...</div>
+  <!-- القسم 3: بناء وتغذية القائمة العراقية التلقائية -->
+  <div class="section-box">
+    <div class="section-title"><i class="fa-solid fa-list-ul"></i> إدارة قائمتك العراقية التلقائية (الأوتو بايلوت الدائري)</div>
+    <div style="display:flex; gap:8px; margin-bottom:10px;">
+      <input id="playlistUrl" type="text" class="studio-input" placeholder="ضع رابط الأغنية العراقية لإضافتها للقائمة الدائرية...">
+      <button class="btn btn-success" style="white-space:nowrap;" onclick="addToRotation()">إضافة للقائمة ➕</button>
+    </div>
+    
+    <span style="font-size:0.75rem; color:#8a8a9e; font-weight:700;">الأغاني الحالية في الدوران التلقائي:</span>
+    <div class="songs-list" id="rotationContainer">جاري تحميل قائمتك...</div>
   </div>
 
-  <!-- إعادة البث للوضع التلقائي في أي وقت -->
-  <button class="btn btn-back-auto" onclick="resetToAuto()"><i class="fa-solid fa-robot"></i> إنهاء أي قطع يدوي وإرجاع القناة للوضع التلقائي الفوري</button>
+  <!-- القسم 4: شريط الأخبار -->
+  <div class="section-box">
+    <div class="section-title"><i class="fa-solid fa-bullhorn"></i> شريط الأخبار السفلي</div>
+    <div style="display:flex; gap:8px;">
+      <input id="tickerInput" type="text" class="studio-input" placeholder="اكتب نص شريط الأخبار...">
+      <button class="btn btn-danger" onclick="saveTicker()">تحديث 📢</button>
+    </div>
+  </div>
 
 </div>
 
-<div class="status-toast" id="toast">تم بث التحديث للإشارة بنجاح! 📡</div>
+<div class="toast" id="toast">تمت المزامنة بنجاح! 📡</div>
 
 <script>
 const SB_URL = 'https://hvgtysuwzdtsgqjgsuhi.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2Z3R5c3V3emR0c2dxamdzdWhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NjgyNDIsImV4cCI6Mjا5NjE0NDI0Mn0.YjlcTIO_uycIolB3N2dkw0U76iJ76G57uhwpuTavrSM';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2Z3R5c3V3emR0c2dxamdzdWhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NjgyNDIsImV4cCI6MjA5NjE0NDI0Mn0.YjlcTIO_uycIolB3N2dkw0U76iJ76G57uhwpuTavrSM';
 const sb = window.supabase.createClient(SB_URL, SB_KEY);
 
-async function init() {
+async function loadStudio() {
   const { data: config } = await sb.from('channel_settings').select('*').eq('id', 'live_stream').single();
-  if(config) document.getElementById('tickerInput').value = config.ticker_text;
-  fetchPlaylist();
-}
-
-async function fetchPlaylist() {
-  const { data: songs } = await sb.from('playlist').select('*').order('id', { ascending: true });
-  const container = document.getElementById('libraryContainer');
-  document.getElementById('count').textContent = songs ? songs.length : 0;
-
-  if(!songs || songs.length === 0) {
-    container.innerHTML = '<div style="color:#8a8a9e; text-align:center; padding:20px;">المكتبة فارغة! اضغط على زر "شحن المكتبة تلقائياً" بالرأس لملء القناة فوراً.</div>';
-    return;
+  if(config) {
+    document.getElementById('tickerInput').value = config.ticker_text || '';
+    const vol = config.volume !== undefined ? config.volume : 100;
+    document.getElementById('volSlider').value = vol;
+    document.getElementById('volNum').textContent = vol + '%';
   }
-
-  container.innerHTML = '';
-  songs.forEach((song) => {
-    container.innerHTML += `
-      <div class="song-row">
-        <span style="font-weight:700; font-size:0.85rem; max-width:60%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">🎵 ${escapeHtml(song.title)}</span>
-        <div style="display:flex; gap:6px;">
-          <button class="btn btn-live" onclick="goLiveNow('${song.video_url}')"><i class="fa-solid fa-play"></i> بث الآن فوراً 🔴</button>
-          <button class="btn" style="background:#b31020; padding:4px 8px; font-size:0.8rem;" onclick="deleteSong(${song.id})"><i class="fa-solid fa-trash"></i></button>
-        </div>
-      </div>`;
-  });
+  fetchRotationList();
 }
 
-// ميزة شحن القناة بأغاني تلقائية بدون كسب الروابط يدوياً للتجربة والتشغيل الفوري
-async function injectDefaultPlaylist() {
-  if(confirm('هل تريد شحن القناة تلقائياً بـ 5 أغاني مشهورة ومنوعة لتشغيل الأوتو بايلوت فوراً؟')) {
-    const defaultSongs = [
-      { title: "ماجد المهندس - هتان", video_url: "https://www.youtube.com/watch?v=Xp0N1hCsh6A" },
-      { title: "رحمة رياض - الكوكب", video_url: "https://www.youtube.com/watch?v=R9reV20_C3A" },
-      { title: "سيف نبيل - ممكن", video_url: "https://www.youtube.com/watch?v=I673fNsk_8w" },
-      { title: "حسين الجسمي - بالبنط العريض", video_url: "https://www.youtube.com/watch?v=5V9zYHezM34" },
-      { title: "أصيل هميم - سر الحياة", video_url: "https://www.youtube.com/watch?v=8Vco_Xf4GNo" }
-    ];
-    await sb.from('playlist').insert(defaultSongs);
-    showToast();
-    fetchPlaylist();
-  }
+// دالة تحديث مكسر الصوت عن بعد
+async function updateRemoteVolume(val) {
+  document.getElementById('volNum').textContent = val + '%';
+  await sb.from('channel_settings').upsert({ id: 'live_stream', volume: parseInt(val) });
+  triggerToast();
 }
 
-async function addSong() {
-  const tInput = document.getElementById('songTitle');
-  const uInput = document.getElementById('songUrl');
-  if(!tInput.value.trim() || !uInput.value.trim()) return alert('الرجاء كتابة اسم الأغنية والرابط!');
-
-  await sb.from('playlist').insert([{ title: tInput.value.trim(), video_url: uInput.value.trim() }]);
-  tInput.value = ''; uInput.value = '';
-  showToast(); fetchPlaylist();
-}
-
-// الزر السحري: قطع البث عند الجميع وتشغيل هذه الأغنية فوراً في نفس الثانية
-async function goLiveNow(url) {
+// دالة تشغيل كبل فوري
+async function playInstant() {
+  const input = document.getElementById('instantUrl');
+  const url = input.value.trim();
+  if(!url) return alert('ضع رابط أولاً!');
+  
   await sb.from('channel_settings').upsert({
     id: 'live_stream',
     override_url: url,
     override_start: Date.now()
   });
-  showToast();
+  input.value = '';
+  triggerToast();
 }
 
-// إعادة القناة للوضع التلقائي المجدول
-async function resetToAuto() {
-  await sb.from('channel_settings').upsert({
-    id: 'live_stream',
-    override_url: null,
-    override_start: null
+async function cancelInstant() {
+  await sb.from('channel_settings').upsert({ id: 'live_stream', override_url: null, override_start: null });
+  triggerToast();
+}
+
+// إضافة أغانيك العراقية إلى مصفوفة التدوير التلقائي
+async function addToRotation() {
+  const input = document.getElementById('playlistUrl');
+  const url = input.value.trim();
+  if(!url) return alert('يرجى وضع رابط!');
+
+  await sb.from('playlist').insert([{ title: 'أغنية عراقية مضافة', video_url: url }]);
+  input.value = '';
+  triggerToast();
+  fetchRotationList();
+}
+
+async function fetchRotationList() {
+  const { data: songs } = await sb.from('playlist').select('*').order('id', { ascending: true });
+  const container = document.getElementById('rotationContainer');
+  
+  if(!songs || songs.length === 0) {
+    container.innerHTML = '<div style="color:#8a8a9e; font-size:0.8rem; text-align:center;">القائمة فارغة تماماً. ضع روابط أغانيك العراقية المفضلة بالأعلى لتشغيل التلقائي!</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+  songs.forEach((song, i) => {
+    container.innerHTML += `
+      <div class="song-row">
+        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:80%;">السلوت ${i+1}: ${song.video_url}</span>
+        <button onclick="deleteSong(${song.id})" style="background:none; border:none; color:#ff4757; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+      </div>`;
   });
-  showToast();
-}
-
-async function saveTicker() {
-  const t = document.getElementById('tickerInput').value.trim();
-  await sb.from('channel_settings').upsert({ id: 'live_stream', ticker_text: t });
-  showToast();
 }
 
 async function deleteSong(id) {
-  if(confirm('حذف الأغنية؟')) {
-    await sb.from('playlist').delete().eq('id', id);
-    showToast(); fetchPlaylist();
-  }
+  await sb.from('playlist').delete().eq('id', id);
+  triggerToast();
+  fetchRotationList();
 }
 
-function showToast() {
+async function saveTicker() {
+  const text = document.getElementById('tickerInput').value.trim();
+  await sb.from('channel_settings').upsert({ id: 'live_stream', ticker_text: text });
+  triggerToast();
+}
+
+function triggerToast() {
   const toast = document.getElementById('toast'); toast.style.display = 'block';
-  setTimeout(()=> toast.style.display = 'none', 2000);
+  setTimeout(()=> toast.style.display = 'none', 1500);
 }
 
-function escapeHtml(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
-
-init();
+loadStudio();
 </script>
 </body>
 </html>
