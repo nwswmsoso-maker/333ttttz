@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>غرفة الإدارة الرئيسية — غير جوك TV</title>
+<title>غرفة الإدارة الرئيسية — إدارة البث التلقائي</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght=500;700;900&display=swap" rel="stylesheet">
 <style>
 body {
   font-family: 'Tajawal', sans-serif; background: #06060a; color: #e1e1e6;
   min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
 }
 .admin-station {
-  background: #0f0f18; border: 1px solid rgba(255, 71, 87, 0.3); width: 100%; max-width: 520px;
-  border-radius: 16px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(255, 71, 87, 0.05);
+  background: #0f0f18; border: 1px solid rgba(255, 71, 87, 0.3); width: 100%; max-width: 550px;
+  border-radius: 16px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
 }
 .station-title {
   text-align: center; color: #ff4757; font-weight: 900; font-size: 1.4rem; margin-bottom: 25px;
@@ -26,38 +26,58 @@ label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: #8a8a9e; 
   width: 100%; padding: 14px; background: #161622; border: 1px solid rgba(255,255,255,0.08);
   border-radius: 10px; color: #fff; font-family: inherit; font-size: 0.95rem; transition: all 0.2s;
 }
-.admin-input:focus { outline: none; border-color: #ff4757; box-shadow: 0 0 10px rgba(255, 71, 87, 0.2); }
+.admin-input:focus { outline: none; border-color: #ff4757; }
 .push-btn {
   width: 100%; padding: 14px; background: #ff4757; color: #fff; border: none; border-radius: 10px;
   font-weight: 700; font-size: 1rem; cursor: pointer; transition: background 0.2s; margin-top: 10px;
 }
 .push-btn:hover { background: #ff2a3b; }
+.songs-list {
+  background: #161622; border-radius: 10px; padding: 10px; max-height: 200px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 8px; margin-top: 8px;
+}
+.song-item {
+  display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03);
+  padding: 8px 12px; border-radius: 6px; font-size: 0.85rem;
+}
+.del-btn { background: none; border: none; color: #ff4757; cursor: pointer; font-size: 1rem; }
 .status-toast {
   position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #2ecc71;
-  color: #fff; padding: 12px 30px; border-radius: 8px; font-weight: 700; font-size: 0.9rem;
-  display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.4); z-index: 99;
+  color: #fff; padding: 12px 30px; border-radius: 8px; font-weight: 700; display: none; z-index: 99;
 }
 </style>
 </head>
 <body>
 
 <div class="admin-station">
-  <div class="station-title"><i class="fa-solid fa-satellite-dish"></i> لوحة البث المباشر والأخبار</div>
+  <div class="station-title"><i class="fa-solid fa-satellite-dish"></i> لوحة تحكم البث التلقائي ذكي</div>
   
+  <!-- إدارة شريط الأخبار -->
   <div class="input-block">
-    <label>نص شريط عاجل / الأخبار (يظهر أسفل الفيديو)</label>
-    <textarea id="tickerInput" class="admin-input" rows="3" placeholder="أهلاً بكم في قناة غير جوك للأغاني..."></textarea>
+    <label>نص شريط عاجل / الأخبار</label>
+    <textarea id="tickerInput" class="admin-input" rows="2" placeholder="أهلاً بكم في قناة غير جوك..."></textarea>
+    <button class="push-btn" style="padding:8px; font-size:0.85rem;" onclick="saveTicker()">تحديث شريط الأخبار فقط 📢</button>
   </div>
 
+  <hr style="border:0; border-top:1px solid rgba(255,255,255,0.05); margin:20px 0;">
+
+  <!-- إضافة أغنية -->
   <div class="input-block">
-    <label>رابط فيديو أو أغنية اليوتيوب الحالية</label>
-    <input type="text" id="videoInput" class="admin-input" placeholder="https://www.youtube.com/watch?v=...">
+    <label>إضافة أغنية جديدة لجدول البث التلقائي</label>
+    <div style="display: flex; gap: 10px;">
+      <input type="text" id="videoInput" class="admin-input" placeholder="ضع رابط اليوتيوب هنا...">
+      <button class="push-btn" style="margin-top:0; width:100px;" onclick="addSong()">إضافة ➕</button>
+    </div>
   </div>
 
-  <button class="push-btn" id="btnSave" onclick="pushToBroadcast()">تحديث البث على الهواء فوراً 🚀</button>
+  <!-- عرض الأغاني الحالية وطريقة حذفها -->
+  <div class="input-block">
+    <label>قائمة الأغاني الحالية في البث التلقائي (<span id="count">0</span>)</label>
+    <div class="songs-list" id="songsContainer">جاري تحميل الأغاني الحالية...</div>
+  </div>
 </div>
 
-<div class="status-toast" id="toast">تم بث التحديث إلى القناة بنجاح! 📡</div>
+<div class="status-toast" id="toast">تم الإجراء بنجاح! 📡</div>
 
 <script>
 const SB_URL = 'https://hvgtysuwzdtsgqjgsuhi.supabase.co';
@@ -65,31 +85,65 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 const sb = window.supabase.createClient(SB_URL, SB_KEY);
 
 async function loadData() {
-  const { data } = await sb.from('channel_settings').select('*').eq('id', 'live_stream').single();
-  if(data) {
-    document.getElementById('tickerInput').value = data.ticker_text;
-    document.getElementById('videoInput').value = data.video_url;
+  // جلب شريط الأخبار
+  const { data: config } = await sb.from('channel_settings').select('*').eq('id', 'live_stream').single();
+  if(config) {
+    document.getElementById('tickerInput').value = config.ticker_text;
+  }
+  // جلب قائمة الأغاني
+  fetchPlaylist();
+}
+
+async function fetchPlaylist() {
+  const { data: songs } = await sb.from('playlist').select('*').order('id', { ascending: true });
+  const container = document.getElementById('songsContainer');
+  document.getElementById('count').textContent = songs ? songs.length : 0;
+  
+  if(!songs || songs.length === 0) {
+    container.innerHTML = '<div style="color:#8a8a9e; text-align:center; padding:10px;">لا توجد أغاني في القائمة حالياً. أضف بعض الأغاني!</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+  songs.forEach((song, idx) => {
+    container.innerHTML += `
+      <div class="song-item">
+        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:85%;">أغنية رقم ${idx + 1}: ${song.video_url}</span>
+        <button class="del-btn" onclick="deleteSong(${song.id})"><i class="fa-solid fa-trash"></i></button>
+      </div>`;
+  });
+}
+
+async function saveTicker() {
+  const t = document.getElementById('tickerInput').value.trim();
+  if(!t) return alert('يرجى كتابة نص للشريط!');
+  await sb.from('channel_settings').upsert({ id: 'live_stream', ticker_text: t });
+  showToast();
+}
+
+async function addSong() {
+  const urlInput = document.getElementById('videoInput');
+  const url = urlInput.value.trim();
+  if(!url) return alert('يرجى وضع رابط صالح!');
+  
+  await sb.from('playlist').insert([{ video_url: url }]);
+  urlInput.value = '';
+  showToast();
+  fetchPlaylist();
+}
+
+async function deleteSong(id) {
+  if(confirm('هل أنت متأكد من حذف هذه الأغنية من التلقائي؟')) {
+    await sb.from('playlist').delete().eq('id', id);
+    showToast();
+    fetchPlaylist();
   }
 }
 
-async function pushToBroadcast() {
-  const t = document.getElementById('tickerInput').value.trim();
-  const v = document.getElementById('videoInput').value.trim();
-  const b = document.getElementById('btnSave');
-
-  if(!t || !v) { alert('يرجى ملء جميع الحقول!'); return; }
-  b.disabled = true; b.textContent = 'جاري إرسال الإشارة...';
-
-  const { error } = await sb.from('channel_settings').upsert({ id: 'live_stream', ticker_text: t, video_url: v });
-  b.disabled = false; b.textContent = 'تحديث البث على الهواء فوراً 🚀';
-
-  if(!error) {
-    const toast = document.getElementById('toast');
-    toast.style.display = 'block';
-    setTimeout(()=> toast.style.display = 'none', 3000);
-  } else {
-    alert('حدث خطأ أثناء التحديث: ' + error.message);
-  }
+function showToast() {
+  const toast = document.getElementById('toast');
+  toast.style.display = 'block';
+  setTimeout(()=> toast.style.display = 'none', 2000);
 }
 
 loadData();
