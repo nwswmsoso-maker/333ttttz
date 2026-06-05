@@ -363,4 +363,144 @@ async function toggleMic(n) {
 
   if (micStreams[n]) {
     // Stop mic
-    micStreams
+    micStreams[n].getTracks().forEach(t => t.stop());
+    if (audioCtxs[n]) { audioCtxs[n].close(); delete audioCtxs[n]; }
+    delete micStreams[n];
+    btn.className = 'mic-btn start';
+    btn.innerHTML = `<i class="fa-solid fa-microphone"></i> تشغيل ${n === 2 ? 'مايك الضيف' : 'المايك'}`;
+    status.className = 'mic-status off'; status.textContent = 'متوقف';
+    channel.classList.remove('active');
+    icon.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+    errEl.style.display = 'none';
+    toast('تم إيقاف المايك ' + n);
+  } else {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      micStreams[n] = stream;
+
+      // Web Audio to control volume
+      const ctx = new AudioContext();
+      audioCtxs[n] = ctx;
+      const source = ctx.createMediaStreamSource(stream);
+      const gainNode = ctx.createGain();
+      const volSlider = document.getElementById('mic' + n + '-vol');
+      gainNode.gain.value = parseInt(volSlider.value) / 100;
+      volSlider.oninput = () => { gainNode.gain.value = parseInt(volSlider.value) / 100; };
+      source.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      btn.className = 'mic-btn stop';
+      btn.innerHTML = '<i class="fa-solid fa-microphone-slash"></i> إيقاف المايك';
+      status.className = 'mic-status live';
+      status.innerHTML = '<div class="wave"><span></span><span></span><span></span><span></span><span></span></div>';
+      channel.classList.add('active');
+      icon.innerHTML = '<i class="fa-solid fa-microphone" style="color:var(--green);"></i>';
+      errEl.style.display = 'none';
+      toast('🎙️ المايك ' + n + ' شغال — أنت على الهواء!');
+    } catch (err) {
+      errEl.style.display = 'block';
+      errEl.textContent = '⚠️ ما قدرنا نفتح المايك: ' + (err.message || 'تأكد إنك سمحت للمتصفح باستخدام المايك');
+    }
+  }
+}
+
+// ─── YouTube Helpers ─────────────────────────────────────────────────────────
+function extractYoutubeId(url) {
+  if (!url) return null;
+  url = url.trim();
+  if (url.includes('list=')) {
+    const m = url.match(/[&?]list=([^#&?]+)/);
+    if (m) return { id: m[1], type: 'playlist' };
+  }
+  if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return { id: url, type: 'video' };
+  const rx = /^.*(?:youtu\.be\/|v\/|vi\/|embed\/|shorts\/|watch\?v=|&v=)([^#&?]{11}).*/;
+  const m = url.match(rx);
+  return m ? { id: m[1], type: 'video' } : null;
+}
+
+async function playInstant() {
+  const res = extractYoutubeId(document.getElementById('instantUrl').value);
+  if (!res) return alert('رابط غير صحيح!');
+  const url = res.type === 'playlist' ? 'https://www.youtube.com/playlist?list=' + res.id : 'https://www.youtube.com/watch?v=' + res.id;
+  await sb.from('channel_settings').update({ override_url: url, override_start: Date.now() }).eq('id', 'live_stream');
+  document.getElementById('instantUrl').value = '';
+  document.getElementById('statusText').textContent = 'بث فوري نشط 🔴';
+  toast('🔴 بث فوري شغال!');
+}
+
+async function cancelInstant() {
+  await sb.from('channel_settings').update({ override_url: null, override_start: null }).eq('id', 'live_stream');
+  document.getElementById('statusText').textContent = 'جاهز للبث';
+  toast('رجع للجدول التلقائي');
+}
+
+async function addToRotation() {
+  const input = document.getElementById('playlistUrl');
+  const res = extractYoutubeId(input.value);
+  if (!res) return alert('رابط يوتيوب غير صحيح!');
+  const url = res.type === 'playlist' ? 'https://www.youtube.com/playlist?list=' + res.id : 'https://www.youtube.com/watch?v=' + res.id;
+  const label = res.type === 'playlist' ? 'قائمة تشغيل' : 'أغنية';
+  await sb.from('playlist').insert([{ title: label, video_url: url }]);
+  input.value = '';
+  toast('تمت الإضافة للقائمة ✅');
+  fetchRotationList();
+}
+
+async function fetchRotationList() {
+  const { data: songs } = await sb.from('playlist').select('*').order('id', { ascending: true });
+  const container = document.getElementById('rotationContainer');
+  if (!songs || songs.length === 0) {
+    container.innerHTML = '<div style="text-align:center; padding:16px; color:var(--text-dim); font-size:0.8rem;">القائمة فارغة</div>';
+    return;
+  }
+  container.innerHTML = '';
+  songs.forEach(song => {
+    const isPlaylist = song.video_url.includes('list=');
+    container.innerHTML += `
+      <div class="p-row">
+        <span class="p-type ${isPlaylist ? 'pl' : 'vid'}">${isPlaylist ? 'PL' : 'VID'}</span>
+        <span class="p-url">${song.video_url}</span>
+        <button class="del-btn" onclick="deleteSong(${song.id})"><i class="fa-solid fa-xmark"></i></button>
+      </div>`;
+  });
+}
+
+async function deleteSong(id) {
+  await sb.from('playlist').delete().eq('id', id);
+  fetchRotationList();
+  toast('تم الحذف');
+}
+
+async function saveTicker() {
+  const text = document.getElementById('tickerInput').value.trim();
+  await sb.from('channel_settings').update({ ticker_text: text }).eq('id', 'live_stream');
+  toast('تم تحديث الشريط 📢');
+}
+
+// ─── Toast ────────────────────────────────────────────────────────────────────
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+async function loadStudio() {
+  const { data: config } = await sb.from('channel_settings').select('*').eq('id', 'live_stream').single();
+  if (config) {
+    document.getElementById('tickerInput').value = config.ticker_text || '';
+    const vol = config.volume !== undefined ? config.volume : 100;
+    document.getElementById('volSlider').value = vol;
+    document.getElementById('volNum').textContent = vol;
+    animateVU(vol);
+  }
+  fetchRotationList();
+}
+
+loadStudio();
+</script>
+</body>
+  </html>
