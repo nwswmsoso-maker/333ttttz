@@ -26,7 +26,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
 
-  /* Noise overlay */
   body::before {
     content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
@@ -35,7 +34,6 @@
 
   .studio { position: relative; z-index: 1; width: 100%; max-width: 680px; }
 
-  /* Header */
   .header { text-align: center; margin-bottom: 28px; }
   .header-logo { display: inline-flex; align-items: center; gap: 12px; background: var(--panel); border: 1px solid rgba(255,42,59,0.3); border-radius: 50px; padding: 10px 24px; margin-bottom: 8px; }
   .on-air { background: var(--red); color: #fff; font-size: 0.65rem; font-weight: 900; padding: 3px 8px; border-radius: 3px; letter-spacing: 2px; animation: blink 1.2s infinite; }
@@ -43,22 +41,16 @@
   .header-logo span { font-size: 1.1rem; font-weight: 900; color: #fff; letter-spacing: 1px; }
   .header-sub { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 3px; text-transform: uppercase; }
 
-  /* Cards */
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 16px; position: relative; overflow: hidden; }
   .card::before { content: ''; position: absolute; top: 0; right: 0; left: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); }
   .card-title { font-size: 0.78rem; font-weight: 700; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
   .card-title .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); box-shadow: 0 0 8px var(--red); }
 
-  /* ===== VOLUME FADER ===== */
-  .fader-section { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  /* Volume */
   .fader-wrap { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
   .fader-label { font-size: 0.72rem; font-weight: 700; color: var(--text-dim); letter-spacing: 2px; }
-
-  /* VU Meter */
   .vu-meter { display: flex; gap: 2px; height: 80px; align-items: flex-end; justify-content: center; }
   .vu-bar { width: 8px; border-radius: 2px 2px 0 0; background: var(--card); transition: height 0.08s ease; }
-
-  /* Vertical Slider */
   .fader-track { position: relative; height: 120px; width: 40px; display: flex; justify-content: center; align-items: center; }
   .fader-track::before { content: ''; position: absolute; left: 50%; transform: translateX(-50%); width: 3px; height: 100%; background: linear-gradient(to top, var(--red), #ff8800, var(--green)); border-radius: 3px; }
   input[type=range].vertical {
@@ -70,52 +62,19 @@
   }
   input[type=range].vertical::-webkit-slider-thumb { -webkit-appearance: none; width: 32px; height: 14px; background: #fff; border-radius: 3px; box-shadow: 0 2px 10px rgba(0,0,0,0.6); cursor: grab; }
   input[type=range].vertical::-webkit-slider-runnable-track { background: transparent; }
-
   .vol-display { font-size: 1.6rem; font-weight: 900; font-family: monospace; color: var(--red); line-height: 1; }
   .vol-display small { font-size: 0.65rem; color: var(--text-dim); display: block; text-align: center; margin-top: 2px; }
-
-  /* Mute button */
   .mute-btn { background: none; border: 1px solid var(--border); color: var(--text-dim); padding: 6px 14px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 5px; }
   .mute-btn.muted { background: var(--red-dim); border-color: var(--red); color: var(--red); }
   .mute-btn:hover { border-color: rgba(255,255,255,0.2); }
 
-  /* ===== MIC SECTION ===== */
-  .mic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .mic-channel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: border-color 0.3s; }
-  .mic-channel.active { border-color: rgba(0,230,118,0.4); box-shadow: 0 0 20px rgba(0,230,118,0.05); }
-  .mic-icon { width: 44px; height: 44px; border-radius: 50%; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: var(--text-dim); transition: all 0.3s; }
-  .mic-channel.active .mic-icon { background: var(--green-dim); color: var(--green); box-shadow: 0 0 16px rgba(0,230,118,0.3); }
-  .mic-name { font-size: 0.72rem; font-weight: 700; color: var(--text-dim); }
-  .mic-status { font-size: 0.6rem; letter-spacing: 2px; font-weight: 700; }
-  .mic-status.live { color: var(--green); }
-  .mic-status.off { color: var(--text-dim); }
-
-  input[type=range].small-slider { width: 100%; accent-color: var(--green); cursor: pointer; }
-
-  .mic-btn { width: 100%; padding: 7px; border: none; border-radius: 6px; font-weight: 700; font-size: 0.72rem; cursor: pointer; font-family: inherit; transition: all 0.2s; }
-  .mic-btn.start { background: var(--green-dim); color: var(--green); border: 1px solid rgba(0,230,118,0.3); }
-  .mic-btn.stop { background: var(--red-dim); color: var(--red); border: 1px solid rgba(255,42,59,0.3); }
-  .mic-btn:hover { filter: brightness(1.2); }
-
-  /* Live wave indicator */
-  .wave { display: flex; align-items: center; gap: 2px; height: 16px; }
-  .wave span { display: block; width: 3px; background: var(--green); border-radius: 2px; animation: wave 0.8s ease-in-out infinite; }
-  .wave span:nth-child(1){ height: 5px; animation-delay: 0s; }
-  .wave span:nth-child(2){ height: 12px; animation-delay: 0.1s; }
-  .wave span:nth-child(3){ height: 8px; animation-delay: 0.2s; }
-  .wave span:nth-child(4){ height: 14px; animation-delay: 0.3s; }
-  .wave span:nth-child(5){ height: 6px; animation-delay: 0.4s; }
-  @keyframes wave { 0%,100%{ transform: scaleY(0.5); opacity:0.5; } 50%{ transform: scaleY(1); opacity:1; } }
-
-  /* ===== INSTANT PLAY ===== */
+  /* Inputs & Buttons */
   .instant-row { display: flex; gap: 8px; }
   .s-input { flex: 1; padding: 11px 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-family: inherit; font-size: 0.85rem; transition: border-color 0.2s; }
   .s-input:focus { outline: none; border-color: rgba(255,42,59,0.5); }
   .s-input::placeholder { color: var(--text-dim); }
-
   .btn { padding: 11px 16px; border: none; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer; color: #fff; transition: all 0.2s; font-family: inherit; white-space: nowrap; }
   .btn-red { background: var(--red); } .btn-red:hover { background: #ff1020; transform: translateY(-1px); }
-  .btn-green { background: #1db954; } .btn-green:hover { background: #17a348; }
   .btn-blue { background: var(--blue); } .btn-blue:hover { background: #2979ff; }
   .btn-ghost { background: none; border: 1px solid rgba(255,42,59,0.3); color: var(--red); width: 100%; margin-top: 8px; } .btn-ghost:hover { background: var(--red-dim); }
 
@@ -133,13 +92,6 @@
   .del-btn { background: none; border: none; color: var(--text-dim); cursor: pointer; padding: 3px 6px; transition: color 0.2s; }
   .del-btn:hover { color: var(--red); }
 
-  /* Ticker */
-  .ticker-row { display: flex; gap: 8px; }
-
-  /* Toast */
-  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1a30; border: 1px solid rgba(0,230,118,0.3); color: var(--green); padding: 10px 24px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; z-index: 1000; transition: transform 0.3s ease; display: flex; align-items: center; gap: 8px; }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-
   /* Status bar */
   .statusbar { display: flex; justify-content: space-between; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; margin-bottom: 16px; font-size: 0.72rem; }
   .status-item { display: flex; align-items: center; gap: 5px; color: var(--text-dim); }
@@ -147,16 +99,15 @@
   .status-dot.green { background: var(--green); box-shadow: 0 0 6px var(--green); }
   .status-dot.red { background: var(--red); }
 
-  @media (max-width: 480px) {
-    .fader-section, .mic-grid { grid-template-columns: 1fr; }
-  }
+  /* Toast */
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1a30; border: 1px solid rgba(0,230,118,0.3); color: var(--green); padding: 10px 24px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; z-index: 1000; transition: transform 0.3s ease; display: flex; align-items: center; gap: 8px; }
+  .toast.show { transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 
 <div class="studio">
 
-  <!-- Header -->
   <div class="header">
     <div class="header-logo">
       <div class="on-air">ON AIR</div>
@@ -166,76 +117,26 @@
     <div class="header-sub">لوحة التحكم الاحترافية</div>
   </div>
 
-  <!-- Status Bar -->
   <div class="statusbar">
     <div class="status-item"><div class="status-dot green"></div> متصل بالسيرفر</div>
     <div class="status-item"><i class="fa-solid fa-satellite-dish" style="color:var(--red);font-size:0.8rem;"></i> <span id="statusText">جاهز للبث</span></div>
     <div class="status-item"><div class="status-dot red" style="animation:blink 1.2s infinite;"></div> مباشر</div>
   </div>
 
-  <!-- Volume Fader -->
+  <!-- Volume -->
   <div class="card">
     <div class="card-title"><div class="dot"></div> مكسر الصوت الرئيسي</div>
-    <div class="fader-section">
-      <!-- Master Volume -->
-      <div class="fader-wrap">
-        <div class="fader-label">مستوى الصوت</div>
-        <div class="vu-meter" id="vuMeter">
-          <!-- bars injected by JS -->
-        </div>
-        <div class="fader-track">
-          <input type="range" class="vertical" id="volSlider" min="0" max="100" value="100"
-            oninput="onVolInput(this.value)" onchange="updateRemoteVolume(this.value)">
-        </div>
-        <div class="vol-display" id="volNum">100<small>%</small></div>
-        <button class="mute-btn" id="muteBtn" onclick="toggleMute()">
-          <i class="fa-solid fa-volume-xmark"></i> كتم
-        </button>
+    <div class="fader-wrap">
+      <div class="fader-label">مستوى الصوت</div>
+      <div class="vu-meter" id="vuMeter"></div>
+      <div class="fader-track">
+        <input type="range" class="vertical" id="volSlider" min="0" max="100" value="100"
+          oninput="onVolInput(this.value)" onchange="updateRemoteVolume(this.value)">
       </div>
-
-      <!-- Music Balance -->
-      <div class="fader-wrap">
-        <div class="fader-label">موازنة الموسيقى</div>
-        <div style="width:100%; display:flex; flex-direction:column; gap:10px; margin-top:8px;">
-          <div style="font-size:0.7rem; color:var(--text-dim);">باس</div>
-          <input type="range" class="small-slider" id="bassSlider" min="0" max="100" value="60" style="accent-color:#ff8800;">
-          <div style="font-size:0.7rem; color:var(--text-dim);">صوت عالي</div>
-          <input type="range" class="small-slider" id="trebleSlider" min="0" max="100" value="60" style="accent-color:#448aff;">
-          <div style="font-size:0.7rem; color:var(--text-dim);">توازن</div>
-          <input type="range" class="small-slider" id="balanceSlider" min="-50" max="50" value="0" style="accent-color:#ffd740;">
-        </div>
-        <div style="font-size:0.68rem; color:var(--text-dim); text-align:center; margin-top:4px;">هذي للعرض — قريباً تشتغل</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mic Section -->
-  <div class="card">
-    <div class="card-title"><div class="dot" style="background:var(--green);box-shadow:0 0 8px var(--green);"></div> المايكات المباشرة</div>
-    <div class="mic-grid">
-      <div class="mic-channel" id="mic1-ch">
-        <div class="mic-icon" id="mic1-icon"><i class="fa-solid fa-microphone"></i></div>
-        <div class="mic-name">مايك ١</div>
-        <div class="mic-status off" id="mic1-status">متوقف</div>
-        <input type="range" class="small-slider" id="mic1-vol" min="0" max="100" value="80" title="صوت المايك">
-        <button class="mic-btn start" id="mic1-btn" onclick="toggleMic(1)">
-          <i class="fa-solid fa-microphone"></i> تشغيل المايك
-        </button>
-      </div>
-      <div class="mic-channel" id="mic2-ch">
-        <div class="mic-icon" id="mic2-icon"><i class="fa-solid fa-microphone"></i></div>
-        <div class="mic-name">مايك ٢ (ضيف)</div>
-        <div class="mic-status off" id="mic2-status">متوقف</div>
-        <input type="range" class="small-slider" id="mic2-vol" min="0" max="100" value="80" title="صوت المايك">
-        <button class="mic-btn start" id="mic2-btn" onclick="toggleMic(2)">
-          <i class="fa-solid fa-microphone"></i> تشغيل مايك الضيف
-        </button>
-      </div>
-    </div>
-    <div id="mic-error" style="display:none; margin-top:10px; background:rgba(255,42,59,0.1); border:1px solid rgba(255,42,59,0.3); padding:10px; border-radius:6px; font-size:0.78rem; color:var(--red); text-align:center;"></div>
-    <div style="margin-top:10px; font-size:0.72rem; color:var(--text-dim); text-align:center; display:flex; align-items:center; justify-content:center; gap:6px;">
-      <i class="fa-solid fa-circle-info"></i>
-      المايك يشتغل فوري من متصفحك — ما يحتاج برامج إضافية
+      <div class="vol-display" id="volNum">100<small>%</small></div>
+      <button class="mute-btn" id="muteBtn" onclick="toggleMute()">
+        <i class="fa-solid fa-volume-xmark"></i> كتم
+      </button>
     </div>
   </div>
 
@@ -243,7 +144,7 @@
   <div class="card" style="border-color:rgba(255,42,59,0.25);">
     <div class="card-title"><div class="dot"></div> بث فوري — يشتغل عند الكل</div>
     <div class="instant-row">
-      <input id="instantUrl" type="text" class="s-input" placeholder="رابط فيديو أو قائمة تشغيل...">
+      <input id="instantUrl" type="text" class="s-input" placeholder="رابط فيديو يوتيوب أو بث مباشر...">
       <button class="btn btn-red" onclick="playInstant()"><i class="fa-solid fa-circle-play"></i> بث</button>
     </div>
     <button class="btn btn-ghost" onclick="cancelInstant()"><i class="fa-solid fa-rotate-right"></i> إلغاء والرجوع للجدول</button>
@@ -264,7 +165,7 @@
   <!-- Ticker -->
   <div class="card">
     <div class="card-title"><div class="dot" style="background:var(--yellow);box-shadow:0 0 8px var(--yellow);"></div> شريط الأخبار السفلي</div>
-    <div class="ticker-row">
+    <div style="display:flex; gap:8px;">
       <input id="tickerInput" type="text" class="s-input" placeholder="نص الشريط السفلي للمشاهدين...">
       <button class="btn btn-red" onclick="saveTicker()"><i class="fa-solid fa-paper-plane"></i></button>
     </div>
@@ -272,15 +173,14 @@
 
 </div>
 
-<div class="toast" id="toast"><i class="fa-solid fa-check-circle"></i> <span id="toastMsg">تمت المزامنة مع السيرفر!</span></div>
+<div class="toast" id="toast"><i class="fa-solid fa-check-circle"></i> <span id="toastMsg"></span></div>
 
 <script>
-// ─── Supabase ───────────────────────────────────────────────────────────────
 const SB_URL = 'https://hvgtysuwzdtsgqjgsuhi.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2Z3R5c3V3emR0c2dxamdzdWhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NjgyNDIsImV4cCI6MjA5NjE0NDI0Mn0.YjlcTIO_uycIolB3N2dkw0U76iJ76G57uhwpuTavrSM';
 const sb = window.supabase.createClient(SB_URL, SB_KEY);
 
-// ─── Volume ─────────────────────────────────────────────────────────────────
+// ─── Volume ──────────────────────────────────────────────
 let isMuted = false, prevVol = 100;
 
 function onVolInput(val) {
@@ -299,19 +199,15 @@ function toggleMute() {
   const btn = document.getElementById('muteBtn');
   if (!isMuted) {
     prevVol = parseInt(slider.value);
-    slider.value = 0;
-    isMuted = true;
+    slider.value = 0; isMuted = true;
     btn.classList.add('muted');
     btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> إلغاء الكتم';
-    updateRemoteVolume(0);
-    animateVU(0);
+    updateRemoteVolume(0); animateVU(0);
   } else {
-    slider.value = prevVol;
-    isMuted = false;
+    slider.value = prevVol; isMuted = false;
     btn.classList.remove('muted');
     btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> كتم';
-    updateRemoteVolume(prevVol);
-    onVolInput(prevVol);
+    updateRemoteVolume(prevVol); onVolInput(prevVol);
   }
 }
 
@@ -320,18 +216,16 @@ const NUM_BARS = 12;
 const vuMeter = document.getElementById('vuMeter');
 for (let i = 0; i < NUM_BARS; i++) {
   const b = document.createElement('div');
-  b.className = 'vu-bar';
-  b.id = 'vb' + i;
+  b.className = 'vu-bar'; b.id = 'vb' + i;
   vuMeter.appendChild(b);
 }
-const barColors = (i) => i < 7 ? '#00e676' : i < 10 ? '#ffd740' : '#ff2a3b';
+const barColors = i => i < 7 ? '#00e676' : i < 10 ? '#ffd740' : '#ff2a3b';
 
 function animateVU(vol) {
   const level = parseInt(vol) / 100;
   for (let i = 0; i < NUM_BARS; i++) {
     const bar = document.getElementById('vb' + i);
-    const threshold = i / NUM_BARS;
-    if (threshold <= level) {
+    if (i / NUM_BARS <= level) {
       bar.style.height = (20 + Math.random() * 60 * level) + 'px';
       bar.style.background = barColors(i);
       bar.style.boxShadow = `0 0 6px ${barColors(i)}88`;
@@ -342,86 +236,37 @@ function animateVU(vol) {
     }
   }
 }
-// Idle VU animation
-let vuInterval;
-function startVUIdle() {
-  const vol = parseInt(document.getElementById('volSlider').value);
-  vuInterval = setInterval(() => animateVU(vol), 100);
-}
-startVUIdle();
+setInterval(() => animateVU(document.getElementById('volSlider').value), 100);
 
-// ─── Mic ────────────────────────────────────────────────────────────────────
-let micStreams = {};
-let audioCtxs = {};
-
-async function toggleMic(n) {
-  const btn = document.getElementById('mic' + n + '-btn');
-  const status = document.getElementById('mic' + n + '-status');
-  const channel = document.getElementById('mic' + n + '-ch');
-  const icon = document.getElementById('mic' + n + '-icon');
-  const errEl = document.getElementById('mic-error');
-
-  if (micStreams[n]) {
-    // Stop mic
-    micStreams[n].getTracks().forEach(t => t.stop());
-    if (audioCtxs[n]) { audioCtxs[n].close(); delete audioCtxs[n]; }
-    delete micStreams[n];
-    btn.className = 'mic-btn start';
-    btn.innerHTML = `<i class="fa-solid fa-microphone"></i> تشغيل ${n === 2 ? 'مايك الضيف' : 'المايك'}`;
-    status.className = 'mic-status off'; status.textContent = 'متوقف';
-    channel.classList.remove('active');
-    icon.innerHTML = '<i class="fa-solid fa-microphone"></i>';
-    errEl.style.display = 'none';
-    toast('تم إيقاف المايك ' + n);
-  } else {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-      micStreams[n] = stream;
-
-      // Web Audio to control volume
-      const ctx = new AudioContext();
-      audioCtxs[n] = ctx;
-      const source = ctx.createMediaStreamSource(stream);
-      const gainNode = ctx.createGain();
-      const volSlider = document.getElementById('mic' + n + '-vol');
-      gainNode.gain.value = parseInt(volSlider.value) / 100;
-      volSlider.oninput = () => { gainNode.gain.value = parseInt(volSlider.value) / 100; };
-      source.connect(gainNode);
-      gainNode.connect(ctx.destination);
-
-      btn.className = 'mic-btn stop';
-      btn.innerHTML = '<i class="fa-solid fa-microphone-slash"></i> إيقاف المايك';
-      status.className = 'mic-status live';
-      status.innerHTML = '<div class="wave"><span></span><span></span><span></span><span></span><span></span></div>';
-      channel.classList.add('active');
-      icon.innerHTML = '<i class="fa-solid fa-microphone" style="color:var(--green);"></i>';
-      errEl.style.display = 'none';
-      toast('🎙️ المايك ' + n + ' شغال — أنت على الهواء!');
-    } catch (err) {
-      errEl.style.display = 'block';
-      errEl.textContent = '⚠️ ما قدرنا نفتح المايك: ' + (err.message || 'تأكد إنك سمحت للمتصفح باستخدام المايك');
-    }
-  }
-}
-
-// ─── YouTube Helpers ─────────────────────────────────────────────────────────
+// ─── YouTube / Live URL Helper ───────────────────────────
 function extractYoutubeId(url) {
   if (!url) return null;
   url = url.trim();
+
+  // قائمة تشغيل
   if (url.includes('list=')) {
     const m = url.match(/[&?]list=([^#&?]+)/);
     if (m) return { id: m[1], type: 'playlist' };
   }
+
+  // Video ID مباشر (11 حرف)
   if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return { id: url, type: 'video' };
-  const rx = /^.*(?:youtu\.be\/|v\/|vi\/|embed\/|shorts\/|watch\?v=|&v=)([^#&?]{11}).*/;
+
+  // روابط يوتيوب بكل أشكالها (watch, live, shorts, youtu.be)
+  const rx = /(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|live\/|shorts\/|embed\/|v\/))([a-zA-Z0-9_-]{11})/;
   const m = url.match(rx);
-  return m ? { id: m[1], type: 'video' } : null;
+  if (m) return { id: m[1], type: 'video' };
+
+  return null;
 }
 
 async function playInstant() {
-  const res = extractYoutubeId(document.getElementById('instantUrl').value);
-  if (!res) return alert('رابط غير صحيح!');
-  const url = res.type === 'playlist' ? 'https://www.youtube.com/playlist?list=' + res.id : 'https://www.youtube.com/watch?v=' + res.id;
+  const raw = document.getElementById('instantUrl').value.trim();
+  const res = extractYoutubeId(raw);
+  if (!res) { toast('⚠️ رابط غير صحيح!'); return; }
+  const url = res.type === 'playlist'
+    ? 'https://www.youtube.com/playlist?list=' + res.id
+    : 'https://www.youtube.com/watch?v=' + res.id;
   await sb.from('channel_settings').update({ override_url: url, override_start: Date.now() }).eq('id', 'live_stream');
   document.getElementById('instantUrl').value = '';
   document.getElementById('statusText').textContent = 'بث فوري نشط 🔴';
@@ -436,11 +281,12 @@ async function cancelInstant() {
 
 async function addToRotation() {
   const input = document.getElementById('playlistUrl');
-  const res = extractYoutubeId(input.value);
-  if (!res) return alert('رابط يوتيوب غير صحيح!');
-  const url = res.type === 'playlist' ? 'https://www.youtube.com/playlist?list=' + res.id : 'https://www.youtube.com/watch?v=' + res.id;
-  const label = res.type === 'playlist' ? 'قائمة تشغيل' : 'أغنية';
-  await sb.from('playlist').insert([{ title: label, video_url: url }]);
+  const res = extractYoutubeId(input.value.trim());
+  if (!res) { toast('⚠️ رابط يوتيوب غير صحيح!'); return; }
+  const url = res.type === 'playlist'
+    ? 'https://www.youtube.com/playlist?list=' + res.id
+    : 'https://www.youtube.com/watch?v=' + res.id;
+  await sb.from('playlist').insert([{ title: res.type === 'playlist' ? 'قائمة تشغيل' : 'أغنية', video_url: url }]);
   input.value = '';
   toast('تمت الإضافة للقائمة ✅');
   fetchRotationList();
@@ -477,7 +323,7 @@ async function saveTicker() {
   toast('تم تحديث الشريط 📢');
 }
 
-// ─── Toast ────────────────────────────────────────────────────────────────────
+// ─── Toast ───────────────────────────────────────────────
 let toastTimer;
 function toast(msg) {
   const el = document.getElementById('toast');
@@ -487,7 +333,7 @@ function toast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
 }
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
+// ─── Init ────────────────────────────────────────────────
 async function loadStudio() {
   const { data: config } = await sb.from('channel_settings').select('*').eq('id', 'live_stream').single();
   if (config) {
@@ -499,8 +345,7 @@ async function loadStudio() {
   }
   fetchRotationList();
 }
-
 loadStudio();
 </script>
 </body>
-  </html>
+</html>
