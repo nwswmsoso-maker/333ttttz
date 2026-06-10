@@ -26,7 +26,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
 
-  /* Noise overlay */
   body::before {
     content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
@@ -35,7 +34,6 @@
 
   .studio { position: relative; z-index: 1; width: 100%; max-width: 680px; }
 
-  /* Header */
   .header { text-align: center; margin-bottom: 28px; }
   .header-logo { display: inline-flex; align-items: center; gap: 12px; background: var(--panel); border: 1px solid rgba(255,42,59,0.3); border-radius: 50px; padding: 10px 24px; margin-bottom: 8px; }
   .on-air { background: var(--red); color: #fff; font-size: 0.65rem; font-weight: 900; padding: 3px 8px; border-radius: 3px; letter-spacing: 2px; animation: blink 1.2s infinite; }
@@ -43,22 +41,18 @@
   .header-logo span { font-size: 1.1rem; font-weight: 900; color: #fff; letter-spacing: 1px; }
   .header-sub { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 3px; text-transform: uppercase; }
 
-  /* Cards */
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 16px; position: relative; overflow: hidden; }
   .card::before { content: ''; position: absolute; top: 0; right: 0; left: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); }
   .card-title { font-size: 0.78rem; font-weight: 700; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
   .card-title .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); box-shadow: 0 0 8px var(--red); }
 
-  /* ===== VOLUME FADER ===== */
   .fader-section { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .fader-wrap { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
   .fader-label { font-size: 0.72rem; font-weight: 700; color: var(--text-dim); letter-spacing: 2px; }
 
-  /* VU Meter */
   .vu-meter { display: flex; gap: 2px; height: 80px; align-items: flex-end; justify-content: center; }
   .vu-bar { width: 8px; border-radius: 2px 2px 0 0; background: var(--card); transition: height 0.08s ease; }
 
-  /* Vertical Slider */
   .fader-track { position: relative; height: 120px; width: 40px; display: flex; justify-content: center; align-items: center; }
   .fader-track::before { content: ''; position: absolute; left: 50%; transform: translateX(-50%); width: 3px; height: 100%; background: linear-gradient(to top, var(--red), #ff8800, var(--green)); border-radius: 3px; }
   input[type=range].vertical {
@@ -74,12 +68,10 @@
   .vol-display { font-size: 1.6rem; font-weight: 900; font-family: monospace; color: var(--red); line-height: 1; }
   .vol-display small { font-size: 0.65rem; color: var(--text-dim); display: block; text-align: center; margin-top: 2px; }
 
-  /* Mute button */
   .mute-btn { background: none; border: 1px solid var(--border); color: var(--text-dim); padding: 6px 14px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 5px; }
   .mute-btn.muted { background: var(--red-dim); border-color: var(--red); color: var(--red); }
   .mute-btn:hover { border-color: rgba(255,255,255,0.2); }
 
-  /* ===== MIC SECTION ===== */
   .mic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .mic-channel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: border-color 0.3s; }
   .mic-channel.active { border-color: rgba(0,230,118,0.4); box-shadow: 0 0 20px rgba(0,230,118,0.05); }
@@ -97,7 +89,6 @@
   .mic-btn.stop { background: var(--red-dim); color: var(--red); border: 1px solid rgba(255,42,59,0.3); }
   .mic-btn:hover { filter: brightness(1.2); }
 
-  /* Live wave indicator */
   .wave { display: flex; align-items: center; gap: 2px; height: 16px; }
   .wave span { display: block; width: 3px; background: var(--green); border-radius: 2px; animation: wave 0.8s ease-in-out infinite; }
   .wave span:nth-child(1){ height: 5px; animation-delay: 0s; }
@@ -107,7 +98,6 @@
   .wave span:nth-child(5){ height: 6px; animation-delay: 0.4s; }
   @keyframes wave { 0%,100%{ transform: scaleY(0.5); opacity:0.5; } 50%{ transform: scaleY(1); opacity:1; } }
 
-  /* ===== INSTANT PLAY ===== */
   .instant-row { display: flex; gap: 8px; }
   .s-input { flex: 1; padding: 11px 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-family: inherit; font-size: 0.85rem; transition: border-color 0.2s; }
   .s-input:focus { outline: none; border-color: rgba(255,42,59,0.5); }
@@ -119,33 +109,50 @@
   .btn-blue { background: var(--blue); } .btn-blue:hover { background: #2979ff; }
   .btn-ghost { background: none; border: 1px solid rgba(255,42,59,0.3); color: var(--red); width: 100%; margin-top: 8px; } .btn-ghost:hover { background: var(--red-dim); }
 
-  /* Playlist */
   .playlist-list { max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; margin-top: 10px; }
   .playlist-list::-webkit-scrollbar { width: 4px; }
   .playlist-list::-webkit-scrollbar-track { background: transparent; }
   .playlist-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
   .p-row { display: flex; justify-content: space-between; align-items: center; background: var(--panel); padding: 7px 10px; border-radius: 6px; font-size: 0.78rem; gap: 8px; border: 1px solid var(--border); }
   .p-row:hover { border-color: rgba(255,255,255,0.1); }
-  .p-url { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-dim); font-family: monospace; font-size: 0.72rem; }
+  .p-url { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-dim); font-family: monospace; font-size: 0.72rem; flex: 1; }
   .p-type { font-size: 0.6rem; padding: 2px 6px; border-radius: 3px; font-weight: 700; letter-spacing: 1px; flex-shrink: 0; }
   .p-type.pl { background: rgba(68,138,255,0.15); color: var(--blue); }
   .p-type.vid { background: rgba(255,42,59,0.12); color: var(--red); }
   .del-btn { background: none; border: none; color: var(--text-dim); cursor: pointer; padding: 3px 6px; transition: color 0.2s; }
   .del-btn:hover { color: var(--red); }
 
-  /* Ticker */
   .ticker-row { display: flex; gap: 8px; }
 
-  /* Toast */
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1a30; border: 1px solid rgba(0,230,118,0.3); color: var(--green); padding: 10px 24px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; z-index: 1000; transition: transform 0.3s ease; display: flex; align-items: center; gap: 8px; }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
-  /* Status bar */
   .statusbar { display: flex; justify-content: space-between; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; margin-bottom: 16px; font-size: 0.72rem; }
   .status-item { display: flex; align-items: center; gap: 5px; color: var(--text-dim); }
   .status-dot { width: 5px; height: 5px; border-radius: 50%; }
-  .status-dot.green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .status-dot.green { background: var(--green); box-shadow: 0 0 6px var(--green); animation: blink 2s infinite; }
   .status-dot.red { background: var(--red); }
+  .status-dot.gray { background: var(--text-dim); }
+
+  /* مؤشر فوري */
+  .rt-indicator {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--green-dim); color: var(--green);
+    padding: 2px 8px; border-radius: 12px;
+    font-size: 0.65rem; font-weight: 700;
+    margin-right: auto;
+  }
+  .rt-indicator.off { background: var(--red-dim); color: var(--red); }
+  .rt-pulse { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: rtPulse 1.5s infinite; }
+  @keyframes rtPulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* عدد المشاهدين الحاليين */
+  .viewers-live {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--red-dim); border: 1px solid rgba(255,42,59,0.3);
+    padding: 4px 10px; border-radius: 12px;
+    font-size: 0.72rem; font-weight: 700; color: var(--red);
+  }
 
   @media (max-width: 480px) {
     .fader-section, .mic-grid { grid-template-columns: 1fr; }
@@ -156,7 +163,6 @@
 
 <div class="studio">
 
-  <!-- Header -->
   <div class="header">
     <div class="header-logo">
       <div class="on-air">ON AIR</div>
@@ -166,23 +172,28 @@
     <div class="header-sub">لوحة التحكم الاحترافية</div>
   </div>
 
-  <!-- Status Bar -->
   <div class="statusbar">
-    <div class="status-item"><div class="status-dot green"></div> متصل بالسيرفر</div>
-    <div class="status-item"><i class="fa-solid fa-satellite-dish" style="color:var(--red);font-size:0.8rem;"></i> <span id="statusText">جاهز للبث</span></div>
-    <div class="status-item"><div class="status-dot red" style="animation:blink 1.2s infinite;"></div> مباشر</div>
+    <div class="status-item">
+      <div class="status-dot green" id="connDot"></div>
+      <span id="connText">متصل فورياً ⚡</span>
+    </div>
+    <div class="status-item">
+      <div class="viewers-live">
+        <i class="fa-solid fa-eye"></i>
+        <span id="liveViewers">0</span> مشاهد
+      </div>
+    </div>
   </div>
 
-  <!-- Volume Fader -->
   <div class="card">
-    <div class="card-title"><div class="dot"></div> مكسر الصوت الرئيسي</div>
+    <div class="card-title">
+      <div class="dot"></div> مكسر الصوت الرئيسي
+      <div class="rt-indicator" id="rtVol"><span class="rt-pulse"></span>فوري</div>
+    </div>
     <div class="fader-section">
-      <!-- Master Volume -->
       <div class="fader-wrap">
         <div class="fader-label">مستوى الصوت</div>
-        <div class="vu-meter" id="vuMeter">
-          <!-- bars injected by JS -->
-        </div>
+        <div class="vu-meter" id="vuMeter"></div>
         <div class="fader-track">
           <input type="range" class="vertical" id="volSlider" min="0" max="100" value="100"
             oninput="onVolInput(this.value)" onchange="updateRemoteVolume(this.value)">
@@ -193,7 +204,6 @@
         </button>
       </div>
 
-      <!-- Music Balance -->
       <div class="fader-wrap">
         <div class="fader-label">موازنة الموسيقى</div>
         <div style="width:100%; display:flex; flex-direction:column; gap:10px; margin-top:8px;">
@@ -209,7 +219,6 @@
     </div>
   </div>
 
-  <!-- Mic Section -->
   <div class="card">
     <div class="card-title"><div class="dot" style="background:var(--green);box-shadow:0 0 8px var(--green);"></div> المايكات المباشرة</div>
     <div class="mic-grid">
@@ -239,9 +248,11 @@
     </div>
   </div>
 
-  <!-- Instant Play -->
   <div class="card" style="border-color:rgba(255,42,59,0.25);">
-    <div class="card-title"><div class="dot"></div> بث فوري — يشتغل عند الكل</div>
+    <div class="card-title">
+      <div class="dot"></div> بث فوري — يشتغل عند الكل
+      <div class="rt-indicator"><span class="rt-pulse"></span>فوري</div>
+    </div>
     <div class="instant-row">
       <input id="instantUrl" type="text" class="s-input" placeholder="رابط فيديو أو قائمة تشغيل...">
       <button class="btn btn-red" onclick="playInstant()"><i class="fa-solid fa-circle-play"></i> بث</button>
@@ -249,9 +260,11 @@
     <button class="btn btn-ghost" onclick="cancelInstant()"><i class="fa-solid fa-rotate-right"></i> إلغاء والرجوع للجدول</button>
   </div>
 
-  <!-- Playlist -->
   <div class="card">
-    <div class="card-title"><div class="dot" style="background:var(--blue);box-shadow:0 0 8px var(--blue);"></div> قائمة التشغيل</div>
+    <div class="card-title">
+      <div class="dot" style="background:var(--blue);box-shadow:0 0 8px var(--blue);"></div> قائمة التشغيل
+      <div class="rt-indicator"><span class="rt-pulse"></span>فوري</div>
+    </div>
     <div style="display:flex; gap:8px; margin-bottom:5px;">
       <input id="playlistUrl" type="text" class="s-input" placeholder="رابط أغنية أو قائمة تشغيل...">
       <button class="btn btn-blue" onclick="addToRotation()"><i class="fa-solid fa-plus"></i> إضافة</button>
@@ -261,9 +274,11 @@
     </div>
   </div>
 
-  <!-- Ticker -->
   <div class="card">
-    <div class="card-title"><div class="dot" style="background:var(--yellow);box-shadow:0 0 8px var(--yellow);"></div> شريط الأخبار السفلي</div>
+    <div class="card-title">
+      <div class="dot" style="background:var(--yellow);box-shadow:0 0 8px var(--yellow);"></div> شريط الأخبار السفلي
+      <div class="rt-indicator"><span class="rt-pulse"></span>فوري</div>
+    </div>
     <div class="ticker-row">
       <input id="tickerInput" type="text" class="s-input" placeholder="نص الشريط السفلي للمشاهدين...">
       <button class="btn btn-red" onclick="saveTicker()"><i class="fa-solid fa-paper-plane"></i></button>
@@ -272,15 +287,54 @@
 
 </div>
 
-<div class="toast" id="toast"><i class="fa-solid fa-check-circle"></i> <span id="toastMsg">تمت المزامنة مع السيرفر!</span></div>
+<div class="toast" id="toast"><i class="fa-solid fa-check-circle"></i> <span id="toastMsg">تمت المزامنة!</span></div>
 
 <script>
-// ─── Supabase ───────────────────────────────────────────────────────────────
+// ╔═══════════════════════════════════════════════════════════╗
+// ║   لوحة التحكم - نسخة فورية 100% (صفر setInterval)       ║
+// ╚═══════════════════════════════════════════════════════════╝
+
 const SB_URL = 'https://hvgtysuwzdtsgqjgsuhi.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2Z3R5c3V3emR0c2dxamdzdWhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NjgyNDIsImV4cCI6MjA5NjE0NDI0Mn0.YjlcTIO_uycIolB3N2dkw0U76iJ76G57uhwpuTavrSM';
-const sb = window.supabase.createClient(SB_URL, SB_KEY);
 
-// ─── Volume ─────────────────────────────────────────────────────────────────
+const sb = window.supabase.createClient(SB_URL, SB_KEY, {
+  realtime: { params: { eventsPerSecond: 20 } }
+});
+
+const adminSessionId = 'admin_' + Math.random().toString(36).substr(2);
+let isUpdatingFromRemote = false; // منع loop عند استقبال تحديث من السيرفر
+
+// ═══════════════════════════════════════
+//  Toast
+// ═══════════════════════════════════════
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+function setConnStatus(online) {
+  const dot = document.getElementById('connDot');
+  const txt = document.getElementById('connText');
+  if (online) {
+    dot.classList.remove('gray');
+    dot.classList.add('green');
+    txt.textContent = 'متصل فورياً ⚡';
+    document.querySelectorAll('.rt-indicator').forEach(e => e.classList.remove('off'));
+  } else {
+    dot.classList.remove('green');
+    dot.classList.add('gray');
+    txt.textContent = 'يعيد الاتصال...';
+    document.querySelectorAll('.rt-indicator').forEach(e => e.classList.add('off'));
+  }
+}
+
+// ═══════════════════════════════════════
+//  Volume + VU Meter
+// ═══════════════════════════════════════
 let isMuted = false, prevVol = 100;
 
 function onVolInput(val) {
@@ -289,6 +343,7 @@ function onVolInput(val) {
 }
 
 async function updateRemoteVolume(val) {
+  if (isUpdatingFromRemote) return;
   document.getElementById('volNum').textContent = val;
   await sb.from('channel_settings').update({ volume: parseInt(val) }).eq('id', 'live_stream');
   toast('تم ضبط الصوت على ' + val + '%');
@@ -315,7 +370,6 @@ function toggleMute() {
   }
 }
 
-// VU Meter
 const NUM_BARS = 12;
 const vuMeter = document.getElementById('vuMeter');
 for (let i = 0; i < NUM_BARS; i++) {
@@ -342,15 +396,16 @@ function animateVU(vol) {
     }
   }
 }
-// Idle VU animation
-let vuInterval;
-function startVUIdle() {
-  const vol = parseInt(document.getElementById('volSlider').value);
-  vuInterval = setInterval(() => animateVU(vol), 100);
-}
-startVUIdle();
 
-// ─── Mic ────────────────────────────────────────────────────────────────────
+// VU local animation (مو طلبات سيرفر - فقط تأثير بصري محلي)
+setInterval(() => {
+  const vol = parseInt(document.getElementById('volSlider').value);
+  animateVU(vol);
+}, 120);
+
+// ═══════════════════════════════════════
+//  Mic (محلي 100% - بدون سيرفر)
+// ═══════════════════════════════════════
 let micStreams = {};
 let audioCtxs = {};
 
@@ -362,7 +417,6 @@ async function toggleMic(n) {
   const errEl = document.getElementById('mic-error');
 
   if (micStreams[n]) {
-    // Stop mic
     micStreams[n].getTracks().forEach(t => t.stop());
     if (audioCtxs[n]) { audioCtxs[n].close(); delete audioCtxs[n]; }
     delete micStreams[n];
@@ -377,8 +431,6 @@ async function toggleMic(n) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
       micStreams[n] = stream;
-
-      // Web Audio to control volume
       const ctx = new AudioContext();
       audioCtxs[n] = ctx;
       const source = ctx.createMediaStreamSource(stream);
@@ -396,15 +448,17 @@ async function toggleMic(n) {
       channel.classList.add('active');
       icon.innerHTML = '<i class="fa-solid fa-microphone" style="color:var(--green);"></i>';
       errEl.style.display = 'none';
-      toast('🎙️ المايك ' + n + ' شغال — أنت على الهواء!');
+      toast('🎙️ المايك ' + n + ' شغال!');
     } catch (err) {
       errEl.style.display = 'block';
-      errEl.textContent = '⚠️ ما قدرنا نفتح المايك: ' + (err.message || 'تأكد إنك سمحت للمتصفح باستخدام المايك');
+      errEl.textContent = '⚠️ ما قدرنا نفتح المايك: ' + (err.message || 'تأكد إنك سمحت للمتصفح');
     }
   }
 }
 
-// ─── YouTube Helpers ─────────────────────────────────────────────────────────
+// ═══════════════════════════════════════
+//  YouTube
+// ═══════════════════════════════════════
 function extractYoutubeId(url) {
   if (!url) return null;
   url = url.trim();
@@ -424,13 +478,11 @@ async function playInstant() {
   const url = res.type === 'playlist' ? 'https://www.youtube.com/playlist?list=' + res.id : 'https://www.youtube.com/watch?v=' + res.id;
   await sb.from('channel_settings').update({ override_url: url, override_start: Date.now() }).eq('id', 'live_stream');
   document.getElementById('instantUrl').value = '';
-  document.getElementById('statusText').textContent = 'بث فوري نشط 🔴';
   toast('🔴 بث فوري شغال!');
 }
 
 async function cancelInstant() {
   await sb.from('channel_settings').update({ override_url: null, override_start: null }).eq('id', 'live_stream');
-  document.getElementById('statusText').textContent = 'جاهز للبث';
   toast('رجع للجدول التلقائي');
 }
 
@@ -442,33 +494,31 @@ async function addToRotation() {
   const label = res.type === 'playlist' ? 'قائمة تشغيل' : 'أغنية';
   await sb.from('playlist').insert([{ title: label, video_url: url }]);
   input.value = '';
-  toast('تمت الإضافة للقائمة ✅');
-  fetchRotationList();
+  // التحديث تلقائي عبر Realtime - ما نحتاج fetch
 }
 
-async function fetchRotationList() {
-  const { data: songs } = await sb.from('playlist').select('*').order('id', { ascending: true });
+function renderPlaylist(songs) {
   const container = document.getElementById('rotationContainer');
   if (!songs || songs.length === 0) {
     container.innerHTML = '<div style="text-align:center; padding:16px; color:var(--text-dim); font-size:0.8rem;">القائمة فارغة</div>';
     return;
   }
-  container.innerHTML = '';
+  let html = '';
   songs.forEach(song => {
     const isPlaylist = song.video_url.includes('list=');
-    container.innerHTML += `
+    html += `
       <div class="p-row">
         <span class="p-type ${isPlaylist ? 'pl' : 'vid'}">${isPlaylist ? 'PL' : 'VID'}</span>
         <span class="p-url">${song.video_url}</span>
         <button class="del-btn" onclick="deleteSong(${song.id})"><i class="fa-solid fa-xmark"></i></button>
       </div>`;
   });
+  container.innerHTML = html;
 }
 
 async function deleteSong(id) {
   await sb.from('playlist').delete().eq('id', id);
-  fetchRotationList();
-  toast('تم الحذف');
+  // التحديث تلقائي عبر Realtime
 }
 
 async function saveTicker() {
@@ -477,30 +527,130 @@ async function saveTicker() {
   toast('تم تحديث الشريط 📢');
 }
 
-// ─── Toast ────────────────────────────────────────────────────────────────────
-let toastTimer;
-function toast(msg) {
-  const el = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+// ═══════════════════════════════════════
+//  الاشتراكات الفورية ⚡
+// ═══════════════════════════════════════
+function subscribeRealtime() {
+
+  // ─── إعدادات القناة فورية ───
+  sb.channel('admin-settings')
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'channel_settings',
+      filter: 'id=eq.live_stream'
+    }, (payload) => {
+      // تحديث الواجهة من تغيير الإعدادات (لو من جهاز ثاني)
+      isUpdatingFromRemote = true;
+
+      const config = payload.new;
+      if (config.volume !== undefined) {
+        const cur = parseInt(document.getElementById('volSlider').value);
+        if (cur !== config.volume) {
+          document.getElementById('volSlider').value = config.volume;
+          document.getElementById('volNum').textContent = config.volume;
+          animateVU(config.volume);
+        }
+      }
+      if (config.ticker_text !== undefined) {
+        const tickerEl = document.getElementById('tickerInput');
+        if (document.activeElement !== tickerEl) {
+          tickerEl.value = config.ticker_text || '';
+        }
+      }
+
+      setTimeout(() => { isUpdatingFromRemote = false; }, 100);
+    })
+    .subscribe();
+
+  // ─── قائمة التشغيل فورية ───
+  sb.channel('admin-playlist')
+    .on('postgres_changes', {
+      event: '*',
+      schema: 'public',
+      table: 'playlist'
+    }, async () => {
+      // لما يتغير أي شيء بالقائمة، نسحب نسخة محدثة
+      const { data } = await sb.from('playlist').select('*').order('id', { ascending: true });
+      renderPlaylist(data);
+    })
+    .subscribe(status => {
+      setConnStatus(status === 'SUBSCRIBED');
+    });
+
+  // ─── عدد المشاهدين الفوري (Presence) ───
+  const viewersCh = sb.channel('viewers-live', {
+    config: { presence: { key: adminSessionId } }
+  });
+
+  viewersCh
+    .on('presence', { event: 'sync' }, () => {
+      // كل من في الـ presence ما عدا الأدمن
+      const state = viewersCh.presenceState();
+      const total = Object.keys(state).length;
+      // ما نحسب الأدمن نفسه
+      const viewers = Math.max(0, total - 1);
+      updateViewersCount(viewers);
+    })
+    .on('presence', { event: 'join' }, () => {
+      const state = viewersCh.presenceState();
+      updateViewersCount(Math.max(0, Object.keys(state).length - 1));
+    })
+    .on('presence', { event: 'leave' }, () => {
+      const state = viewersCh.presenceState();
+      updateViewersCount(Math.max(0, Object.keys(state).length - 1));
+    })
+    .subscribe(async status => {
+      if (status === 'SUBSCRIBED') {
+        // الأدمن يدخل لكن نميزه
+        await viewersCh.track({ id: adminSessionId, role: 'admin', t: Date.now() });
+      }
+    });
 }
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
+function updateViewersCount(count) {
+  const el = document.getElementById('liveViewers');
+  if (el.textContent != count) {
+    el.style.transform = 'scale(1.3)';
+    el.style.transition = 'transform .2s';
+    el.textContent = count;
+    setTimeout(() => el.style.transform = 'scale(1)', 200);
+  }
+}
+
+// ═══════════════════════════════════════
+//  التحميل الأولي + التشغيل
+// ═══════════════════════════════════════
 async function loadStudio() {
-  const { data: config } = await sb.from('channel_settings').select('*').eq('id', 'live_stream').single();
-  if (config) {
+  // تحميل أولي (مرة واحدة فقط)
+  const [configRes, songsRes] = await Promise.all([
+    sb.from('channel_settings').select('*').eq('id', 'live_stream').single(),
+    sb.from('playlist').select('*').order('id', { ascending: true })
+  ]);
+
+  if (configRes.data) {
+    const config = configRes.data;
     document.getElementById('tickerInput').value = config.ticker_text || '';
     const vol = config.volume !== undefined ? config.volume : 100;
     document.getElementById('volSlider').value = vol;
     document.getElementById('volNum').textContent = vol;
     animateVU(vol);
   }
-  fetchRotationList();
+
+  renderPlaylist(songsRes.data);
+
+  // تفعيل الاشتراكات الفورية
+  subscribeRealtime();
 }
 
 loadStudio();
+
+// ╔═══════════════════════════════════════════════════════════╗
+// ║  ✅ صفر setInterval للسيرفر                              ║
+// ║  ✅ كل التحديثات فورية عبر Realtime                      ║
+// ║  ✅ عدد المشاهدين الحاليين يظهر مباشرة                  ║
+// ║  ✅ لما تغير شي يطلع تلقائياً (لو فاتح من 2 جهاز)       ║
+// ╚═══════════════════════════════════════════════════════════╝
 </script>
 </body>
 </html>
