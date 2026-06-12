@@ -9,19 +9,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --red: #ff2a3b;
-    --red-dim: rgba(255,42,59,0.15);
-    --green: #00e676;
-    --green-dim: rgba(0,230,118,0.12);
-    --yellow: #ffd740;
-    --blue: #448aff;
-    --purple: #d500f9;
-    --bg: #07070f;
-    --panel: #0e0e1c;
-    --card: #13132b;
-    --border: rgba(255,255,255,0.06);
-    --text: #d0d0e8;
-    --text-dim: #5a5a8a;
+    --red: #ff2a3b; --red-dim: rgba(255,42,59,0.15);
+    --green: #00e676; --green-dim: rgba(0,230,118,0.12);
+    --yellow: #ffd740; --blue: #448aff; --purple: #d500f9;
+    --bg: #07070f; --panel: #0e0e1c; --card: #13132b;
+    --border: rgba(255,255,255,0.06); --text: #d0d0e8; --text-dim: #5a5a8a;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
@@ -88,109 +80,85 @@
   .rt-indicator.off { background: var(--red-dim); color: var(--red); }
   .rt-pulse { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: rtPulse 1.5s infinite; }
   @keyframes rtPulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  /* ═══════════════════════════════════════
-     قسم الإشعارات الخرافي
-     ═══════════════════════════════════════ */
-  .notif-card {
-    border: 1px solid rgba(213, 0, 249, 0.3);
-    background: linear-gradient(135deg, var(--card), rgba(213, 0, 249, 0.05));
-  }
-  .notif-textarea {
-    width: 100%; padding: 12px 14px; background: var(--panel); border: 1px solid var(--border);
-    border-radius: 8px; color: #fff; font-family: inherit; font-size: 0.9rem; font-weight: 700;
-    resize: vertical; min-height: 60px; margin-bottom: 12px;
-  }
+  .notif-card { border: 1px solid rgba(213, 0, 249, 0.3); background: linear-gradient(135deg, var(--card), rgba(213, 0, 249, 0.05)); }
+  .notif-textarea { width: 100%; padding: 12px 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-family: inherit; font-size: 0.9rem; font-weight: 700; resize: vertical; min-height: 60px; margin-bottom: 12px; }
   .notif-textarea:focus { outline: none; border-color: rgba(213, 0, 249, 0.5); }
   .notif-textarea::placeholder { color: var(--text-dim); }
-
-  .types-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px;
-  }
-  .type-btn {
-    padding: 10px 4px; border: 2px solid var(--border); border-radius: 8px;
-    background: var(--panel); color: var(--text-dim); cursor: pointer; font-family: inherit;
-    font-size: 0.7rem; font-weight: 700; transition: all 0.2s; display: flex;
-    flex-direction: column; align-items: center; gap: 4px;
-  }
+  .types-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
+  .type-btn { padding: 10px 4px; border: 2px solid var(--border); border-radius: 8px; background: var(--panel); color: var(--text-dim); cursor: pointer; font-family: inherit; font-size: 0.7rem; font-weight: 700; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .type-btn .emoji { font-size: 1.3rem; }
   .type-btn:hover { border-color: rgba(255,255,255,0.2); }
-  .type-btn.active {
-    background: linear-gradient(135deg, var(--purple), var(--red));
-    border-color: #fff; color: #fff;
-    box-shadow: 0 4px 16px rgba(213, 0, 249, 0.4);
-    transform: translateY(-2px);
-  }
-
-  .notif-options {
-    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px;
-  }
+  .type-btn.active { background: linear-gradient(135deg, var(--purple), var(--red)); border-color: #fff; color: #fff; box-shadow: 0 4px 16px rgba(213, 0, 249, 0.4); transform: translateY(-2px); }
+  .notif-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
   .opt-group { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 8px; }
   .opt-label { font-size: 0.65rem; color: var(--text-dim); margin-bottom: 4px; font-weight: 700; letter-spacing: 1px; }
-  .opt-select {
-    width: 100%; padding: 6px 8px; background: var(--card); border: 1px solid var(--border);
-    border-radius: 5px; color: #fff; font-family: inherit; font-size: 0.78rem; cursor: pointer;
-  }
+  .opt-select { width: 100%; padding: 6px 8px; background: var(--card); border: 1px solid var(--border); border-radius: 5px; color: #fff; font-family: inherit; font-size: 0.78rem; cursor: pointer; }
   .opt-select:focus { outline: none; border-color: var(--purple); }
-
-  .sound-toggle {
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    padding: 7px; background: var(--card); border: 1px solid var(--border);
-    border-radius: 5px; cursor: pointer; font-size: 0.78rem; font-weight: 700;
-    color: var(--text-dim); transition: all 0.2s;
-  }
+  .sound-toggle { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 7px; background: var(--card); border: 1px solid var(--border); border-radius: 5px; cursor: pointer; font-size: 0.78rem; font-weight: 700; color: var(--text-dim); transition: all 0.2s; }
   .sound-toggle.on { background: var(--green-dim); border-color: var(--green); color: var(--green); }
-
   .color-picker-row { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
-  .color-input {
-    width: 50px; height: 38px; border: 1px solid var(--border); border-radius: 8px;
-    cursor: pointer; background: var(--panel); padding: 2px;
-  }
+  .color-input { width: 50px; height: 38px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; background: var(--panel); padding: 2px; }
   .color-clear { font-size: 0.7rem; color: var(--text-dim); cursor: pointer; text-decoration: underline; }
-
-  .send-notif-btn {
-    width: 100%; padding: 14px; background: linear-gradient(135deg, var(--purple), var(--red));
-    color: #fff; border: none; border-radius: 10px; font-weight: 900; font-size: 0.95rem;
-    cursor: pointer; transition: all 0.2s; display: flex; align-items: center;
-    justify-content: center; gap: 8px; font-family: inherit;
-    box-shadow: 0 6px 20px rgba(213, 0, 249, 0.3);
-  }
+  .send-notif-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--purple), var(--red)); color: #fff; border: none; border-radius: 10px; font-weight: 900; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; box-shadow: 0 6px 20px rgba(213, 0, 249, 0.3); }
   .send-notif-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(213, 0, 249, 0.5); }
-
-  /* القوالب */
-  .templates-row {
-    display: flex; gap: 6px; overflow-x: auto; padding: 4px 0; margin-bottom: 12px;
-    scrollbar-width: thin; scrollbar-color: var(--purple) transparent;
-  }
+  .templates-row { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0; margin-bottom: 12px; scrollbar-width: thin; scrollbar-color: var(--purple) transparent; }
   .templates-row::-webkit-scrollbar { height: 4px; }
   .templates-row::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 2px; }
-  .template-chip {
-    flex-shrink: 0; padding: 7px 12px; background: var(--panel); border: 1px solid var(--border);
-    border-radius: 50px; cursor: pointer; font-size: 0.72rem; color: var(--text); font-weight: 700;
-    white-space: nowrap; transition: all 0.2s;
-  }
+  .template-chip { flex-shrink: 0; padding: 7px 12px; background: var(--panel); border: 1px solid var(--border); border-radius: 50px; cursor: pointer; font-size: 0.72rem; color: var(--text); font-weight: 700; white-space: nowrap; transition: all 0.2s; }
   .template-chip:hover { border-color: var(--purple); color: var(--purple); transform: translateY(-1px); }
-
-  /* السجل */
   .history-list { display: flex; flex-direction: column; gap: 5px; max-height: 180px; overflow-y: auto; margin-top: 10px; }
   .history-list::-webkit-scrollbar { width: 4px; }
   .history-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
-  .history-item {
-    display: flex; justify-content: space-between; align-items: center; gap: 8px;
-    background: var(--panel); padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border);
-  }
+  .history-item { display: flex; justify-content: space-between; align-items: center; gap: 8px; background: var(--panel); padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); }
   .history-text { flex: 1; font-size: 0.78rem; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .history-type { font-size: 1rem; flex-shrink: 0; }
   .history-time { font-size: 0.65rem; color: var(--text-dim); flex-shrink: 0; }
-  .history-resend {
-    background: rgba(213, 0, 249, 0.15); border: 1px solid var(--purple); color: var(--purple);
-    padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; cursor: pointer;
-  }
+  .history-resend { background: rgba(213, 0, 249, 0.15); border: 1px solid var(--purple); color: var(--purple); padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
   .history-resend:hover { background: var(--purple); color: #fff; }
+
+  /* ═══ قسم خلفية الشاشة الجديد ═══ */
+  .bg-card {
+    border: 1px solid rgba(0, 230, 118, 0.3);
+    background: linear-gradient(135deg, var(--card), rgba(0, 230, 118, 0.04));
+  }
+  .bg-preview {
+    width: 100%; aspect-ratio: 16/9; background: var(--panel); border-radius: 10px;
+    margin-bottom: 12px; background-size: cover; background-position: center;
+    border: 2px solid var(--border); position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .bg-preview-empty {
+    color: var(--text-dim); font-size: 0.85rem; font-weight: 700;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .bg-preview-empty i { font-size: 2rem; opacity: 0.5; }
+
+  .wave-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
+  .wave-btn {
+    padding: 10px 4px; border: 2px solid var(--border); border-radius: 8px;
+    background: var(--panel); color: var(--text-dim); cursor: pointer; font-family: inherit;
+    font-size: 0.72rem; font-weight: 700; transition: all 0.2s; display: flex;
+    flex-direction: column; align-items: center; gap: 4px;
+  }
+  .wave-btn .emoji { font-size: 1.2rem; }
+  .wave-btn:hover { border-color: rgba(255,255,255,0.2); }
+  .wave-btn.active {
+    background: linear-gradient(135deg, #1db954, #00e676);
+    border-color: #fff; color: #fff;
+    box-shadow: 0 4px 16px rgba(0, 230, 118, 0.4);
+  }
+
+  .quick-images { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; margin-bottom: 12px; }
+  .quick-img {
+    flex-shrink: 0; width: 80px; height: 50px; border-radius: 6px;
+    background-size: cover; background-position: center; cursor: pointer;
+    border: 2px solid var(--border); transition: all 0.2s;
+  }
+  .quick-img:hover { border-color: var(--green); transform: scale(1.05); }
 
   @media (max-width: 600px) {
     .fader-section { grid-template-columns: 1fr; }
-    .types-grid { grid-template-columns: repeat(2, 1fr); }
+    .types-grid, .wave-options { grid-template-columns: repeat(2, 1fr); }
     .notif-options { grid-template-columns: 1fr 1fr; }
   }
 </style>
@@ -260,15 +228,82 @@
     </div>
   </div>
 
-  <!-- ═══ الإشعارات الخرافية ═══ -->
+  <!-- ═══ خلفية الشاشة ═══ -->
+  <div class="card bg-card">
+    <div class="card-title">
+      <div class="dot" style="background:var(--green); box-shadow:0 0 8px var(--green);"></div>
+      🖼️ خلفية شاشة البث
+      <div class="rt-indicator"><span class="rt-pulse"></span>فوري</div>
+    </div>
+
+    <!-- معاينة الصورة -->
+    <div class="bg-preview" id="bgPreview">
+      <div class="bg-preview-empty" id="bgEmpty">
+        <i class="fa-solid fa-image"></i>
+        <span>لا توجد صورة - الخلفية افتراضية</span>
+      </div>
+    </div>
+
+    <!-- إدخال رابط الصورة -->
+    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">
+      🔗 رابط الصورة:
+    </div>
+    <div class="instant-row" style="margin-bottom:12px;">
+      <input id="bgImageUrl" type="text" class="s-input" placeholder="الصق رابط الصورة هنا (https://...)">
+      <button class="btn btn-green" onclick="saveBackgroundImage()"><i class="fa-solid fa-check"></i> حفظ</button>
+    </div>
+
+    <!-- أزرار سريعة -->
+    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">
+      ⚡ صور جاهزة (اضغط لاختيار):
+    </div>
+    <div class="quick-images">
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1280')" title="تقني"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1614851099175-e5b30eb6f696?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1614851099175-e5b30eb6f696?w=1280')" title="ليلي"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280')" title="موسيقي"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?w=1280')" title="نيون"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1280')" title="موجي"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=1280')" title="ملون"></div>
+    </div>
+
+    <!-- نوع الموجة -->
+    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">
+      🌊 نوع الحركة الخفيفة:
+    </div>
+    <div class="wave-options">
+      <div class="wave-btn active" data-wave="breath" onclick="selectWave('breath', this)">
+        <span class="emoji">🌬️</span><span>تنفس</span>
+      </div>
+      <div class="wave-btn" data-wave="zoom" onclick="selectWave('zoom', this)">
+        <span class="emoji">🔍</span><span>تكبير</span>
+      </div>
+      <div class="wave-btn" data-wave="pan" onclick="selectWave('pan', this)">
+        <span class="emoji">↔️</span><span>تحريك</span>
+      </div>
+      <div class="wave-btn" data-wave="glow" onclick="selectWave('glow', this)">
+        <span class="emoji">✨</span><span>توهج</span>
+      </div>
+      <div class="wave-btn" data-wave="float" onclick="selectWave('float', this)">
+        <span class="emoji">☁️</span><span>عائم</span>
+      </div>
+      <div class="wave-btn" data-wave="none" onclick="selectWave('none', this)">
+        <span class="emoji">⏸️</span><span>ثابت</span>
+      </div>
+    </div>
+
+    <!-- زر إزالة الصورة -->
+    <button class="btn btn-ghost" onclick="removeBackground()" style="margin-top:4px;">
+      <i class="fa-solid fa-trash"></i> إزالة الصورة (رجوع للافتراضي)
+    </button>
+  </div>
+
+  <!-- ═══ الإشعارات ═══ -->
   <div class="card notif-card">
     <div class="card-title">
       <div class="dot" style="background:var(--purple); box-shadow:0 0 8px var(--purple);"></div>
       📢 إشعار وسط الشاشة
       <div class="rt-indicator"><span class="rt-pulse"></span>فوري</div>
     </div>
-
-    <!-- القوالب الجاهزة -->
     <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">⚡ قوالب جاهزة:</div>
     <div class="templates-row">
       <div class="template-chip" onclick="useTemplate('🎉 مرحباً بكم في غيّر جوك TV', 'celebrate')">🎉 ترحيب</div>
@@ -279,64 +314,35 @@
       <div class="template-chip" onclick="useTemplate('🎁 مفاجأة قادمة!', 'surprise')">🎁 مفاجأة</div>
       <div class="template-chip" onclick="useTemplate('📱 تابعونا على انستغرام: 6.2nr', 'info')">📱 سوشيال</div>
     </div>
-
-    <!-- النص -->
     <textarea id="notifText" class="notif-textarea" placeholder="اكتب نص الإشعار اللي راح يطلع وسط الشاشة..."></textarea>
-
-    <!-- الأنواع -->
     <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">🎨 اختر النوع:</div>
     <div class="types-grid">
-      <div class="type-btn active" data-type="info" onclick="selectType('info', this)">
-        <span class="emoji">ℹ️</span><span>معلومة</span>
-      </div>
-      <div class="type-btn" data-type="urgent" onclick="selectType('urgent', this)">
-        <span class="emoji">🚨</span><span>عاجل</span>
-      </div>
-      <div class="type-btn" data-type="celebrate" onclick="selectType('celebrate', this)">
-        <span class="emoji">🎉</span><span>احتفال</span>
-      </div>
-      <div class="type-btn" data-type="love" onclick="selectType('love', this)">
-        <span class="emoji">❤️</span><span>تحية</span>
-      </div>
-      <div class="type-btn" data-type="song" onclick="selectType('song', this)">
-        <span class="emoji">🎵</span><span>أغنية</span>
-      </div>
-      <div class="type-btn" data-type="warn" onclick="selectType('warn', this)">
-        <span class="emoji">⚠️</span><span>تنبيه</span>
-      </div>
-      <div class="type-btn" data-type="surprise" onclick="selectType('surprise', this)">
-        <span class="emoji">🎁</span><span>مفاجأة</span>
-      </div>
-      <div class="type-btn" data-type="custom" onclick="selectType('custom', this)">
-        <span class="emoji">🎨</span><span>مخصص</span>
-      </div>
+      <div class="type-btn active" data-type="info" onclick="selectType('info', this)"><span class="emoji">ℹ️</span><span>معلومة</span></div>
+      <div class="type-btn" data-type="urgent" onclick="selectType('urgent', this)"><span class="emoji">🚨</span><span>عاجل</span></div>
+      <div class="type-btn" data-type="celebrate" onclick="selectType('celebrate', this)"><span class="emoji">🎉</span><span>احتفال</span></div>
+      <div class="type-btn" data-type="love" onclick="selectType('love', this)"><span class="emoji">❤️</span><span>تحية</span></div>
+      <div class="type-btn" data-type="song" onclick="selectType('song', this)"><span class="emoji">🎵</span><span>أغنية</span></div>
+      <div class="type-btn" data-type="warn" onclick="selectType('warn', this)"><span class="emoji">⚠️</span><span>تنبيه</span></div>
+      <div class="type-btn" data-type="surprise" onclick="selectType('surprise', this)"><span class="emoji">🎁</span><span>مفاجأة</span></div>
+      <div class="type-btn" data-type="custom" onclick="selectType('custom', this)"><span class="emoji">🎨</span><span>مخصص</span></div>
     </div>
-
-    <!-- منتقي اللون (يظهر فقط مع custom) -->
     <div class="color-picker-row" id="colorPickerRow" style="display:none;">
       <span style="font-size:0.78rem; color:var(--text-dim); font-weight:700;">🎨 لون مخصص:</span>
       <input type="color" id="customColor" class="color-input" value="#d500f9">
       <span class="color-clear" onclick="clearColor()">إزالة اللون</span>
     </div>
-
-    <!-- الخيارات -->
     <div class="notif-options">
       <div class="opt-group">
         <div class="opt-label">📏 حجم الخط</div>
         <select id="notifFontSize" class="opt-select">
-          <option value="small">صغير</option>
-          <option value="medium" selected>متوسط</option>
-          <option value="large">كبير</option>
+          <option value="small">صغير</option><option value="medium" selected>متوسط</option><option value="large">كبير</option>
         </select>
       </div>
       <div class="opt-group">
         <div class="opt-label">⏱️ المدة</div>
         <select id="notifDuration" class="opt-select">
-          <option value="3">3 ثواني</option>
-          <option value="5" selected>5 ثواني</option>
-          <option value="7">7 ثواني</option>
-          <option value="10">10 ثواني</option>
-          <option value="15">15 ثانية</option>
+          <option value="3">3 ثواني</option><option value="5" selected>5 ثواني</option>
+          <option value="7">7 ثواني</option><option value="10">10 ثواني</option><option value="15">15 ثانية</option>
         </select>
       </div>
       <div class="opt-group">
@@ -346,13 +352,9 @@
         </div>
       </div>
     </div>
-
-    <!-- زر الإرسال -->
     <button class="send-notif-btn" onclick="sendNotification()">
       <i class="fa-solid fa-paper-plane"></i> إرسال للجميع فوراً
     </button>
-
-    <!-- السجل -->
     <div style="margin-top:16px;">
       <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">📜 آخر الإشعارات:</div>
       <div class="history-list" id="historyList">
@@ -409,15 +411,12 @@
 const SB_URL = 'https://hvgtysuwzdtsgqjgsuhi.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2Z3R5c3V3emR0c2dxamdzdWhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NjgyNDIsImV4cCI6MjA5NjE0NDI0Mn0.YjlcTIO_uycIolB3N2dkw0U76iJ76G57uhwpuTavrSM';
 const sb = window.supabase.createClient(SB_URL, SB_KEY, { realtime: { params: { eventsPerSecond: 20 } } });
-
 const adminSessionId = 'admin_' + Math.random().toString(36).substr(2);
 let isUpdatingFromRemote = false;
 let selectedType = 'info';
+let selectedWave = 'breath';
 let soundEnabled = true;
 
-// ═══════════════════════════════════════
-//  Toast
-// ═══════════════════════════════════════
 let toastTimer;
 function toast(msg) {
   const el = document.getElementById('toast');
@@ -430,20 +429,51 @@ function toast(msg) {
 function setConnStatus(online) {
   const dot = document.getElementById('connDot');
   const txt = document.getElementById('connText');
-  if (online) {
-    dot.classList.remove('gray'); dot.classList.add('green');
-    txt.textContent = 'متصل فورياً ⚡';
-    document.querySelectorAll('.rt-indicator').forEach(e => e.classList.remove('off'));
+  if (online) { dot.classList.remove('gray'); dot.classList.add('green'); txt.textContent = 'متصل فورياً ⚡'; document.querySelectorAll('.rt-indicator').forEach(e => e.classList.remove('off')); }
+  else { dot.classList.remove('green'); dot.classList.add('gray'); txt.textContent = 'يعيد الاتصال...'; document.querySelectorAll('.rt-indicator').forEach(e => e.classList.add('off')); }
+}
+
+// ═══ خلفية الشاشة ═══
+function updateBgPreview(url) {
+  const preview = document.getElementById('bgPreview');
+  const empty = document.getElementById('bgEmpty');
+  if (url && url.trim()) {
+    preview.style.backgroundImage = `url('${url}')`;
+    empty.style.display = 'none';
   } else {
-    dot.classList.remove('green'); dot.classList.add('gray');
-    txt.textContent = 'يعيد الاتصال...';
-    document.querySelectorAll('.rt-indicator').forEach(e => e.classList.add('off'));
+    preview.style.backgroundImage = 'none';
+    empty.style.display = 'flex';
   }
 }
 
-// ═══════════════════════════════════════
-//  🎉 الإشعارات
-// ═══════════════════════════════════════
+async function saveBackgroundImage() {
+  const url = document.getElementById('bgImageUrl').value.trim();
+  await sb.from('channel_settings').update({ background_image: url }).eq('id', 'live_stream');
+  updateBgPreview(url);
+  toast('✅ تم تغيير الخلفية فورياً!');
+}
+
+function quickImage(url) {
+  document.getElementById('bgImageUrl').value = url;
+  saveBackgroundImage();
+}
+
+async function removeBackground() {
+  document.getElementById('bgImageUrl').value = '';
+  await sb.from('channel_settings').update({ background_image: '' }).eq('id', 'live_stream');
+  updateBgPreview('');
+  toast('🗑️ تم إزالة الخلفية');
+}
+
+function selectWave(wave, btn) {
+  selectedWave = wave;
+  document.querySelectorAll('.wave-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  sb.from('channel_settings').update({ wave_type: wave }).eq('id', 'live_stream');
+  toast('🌊 تم تغيير نوع الحركة');
+}
+
+// ═══ الإشعارات ═══
 function selectType(type, btn) {
   selectedType = type;
   document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
@@ -454,26 +484,21 @@ function selectType(type, btn) {
 function toggleSound() {
   soundEnabled = !soundEnabled;
   const t = document.getElementById('soundToggle');
-  if (soundEnabled) {
-    t.classList.add('on');
-    t.innerHTML = '<i class="fa-solid fa-volume-high"></i> تشغيل';
-  } else {
-    t.classList.remove('on');
-    t.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> صامت';
-  }
+  if (soundEnabled) { t.classList.add('on'); t.innerHTML = '<i class="fa-solid fa-volume-high"></i> تشغيل'; }
+  else { t.classList.remove('on'); t.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> صامت'; }
 }
 
 function clearColor() {
   document.getElementById('customColor').value = '#d500f9';
-  toast('تم إزالة اللون المخصص');
+  toast('تم إزالة اللون');
 }
 
 function useTemplate(text, type) {
   document.getElementById('notifText').value = text;
   selectedType = type;
   document.querySelectorAll('.type-btn').forEach(b => {
-    if (b.dataset.type === type) { b.classList.add('active'); }
-    else { b.classList.remove('active'); }
+    if (b.dataset.type === type) b.classList.add('active');
+    else b.classList.remove('active');
   });
   document.getElementById('colorPickerRow').style.display = (type === 'custom') ? 'flex' : 'none';
   document.getElementById('notifText').focus();
@@ -482,60 +507,31 @@ function useTemplate(text, type) {
 async function sendNotification() {
   const text = document.getElementById('notifText').value.trim();
   if (!text) { toast('⚠️ اكتب نص الإشعار أولاً'); return; }
-  if (text.length > 200) { toast('⚠️ النص طويل (200 حرف كحد أقصى)'); return; }
-
+  if (text.length > 200) { toast('⚠️ النص طويل'); return; }
   const fontSize = document.getElementById('notifFontSize').value;
   const duration = parseInt(document.getElementById('notifDuration').value);
   const customColor = (selectedType === 'custom') ? document.getElementById('customColor').value : '';
-
-  await sb.from('notifications').insert([{
-    text: text,
-    type: selectedType,
-    color: customColor,
-    font_size: fontSize,
-    duration: duration,
-    sound: soundEnabled
-  }]);
-
+  await sb.from('notifications').insert([{ text, type: selectedType, color: customColor, font_size: fontSize, duration, sound: soundEnabled }]);
   document.getElementById('notifText').value = '';
-  toast('🚀 تم إرسال الإشعار للجميع فورياً!');
+  toast('🚀 تم إرسال الإشعار!');
 }
 
 function renderHistory(items) {
   const box = document.getElementById('historyList');
-  if (!items || items.length === 0) {
-    box.innerHTML = '<div style="text-align:center; padding:10px; color:var(--text-dim); font-size:0.75rem;">لا يوجد إشعارات بعد</div>';
-    return;
-  }
-
-  const typeEmoji = {
-    info: 'ℹ️', urgent: '🚨', celebrate: '🎉', love: '❤️',
-    song: '🎵', warn: '⚠️', surprise: '🎁', custom: '🎨'
-  };
-
+  if (!items || items.length === 0) { box.innerHTML = '<div style="text-align:center; padding:10px; color:var(--text-dim); font-size:0.75rem;">لا يوجد إشعارات بعد</div>'; return; }
+  const typeEmoji = { info: 'ℹ️', urgent: '🚨', celebrate: '🎉', love: '❤️', song: '🎵', warn: '⚠️', surprise: '🎁', custom: '🎨' };
   let html = '';
   items.forEach(n => {
     const time = new Date(n.created_at);
     const timeStr = time.toLocaleTimeString('ar', { hour: '2-digit', minute: '2-digit' });
     const escText = n.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-    html += `
-      <div class="history-item">
-        <span class="history-type">${typeEmoji[n.type] || 'ℹ️'}</span>
-        <span class="history-text">${n.text}</span>
-        <span class="history-time">${timeStr}</span>
-        <button class="history-resend" onclick="resendNotif('${escText}', '${n.type}', '${n.font_size}', ${n.duration}, ${n.sound}, '${n.color || ''}')">
-          <i class="fa-solid fa-rotate-right"></i>
-        </button>
-      </div>
-    `;
+    html += `<div class="history-item"><span class="history-type">${typeEmoji[n.type] || 'ℹ️'}</span><span class="history-text">${n.text}</span><span class="history-time">${timeStr}</span><button class="history-resend" onclick="resendNotif('${escText}', '${n.type}', '${n.font_size}', ${n.duration}, ${n.sound}, '${n.color || ''}')"><i class="fa-solid fa-rotate-right"></i></button></div>`;
   });
   box.innerHTML = html;
 }
 
 async function resendNotif(text, type, fontSize, duration, sound, color) {
-  await sb.from('notifications').insert([{
-    text: text, type: type, color: color, font_size: fontSize, duration: duration, sound: sound
-  }]);
+  await sb.from('notifications').insert([{ text, type, color, font_size: fontSize, duration, sound }]);
   toast('🔁 تم إعادة الإرسال!');
 }
 
@@ -544,9 +540,7 @@ async function loadHistory() {
   renderHistory(data);
 }
 
-// ═══════════════════════════════════════
-//  Volume + VU
-// ═══════════════════════════════════════
+// ═══ Volume ═══
 let isMuted = false, prevVol = 100;
 function onVolInput(val) { document.getElementById('volNum').textContent = val; animateVU(val); }
 async function updateRemoteVolume(val) {
@@ -558,59 +552,34 @@ async function updateRemoteVolume(val) {
 function toggleMute() {
   const slider = document.getElementById('volSlider');
   const btn = document.getElementById('muteBtn');
-  if (!isMuted) {
-    prevVol = parseInt(slider.value); slider.value = 0; isMuted = true;
-    btn.classList.add('muted'); btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> إلغاء الكتم';
-    updateRemoteVolume(0); animateVU(0);
-  } else {
-    slider.value = prevVol; isMuted = false;
-    btn.classList.remove('muted'); btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> كتم';
-    updateRemoteVolume(prevVol); onVolInput(prevVol);
-  }
+  if (!isMuted) { prevVol = parseInt(slider.value); slider.value = 0; isMuted = true; btn.classList.add('muted'); btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> إلغاء الكتم'; updateRemoteVolume(0); animateVU(0); }
+  else { slider.value = prevVol; isMuted = false; btn.classList.remove('muted'); btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> كتم'; updateRemoteVolume(prevVol); onVolInput(prevVol); }
 }
-
 const NUM_BARS = 12;
 const vuMeter = document.getElementById('vuMeter');
-for (let i = 0; i < NUM_BARS; i++) {
-  const b = document.createElement('div');
-  b.className = 'vu-bar'; b.id = 'vb' + i;
-  vuMeter.appendChild(b);
-}
+for (let i = 0; i < NUM_BARS; i++) { const b = document.createElement('div'); b.className = 'vu-bar'; b.id = 'vb' + i; vuMeter.appendChild(b); }
 const barColors = (i) => i < 7 ? '#00e676' : i < 10 ? '#ffd740' : '#ff2a3b';
 function animateVU(vol) {
   const level = parseInt(vol) / 100;
   for (let i = 0; i < NUM_BARS; i++) {
     const bar = document.getElementById('vb' + i);
     const threshold = i / NUM_BARS;
-    if (threshold <= level) {
-      bar.style.height = (20 + Math.random() * 60 * level) + 'px';
-      bar.style.background = barColors(i);
-      bar.style.boxShadow = `0 0 6px ${barColors(i)}88`;
-    } else {
-      bar.style.height = '4px';
-      bar.style.background = 'rgba(255,255,255,0.05)';
-      bar.style.boxShadow = 'none';
-    }
+    if (threshold <= level) { bar.style.height = (20 + Math.random() * 60 * level) + 'px'; bar.style.background = barColors(i); bar.style.boxShadow = `0 0 6px ${barColors(i)}88`; }
+    else { bar.style.height = '4px'; bar.style.background = 'rgba(255,255,255,0.05)'; bar.style.boxShadow = 'none'; }
   }
 }
 setInterval(() => { animateVU(parseInt(document.getElementById('volSlider').value)); }, 120);
 
-// ═══════════════════════════════════════
-//  YouTube
-// ═══════════════════════════════════════
+// ═══ YouTube ═══
 function extractYoutubeId(url) {
   if (!url) return null;
   url = url.trim();
-  if (url.includes('list=')) {
-    const m = url.match(/[&?]list=([^#&?]+)/);
-    if (m) return { id: m[1], type: 'playlist' };
-  }
+  if (url.includes('list=')) { const m = url.match(/[&?]list=([^#&?]+)/); if (m) return { id: m[1], type: 'playlist' }; }
   if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return { id: url, type: 'video' };
   const rx = /^.*(?:youtu\.be\/|v\/|vi\/|embed\/|shorts\/|watch\?v=|&v=)([^#&?]{11}).*/;
   const m = url.match(rx);
   return m ? { id: m[1], type: 'video' } : null;
 }
-
 async function playInstant() {
   const res = extractYoutubeId(document.getElementById('instantUrl').value);
   if (!res) return alert('رابط غير صحيح!');
@@ -619,12 +588,7 @@ async function playInstant() {
   document.getElementById('instantUrl').value = '';
   toast('🔴 بث فوري شغال!');
 }
-
-async function cancelInstant() {
-  await sb.from('channel_settings').update({ override_url: null, override_start: null }).eq('id', 'live_stream');
-  toast('رجع للجدول التلقائي');
-}
-
+async function cancelInstant() { await sb.from('channel_settings').update({ override_url: null, override_start: null }).eq('id', 'live_stream'); toast('رجع للجدول التلقائي'); }
 async function addToRotation() {
   const input = document.getElementById('playlistUrl');
   const res = extractYoutubeId(input.value);
@@ -634,38 +598,25 @@ async function addToRotation() {
   await sb.from('playlist').insert([{ title: label, video_url: url }]);
   input.value = '';
 }
-
 function renderPlaylist(songs) {
   const container = document.getElementById('rotationContainer');
   document.getElementById('quickSongs').textContent = songs ? songs.length : 0;
-  if (!songs || songs.length === 0) {
-    container.innerHTML = '<div style="text-align:center; padding:16px; color:var(--text-dim); font-size:0.8rem;">القائمة فارغة</div>';
-    return;
-  }
+  if (!songs || songs.length === 0) { container.innerHTML = '<div style="text-align:center; padding:16px; color:var(--text-dim); font-size:0.8rem;">القائمة فارغة</div>'; return; }
   let html = '';
   songs.forEach(song => {
     const isPlaylist = song.video_url.includes('list=');
-    html += `
-      <div class="p-row">
-        <span class="p-type ${isPlaylist ? 'pl' : 'vid'}">${isPlaylist ? 'PL' : 'VID'}</span>
-        <span class="p-url">${song.video_url}</span>
-        <button class="del-btn" onclick="deleteSong(${song.id})"><i class="fa-solid fa-xmark"></i></button>
-      </div>`;
+    html += `<div class="p-row"><span class="p-type ${isPlaylist ? 'pl' : 'vid'}">${isPlaylist ? 'PL' : 'VID'}</span><span class="p-url">${song.video_url}</span><button class="del-btn" onclick="deleteSong(${song.id})"><i class="fa-solid fa-xmark"></i></button></div>`;
   });
   container.innerHTML = html;
 }
-
 async function deleteSong(id) { await sb.from('playlist').delete().eq('id', id); }
-
 async function saveTicker() {
   const text = document.getElementById('tickerInput').value.trim();
   await sb.from('channel_settings').update({ ticker_text: text }).eq('id', 'live_stream');
   toast('تم تحديث الشريط 📢');
 }
 
-// ═══════════════════════════════════════
-//  الاشتراكات الفورية
-// ═══════════════════════════════════════
+// ═══ Realtime ═══
 function subscribeRealtime() {
   sb.channel('admin-settings')
     .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'channel_settings', filter: 'id=eq.live_stream' }, (payload) => {
@@ -673,15 +624,22 @@ function subscribeRealtime() {
       const config = payload.new;
       if (config.volume !== undefined) {
         const cur = parseInt(document.getElementById('volSlider').value);
-        if (cur !== config.volume) {
-          document.getElementById('volSlider').value = config.volume;
-          document.getElementById('volNum').textContent = config.volume;
-          animateVU(config.volume);
-        }
+        if (cur !== config.volume) { document.getElementById('volSlider').value = config.volume; document.getElementById('volNum').textContent = config.volume; animateVU(config.volume); }
       }
       if (config.ticker_text !== undefined) {
         const tickerEl = document.getElementById('tickerInput');
         if (document.activeElement !== tickerEl) tickerEl.value = config.ticker_text || '';
+      }
+      if (config.background_image !== undefined) {
+        const bgEl = document.getElementById('bgImageUrl');
+        if (document.activeElement !== bgEl) { bgEl.value = config.background_image || ''; updateBgPreview(config.background_image); }
+      }
+      if (config.wave_type !== undefined) {
+        selectedWave = config.wave_type;
+        document.querySelectorAll('.wave-btn').forEach(b => {
+          if (b.dataset.wave === config.wave_type) b.classList.add('active');
+          else b.classList.remove('active');
+        });
       }
       setTimeout(() => { isUpdatingFromRemote = false; }, 100);
     }).subscribe();
@@ -692,11 +650,8 @@ function subscribeRealtime() {
       renderPlaylist(data);
     }).subscribe(status => setConnStatus(status === 'SUBSCRIBED'));
 
-  // 🔔 الإشعارات
   sb.channel('admin-notifications')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, () => {
-      loadHistory();
-    }).subscribe();
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, () => loadHistory()).subscribe();
 
   const viewersCh = sb.channel('viewers-live', { config: { presence: { key: adminSessionId } } });
   viewersCh
@@ -723,6 +678,15 @@ async function loadStudio() {
     document.getElementById('volSlider').value = vol;
     document.getElementById('volNum').textContent = vol;
     animateVU(vol);
+    // الخلفية
+    document.getElementById('bgImageUrl').value = config.background_image || '';
+    updateBgPreview(config.background_image);
+    // الموجة
+    selectedWave = config.wave_type || 'breath';
+    document.querySelectorAll('.wave-btn').forEach(b => {
+      if (b.dataset.wave === selectedWave) b.classList.add('active');
+      else b.classList.remove('active');
+    });
   }
   renderPlaylist(songsRes.data);
   await loadHistory();
