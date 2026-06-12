@@ -68,8 +68,9 @@
   .del-btn { background: none; border: none; color: var(--text-dim); cursor: pointer; padding: 3px 6px; transition: color 0.2s; }
   .del-btn:hover { color: var(--red); }
   .ticker-row { display: flex; gap: 8px; }
-  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1a30; border: 1px solid rgba(0,230,118,0.3); color: var(--green); padding: 10px 24px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; z-index: 1000; transition: transform 0.3s ease; display: flex; align-items: center; gap: 8px; }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1a30; border: 1px solid rgba(0,230,118,0.3); color: var(--green); padding: 10px 24px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; z-index: 1000; transition: transform 0.3s ease; display: flex; align-items: center; gap: 8px; max-width: 90%; }
   .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.error { border-color: var(--red); color: var(--red); }
   .statusbar { display: flex; justify-content: space-between; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; margin-bottom: 16px; font-size: 0.72rem; }
   .status-item { display: flex; align-items: center; gap: 5px; color: var(--text-dim); }
   .status-dot { width: 5px; height: 5px; border-radius: 50%; }
@@ -116,44 +117,19 @@
   .history-resend { background: rgba(213, 0, 249, 0.15); border: 1px solid var(--purple); color: var(--purple); padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
   .history-resend:hover { background: var(--purple); color: #fff; }
 
-  /* ═══ قسم خلفية الشاشة الجديد ═══ */
-  .bg-card {
-    border: 1px solid rgba(0, 230, 118, 0.3);
-    background: linear-gradient(135deg, var(--card), rgba(0, 230, 118, 0.04));
-  }
-  .bg-preview {
-    width: 100%; aspect-ratio: 16/9; background: var(--panel); border-radius: 10px;
-    margin-bottom: 12px; background-size: cover; background-position: center;
-    border: 2px solid var(--border); position: relative; overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .bg-preview-empty {
-    color: var(--text-dim); font-size: 0.85rem; font-weight: 700;
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-  }
+  /* قسم الخلفية */
+  .bg-card { border: 1px solid rgba(0, 230, 118, 0.3); background: linear-gradient(135deg, var(--card), rgba(0, 230, 118, 0.04)); }
+  .bg-preview { width: 100%; aspect-ratio: 16/9; background: var(--panel); border-radius: 10px; margin-bottom: 12px; background-size: cover; background-position: center; border: 2px solid var(--border); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .bg-preview-empty { color: var(--text-dim); font-size: 0.85rem; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 8px; }
   .bg-preview-empty i { font-size: 2rem; opacity: 0.5; }
-
   .wave-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
-  .wave-btn {
-    padding: 10px 4px; border: 2px solid var(--border); border-radius: 8px;
-    background: var(--panel); color: var(--text-dim); cursor: pointer; font-family: inherit;
-    font-size: 0.72rem; font-weight: 700; transition: all 0.2s; display: flex;
-    flex-direction: column; align-items: center; gap: 4px;
-  }
+  .wave-btn { padding: 10px 4px; border: 2px solid var(--border); border-radius: 8px; background: var(--panel); color: var(--text-dim); cursor: pointer; font-family: inherit; font-size: 0.72rem; font-weight: 700; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .wave-btn .emoji { font-size: 1.2rem; }
   .wave-btn:hover { border-color: rgba(255,255,255,0.2); }
-  .wave-btn.active {
-    background: linear-gradient(135deg, #1db954, #00e676);
-    border-color: #fff; color: #fff;
-    box-shadow: 0 4px 16px rgba(0, 230, 118, 0.4);
-  }
-
+  .wave-btn.active { background: linear-gradient(135deg, #1db954, #00e676); border-color: #fff; color: #fff; box-shadow: 0 4px 16px rgba(0, 230, 118, 0.4); }
+  .wave-btn.loading { opacity: 0.5; pointer-events: none; }
   .quick-images { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; margin-bottom: 12px; }
-  .quick-img {
-    flex-shrink: 0; width: 80px; height: 50px; border-radius: 6px;
-    background-size: cover; background-position: center; cursor: pointer;
-    border: 2px solid var(--border); transition: all 0.2s;
-  }
+  .quick-img { flex-shrink: 0; width: 80px; height: 50px; border-radius: 6px; background-size: cover; background-position: center; cursor: pointer; border: 2px solid var(--border); transition: all 0.2s; }
   .quick-img:hover { border-color: var(--green); transform: scale(1.05); }
 
   @media (max-width: 600px) {
@@ -189,7 +165,7 @@
     </div>
   </div>
 
-  <!-- ═══ مكسر الصوت ═══ -->
+  <!-- مكسر الصوت -->
   <div class="card">
     <div class="card-title">
       <div class="dot"></div> مكسر الصوت الرئيسي
@@ -228,7 +204,7 @@
     </div>
   </div>
 
-  <!-- ═══ خلفية الشاشة ═══ -->
+  <!-- خلفية الشاشة -->
   <div class="card bg-card">
     <div class="card-title">
       <div class="dot" style="background:var(--green); box-shadow:0 0 8px var(--green);"></div>
@@ -236,7 +212,6 @@
       <div class="rt-indicator"><span class="rt-pulse"></span>فوري</div>
     </div>
 
-    <!-- معاينة الصورة -->
     <div class="bg-preview" id="bgPreview">
       <div class="bg-preview-empty" id="bgEmpty">
         <i class="fa-solid fa-image"></i>
@@ -244,34 +219,25 @@
       </div>
     </div>
 
-    <!-- إدخال رابط الصورة -->
-    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">
-      🔗 رابط الصورة:
-    </div>
+    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">🔗 رابط الصورة:</div>
     <div class="instant-row" style="margin-bottom:12px;">
       <input id="bgImageUrl" type="text" class="s-input" placeholder="الصق رابط الصورة هنا (https://...)">
       <button class="btn btn-green" onclick="saveBackgroundImage()"><i class="fa-solid fa-check"></i> حفظ</button>
     </div>
 
-    <!-- أزرار سريعة -->
-    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">
-      ⚡ صور جاهزة (اضغط لاختيار):
-    </div>
+    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">⚡ صور جاهزة:</div>
     <div class="quick-images">
-      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1280')" title="تقني"></div>
-      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1614851099175-e5b30eb6f696?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1614851099175-e5b30eb6f696?w=1280')" title="ليلي"></div>
-      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280')" title="موسيقي"></div>
-      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?w=1280')" title="نيون"></div>
-      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1280')" title="موجي"></div>
-      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=1280')" title="ملون"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1280')"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1614851099175-e5b30eb6f696?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1614851099175-e5b30eb6f696?w=1280')"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280')"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?w=1280')"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1280')"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=1280')"></div>
     </div>
 
-    <!-- نوع الموجة -->
-    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">
-      🌊 نوع الحركة الخفيفة:
-    </div>
-    <div class="wave-options">
-      <div class="wave-btn active" data-wave="breath" onclick="selectWave('breath', this)">
+    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">🌊 نوع الحركة (اضغط لتطبيق):</div>
+    <div class="wave-options" id="waveOptions">
+      <div class="wave-btn" data-wave="breath" onclick="selectWave('breath', this)">
         <span class="emoji">🌬️</span><span>تنفس</span>
       </div>
       <div class="wave-btn" data-wave="zoom" onclick="selectWave('zoom', this)">
@@ -291,13 +257,12 @@
       </div>
     </div>
 
-    <!-- زر إزالة الصورة -->
     <button class="btn btn-ghost" onclick="removeBackground()" style="margin-top:4px;">
-      <i class="fa-solid fa-trash"></i> إزالة الصورة (رجوع للافتراضي)
+      <i class="fa-solid fa-trash"></i> إزالة الصورة
     </button>
   </div>
 
-  <!-- ═══ الإشعارات ═══ -->
+  <!-- الإشعارات -->
   <div class="card notif-card">
     <div class="card-title">
       <div class="dot" style="background:var(--purple); box-shadow:0 0 8px var(--purple);"></div>
@@ -314,7 +279,7 @@
       <div class="template-chip" onclick="useTemplate('🎁 مفاجأة قادمة!', 'surprise')">🎁 مفاجأة</div>
       <div class="template-chip" onclick="useTemplate('📱 تابعونا على انستغرام: 6.2nr', 'info')">📱 سوشيال</div>
     </div>
-    <textarea id="notifText" class="notif-textarea" placeholder="اكتب نص الإشعار اللي راح يطلع وسط الشاشة..."></textarea>
+    <textarea id="notifText" class="notif-textarea" placeholder="اكتب نص الإشعار..."></textarea>
     <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">🎨 اختر النوع:</div>
     <div class="types-grid">
       <div class="type-btn active" data-type="info" onclick="selectType('info', this)"><span class="emoji">ℹ️</span><span>معلومة</span></div>
@@ -327,9 +292,9 @@
       <div class="type-btn" data-type="custom" onclick="selectType('custom', this)"><span class="emoji">🎨</span><span>مخصص</span></div>
     </div>
     <div class="color-picker-row" id="colorPickerRow" style="display:none;">
-      <span style="font-size:0.78rem; color:var(--text-dim); font-weight:700;">🎨 لون مخصص:</span>
+      <span style="font-size:0.78rem; color:var(--text-dim); font-weight:700;">🎨 لون:</span>
       <input type="color" id="customColor" class="color-input" value="#d500f9">
-      <span class="color-clear" onclick="clearColor()">إزالة اللون</span>
+      <span class="color-clear" onclick="clearColor()">إزالة</span>
     </div>
     <div class="notif-options">
       <div class="opt-group">
@@ -363,7 +328,7 @@
     </div>
   </div>
 
-  <!-- ═══ بث فوري ═══ -->
+  <!-- بث فوري -->
   <div class="card" style="border-color:rgba(255,42,59,0.25);">
     <div class="card-title">
       <div class="dot"></div> بث فوري — يشتغل عند الكل
@@ -376,7 +341,7 @@
     <button class="btn btn-ghost" onclick="cancelInstant()"><i class="fa-solid fa-rotate-right"></i> إلغاء والرجوع للجدول</button>
   </div>
 
-  <!-- ═══ قائمة التشغيل ═══ -->
+  <!-- قائمة التشغيل -->
   <div class="card">
     <div class="card-title">
       <div class="dot" style="background:var(--blue);box-shadow:0 0 8px var(--blue);"></div> قائمة التشغيل
@@ -391,7 +356,7 @@
     </div>
   </div>
 
-  <!-- ═══ شريط الأخبار ═══ -->
+  <!-- شريط الأخبار -->
   <div class="card">
     <div class="card-title">
       <div class="dot" style="background:var(--yellow);box-shadow:0 0 8px var(--yellow);"></div> شريط الأخبار السفلي
@@ -418,12 +383,14 @@ let selectedWave = 'breath';
 let soundEnabled = true;
 
 let toastTimer;
-function toast(msg) {
+function toast(msg, isError = false) {
   const el = document.getElementById('toast');
   document.getElementById('toastMsg').textContent = msg;
+  el.classList.remove('error');
+  if (isError) el.classList.add('error');
   el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
 function setConnStatus(online) {
@@ -448,29 +415,57 @@ function updateBgPreview(url) {
 
 async function saveBackgroundImage() {
   const url = document.getElementById('bgImageUrl').value.trim();
-  await sb.from('channel_settings').update({ background_image: url }).eq('id', 'live_stream');
+  const { error } = await sb.from('channel_settings').update({ background_image: url }).eq('id', 'live_stream');
+  if (error) { toast('❌ خطأ: ' + error.message, true); return; }
   updateBgPreview(url);
   toast('✅ تم تغيير الخلفية فورياً!');
 }
 
-function quickImage(url) {
+async function quickImage(url) {
   document.getElementById('bgImageUrl').value = url;
-  saveBackgroundImage();
+  await saveBackgroundImage();
 }
 
 async function removeBackground() {
   document.getElementById('bgImageUrl').value = '';
-  await sb.from('channel_settings').update({ background_image: '' }).eq('id', 'live_stream');
+  const { error } = await sb.from('channel_settings').update({ background_image: '' }).eq('id', 'live_stream');
+  if (error) { toast('❌ خطأ: ' + error.message, true); return; }
   updateBgPreview('');
   toast('🗑️ تم إزالة الخلفية');
 }
 
-function selectWave(wave, btn) {
+// ═══ تغيير نوع الحركة - مصلحة ═══
+async function selectWave(wave, btn) {
+  // عرض حالة التحميل
+  btn.classList.add('loading');
+
+  // تحديث الواجهة فوراً
   selectedWave = wave;
   document.querySelectorAll('.wave-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  sb.from('channel_settings').update({ wave_type: wave }).eq('id', 'live_stream');
-  toast('🌊 تم تغيير نوع الحركة');
+
+  // إرسال للسيرفر مع انتظار النتيجة
+  const { error } = await sb.from('channel_settings')
+    .update({ wave_type: wave })
+    .eq('id', 'live_stream');
+
+  btn.classList.remove('loading');
+
+  if (error) {
+    toast('❌ خطأ: ' + error.message, true);
+    console.error('خطأ بتحديث الحركة:', error);
+    return;
+  }
+
+  const names = {
+    breath: '🌬️ تنفس',
+    zoom: '🔍 تكبير',
+    pan: '↔️ تحريك',
+    glow: '✨ توهج',
+    float: '☁️ عائم',
+    none: '⏸️ ثابت'
+  };
+  toast('✅ تم: ' + (names[wave] || wave));
 }
 
 // ═══ الإشعارات ═══
@@ -506,12 +501,13 @@ function useTemplate(text, type) {
 
 async function sendNotification() {
   const text = document.getElementById('notifText').value.trim();
-  if (!text) { toast('⚠️ اكتب نص الإشعار أولاً'); return; }
-  if (text.length > 200) { toast('⚠️ النص طويل'); return; }
+  if (!text) { toast('⚠️ اكتب نص الإشعار أولاً', true); return; }
+  if (text.length > 200) { toast('⚠️ النص طويل', true); return; }
   const fontSize = document.getElementById('notifFontSize').value;
   const duration = parseInt(document.getElementById('notifDuration').value);
   const customColor = (selectedType === 'custom') ? document.getElementById('customColor').value : '';
-  await sb.from('notifications').insert([{ text, type: selectedType, color: customColor, font_size: fontSize, duration, sound: soundEnabled }]);
+  const { error } = await sb.from('notifications').insert([{ text, type: selectedType, color: customColor, font_size: fontSize, duration, sound: soundEnabled }]);
+  if (error) { toast('❌ خطأ: ' + error.message, true); return; }
   document.getElementById('notifText').value = '';
   toast('🚀 تم إرسال الإشعار!');
 }
@@ -547,7 +543,7 @@ async function updateRemoteVolume(val) {
   if (isUpdatingFromRemote) return;
   document.getElementById('volNum').textContent = val;
   await sb.from('channel_settings').update({ volume: parseInt(val) }).eq('id', 'live_stream');
-  toast('تم ضبط الصوت على ' + val + '%');
+  toast('🔊 الصوت: ' + val + '%');
 }
 function toggleMute() {
   const slider = document.getElementById('volSlider');
@@ -616,12 +612,21 @@ async function saveTicker() {
   toast('تم تحديث الشريط 📢');
 }
 
-// ═══ Realtime ═══
+// ═══ تحديث الواجهة لما يتغير شي من السيرفر ═══
+function updateWaveButtons(waveType) {
+  selectedWave = waveType || 'breath';
+  document.querySelectorAll('.wave-btn').forEach(b => {
+    if (b.dataset.wave === selectedWave) b.classList.add('active');
+    else b.classList.remove('active');
+  });
+}
+
 function subscribeRealtime() {
   sb.channel('admin-settings')
     .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'channel_settings', filter: 'id=eq.live_stream' }, (payload) => {
       isUpdatingFromRemote = true;
       const config = payload.new;
+
       if (config.volume !== undefined) {
         const cur = parseInt(document.getElementById('volSlider').value);
         if (cur !== config.volume) { document.getElementById('volSlider').value = config.volume; document.getElementById('volNum').textContent = config.volume; animateVU(config.volume); }
@@ -635,12 +640,9 @@ function subscribeRealtime() {
         if (document.activeElement !== bgEl) { bgEl.value = config.background_image || ''; updateBgPreview(config.background_image); }
       }
       if (config.wave_type !== undefined) {
-        selectedWave = config.wave_type;
-        document.querySelectorAll('.wave-btn').forEach(b => {
-          if (b.dataset.wave === config.wave_type) b.classList.add('active');
-          else b.classList.remove('active');
-        });
+        updateWaveButtons(config.wave_type);
       }
+
       setTimeout(() => { isUpdatingFromRemote = false; }, 100);
     }).subscribe();
 
@@ -678,15 +680,9 @@ async function loadStudio() {
     document.getElementById('volSlider').value = vol;
     document.getElementById('volNum').textContent = vol;
     animateVU(vol);
-    // الخلفية
     document.getElementById('bgImageUrl').value = config.background_image || '';
     updateBgPreview(config.background_image);
-    // الموجة
-    selectedWave = config.wave_type || 'breath';
-    document.querySelectorAll('.wave-btn').forEach(b => {
-      if (b.dataset.wave === selectedWave) b.classList.add('active');
-      else b.classList.remove('active');
-    });
+    updateWaveButtons(config.wave_type || 'breath');
   }
   renderPlaylist(songsRes.data);
   await loadHistory();
