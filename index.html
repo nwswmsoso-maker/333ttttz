@@ -44,7 +44,6 @@
   .mute-btn { background: none; border: 1px solid var(--border); color: var(--text-dim); padding: 6px 14px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 5px; }
   .mute-btn.muted { background: var(--red-dim); border-color: var(--red); color: var(--red); }
   .mute-btn:hover { border-color: rgba(255,255,255,0.2); }
-  input[type=range].small-slider { width: 100%; accent-color: var(--green); cursor: pointer; }
   .instant-row { display: flex; gap: 8px; }
   .s-input { flex: 1; padding: 11px 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-family: inherit; font-size: 0.85rem; transition: border-color 0.2s; }
   .s-input:focus { outline: none; border-color: rgba(255,42,59,0.5); }
@@ -55,7 +54,7 @@
   .btn-blue { background: var(--blue); } .btn-blue:hover { background: #2979ff; }
   .btn-purple { background: var(--purple); } .btn-purple:hover { background: #b300d8; }
   .btn-ghost { background: none; border: 1px solid rgba(255,42,59,0.3); color: var(--red); width: 100%; margin-top: 8px; } .btn-ghost:hover { background: var(--red-dim); }
-  .playlist-list { max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; margin-top: 10px; }
+  .playlist-list { max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; margin-top: 10px; }
   .playlist-list::-webkit-scrollbar { width: 4px; }
   .playlist-list::-webkit-scrollbar-track { background: transparent; }
   .playlist-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
@@ -65,9 +64,11 @@
   .p-type { font-size: 0.6rem; padding: 2px 6px; border-radius: 3px; font-weight: 700; letter-spacing: 1px; flex-shrink: 0; }
   .p-type.pl { background: rgba(68,138,255,0.15); color: var(--blue); }
   .p-type.vid { background: rgba(255,42,59,0.12); color: var(--red); }
+  .p-type.verified { background: rgba(0,230,118,0.15); color: var(--green); }
   .del-btn { background: none; border: none; color: var(--text-dim); cursor: pointer; padding: 3px 6px; transition: color 0.2s; }
   .del-btn:hover { color: var(--red); }
-  .ticker-row { display: flex; gap: 8px; }
+  .copy-code-btn { background: rgba(68,138,255,0.15); border: 1px solid rgba(68,138,255,0.4); color: var(--blue); padding: 4px 10px; border-radius: 6px; font-size: 0.68rem; font-weight: 900; cursor: pointer; font-family: monospace; transition: all 0.2s; }
+  .copy-code-btn:hover { background: var(--blue); color: #fff; }
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1a30; border: 1px solid rgba(0,230,118,0.3); color: var(--green); padding: 10px 24px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; z-index: 1000; transition: transform 0.3s ease; display: flex; align-items: center; gap: 8px; max-width: 90%; }
   .toast.show { transform: translateX(-50%) translateY(0); }
   .toast.error { border-color: var(--red); color: var(--red); }
@@ -81,6 +82,8 @@
   .rt-indicator.off { background: var(--red-dim); color: var(--red); }
   .rt-pulse { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: rtPulse 1.5s infinite; }
   @keyframes rtPulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* قسم الإشعارات وسط الشاشة مع التكرار */
   .notif-card { border: 1px solid rgba(213, 0, 249, 0.3); background: linear-gradient(135deg, var(--card), rgba(213, 0, 249, 0.05)); }
   .notif-textarea { width: 100%; padding: 12px 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-family: inherit; font-size: 0.9rem; font-weight: 700; resize: vertical; min-height: 60px; margin-bottom: 12px; }
   .notif-textarea:focus { outline: none; border-color: rgba(213, 0, 249, 0.5); }
@@ -120,6 +123,18 @@
   .history-stop-btn { background: rgba(255,42,59,0.15); border: 1px solid var(--red); color: var(--red); padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; cursor: pointer; flex-shrink: 0; }
   .history-stop-btn:hover { background: var(--red); color: #fff; }
 
+  /* قسم التكرار */
+  .repeat-card { border: 1px solid rgba(80,140,255,0.3); background: var(--panel); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+  .repeat-toggle-row { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .repeat-toggle-row .opt-label { margin-bottom: 0; font-size: 0.78rem; color: var(--text); display: flex; align-items: center; gap: 6px; }
+  .repeat-switch { width: 42px; height: 24px; border-radius: 14px; background: var(--card); border: 1px solid var(--border); position: relative; transition: all 0.2s; flex-shrink: 0; }
+  .repeat-switch::after { content: ''; position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; border-radius: 50%; background: var(--text-dim); transition: all 0.2s; }
+  .repeat-switch.on { background: rgba(80,140,255,0.25); border-color: #64b5f6; }
+  .repeat-switch.on::after { background: #64b5f6; right: 22px; }
+  .repeat-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .repeat-fields.hidden { display: none; }
+  .repeat-hint { font-size: 0.68rem; color: var(--text-dim); margin-top: 8px; line-height: 1.5; }
+
   /* قسم الخلفية */
   .bg-card { border: 1px solid rgba(0, 230, 118, 0.3); background: linear-gradient(135deg, var(--card), rgba(0, 230, 118, 0.04)); }
   .bg-preview { width: 100%; aspect-ratio: 16/9; background: var(--panel); border-radius: 10px; margin-bottom: 12px; background-size: cover; background-position: center; border: 2px solid var(--border); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
@@ -134,20 +149,6 @@
   .quick-images { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; margin-bottom: 12px; }
   .quick-img { flex-shrink: 0; width: 80px; height: 50px; border-radius: 6px; background-size: cover; background-position: center; cursor: pointer; border: 2px solid var(--border); transition: all 0.2s; }
   .quick-img:hover { border-color: var(--green); transform: scale(1.05); }
-
-  .verified-badge { color: #0095F6; font-weight: 900; }
-
-  /* قسم التكرار للإعلانات */
-  .repeat-card { border: 1px solid rgba(80,140,255,0.3); background: var(--panel); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
-  .repeat-toggle-row { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
-  .repeat-toggle-row .opt-label { margin-bottom: 0; font-size: 0.78rem; color: var(--text); display: flex; align-items: center; gap: 6px; }
-  .repeat-switch { width: 42px; height: 24px; border-radius: 14px; background: var(--card); border: 1px solid var(--border); position: relative; transition: all 0.2s; flex-shrink: 0; }
-  .repeat-switch::after { content: ''; position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; border-radius: 50%; background: var(--text-dim); transition: all 0.2s; }
-  .repeat-switch.on { background: rgba(80,140,255,0.25); border-color: #64b5f6; }
-  .repeat-switch.on::after { background: #64b5f6; right: 22px; }
-  .repeat-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
-  .repeat-fields.hidden { display: none; }
-  .repeat-hint { font-size: 0.68rem; color: var(--text-dim); margin-top: 8px; line-height: 1.5; }
 
   @media (max-width: 600px) {
     .fader-section { grid-template-columns: 1fr; }
@@ -222,117 +223,32 @@
     </div>
   </div>
 
-  <!-- توثيق المستخدمين -->
+  <!-- توثيق المستخدمين مع الكود السري -->
   <div class="card" style="border-color:rgba(0, 230, 118, 0.25); background: linear-gradient(135deg, var(--card), rgba(0, 230, 118, 0.04));">
     <div class="card-title">
       <div class="dot" style="background:var(--green); box-shadow:0 0 8px var(--green);"></div>
-      ✅ إدارة توثيق المستخدمين
+      ✅ توثيق المستخدمين (مع كود سري)
       <div class="rt-indicator"><span class="rt-pulse"></span>فوري</div>
     </div>
-    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">🔍 ابحث عن المستخدم:</div>
+    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">🔐 وثّق مستخدم جديد (سيتم توليد كود سري خاص به تلقائيًا):</div>
     <div class="instant-row" style="margin-bottom:12px;">
       <input id="verifyUsername" type="text" class="s-input" placeholder="اسم المستخدم (مثل: يقو)">
       <button class="btn btn-green" onclick="verifyUser()"><i class="fa-solid fa-certificate"></i> وثّق</button>
     </div>
-    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">👥 المستخدمون الموثقون:</div>
-    <div class="playlist-list" id="verifiedUsersList" style="max-height:200px;">
+    <div style="font-size:0.7rem; color:var(--yellow); margin-bottom:10px; padding:8px; background:rgba(255,215,64,0.08); border-radius:6px; border:1px dashed rgba(255,215,64,0.3);">
+      <i class="fa-solid fa-info-circle"></i> كل مستخدم موثق يحصل على كود سري فريد. أعطي الكود للمستخدم فقط، ولن يستطيع أي شخص استخدام هذا الاسم بدونه.
+    </div>
+    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">👥 المستخدمون الموثقون مع أكوادهم:</div>
+    <div class="playlist-list" id="verifiedUsersList" style="max-height:250px;">
       <div style="text-align:center; padding:16px; color:var(--text-dim); font-size:0.8rem;">جاري التحميل...</div>
     </div>
   </div>
 
-  <!-- إعلانات المستخدمين -->
-  <div class="card notif-card" style="border-color:rgba(0, 230, 118, 0.3); background: linear-gradient(135deg, var(--card), rgba(0, 230, 118, 0.05));">
-    <div class="card-title">
-      <div class="dot" style="background:var(--green); box-shadow:0 0 8px var(--green);"></div>
-      📢 إعلانات المستخدمين
-      <div class="rt-indicator"><span class="rt-pulse"></span>فوري</div>
-    </div>
-    <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">⚡ قوالب جاهزة:</div>
-    <div class="templates-row">
-      <div class="template-chip" onclick="useUserTemplate('🎖️ تم توثيق حسابك!')">🎖️ توثيق</div>
-      <div class="template-chip" onclick="useUserTemplate('👑 أنت مشرف الآن!')">👑 مشرف</div>
-      <div class="template-chip" onclick="useUserTemplate('🌟 صاحب محتوى معروف!')">🌟 محتوى</div>
-      <div class="template-chip" onclick="useUserTemplate('🎁 هدية خاصة لك!')">🎁 هدية</div>
-      <div class="template-chip" onclick="useUserTemplate('⭐ شكراً على الدعم!')">⭐ شكر</div>
-      <div class="template-chip" onclick="useUserTemplate('🚀 مرحباً بك الساعة!')">🚀 ترحيب</div>
-    </div>
-    <textarea id="userAnnounceText" class="notif-textarea" placeholder="اكتب إعلان للمستخدمين (علان، توثيق، شكر...)"></textarea>
-    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">👤 اسم المستخدم:</div>
-    <div class="instant-row" style="margin-bottom:12px;">
-      <input id="userAnnounceUsername" type="text" class="s-input" placeholder="مثال: يقو">
-      <button class="btn btn-green" onclick="sendUserAnnouncement()"><i class="fa-solid fa-paper-plane"></i> إرسال</button>
-    </div>
-    <div style="margin-top:16px;">
-      <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">📜 آخر الإعلانات:</div>
-      <div class="history-list" id="userAnnouncementHistory" style="max-height:200px;">
-        <div style="text-align:center; padding:10px; color:var(--text-dim); font-size:0.75rem;">لا يوجد إعلانات بعد</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- خلفية الشاشة -->
-  <div class="card bg-card">
-    <div class="card-title">
-      <div class="dot" style="background:var(--green); box-shadow:0 0 8px var(--green);"></div>
-      🖼️ خلفية شاشة البث
-      <div class="rt-indicator"><span class="rt-pulse"></span>فوري</div>
-    </div>
-
-    <div class="bg-preview" id="bgPreview">
-      <div class="bg-preview-empty" id="bgEmpty">
-        <i class="fa-solid fa-image"></i>
-        <span>لا توجد صورة - الخلفية افتراضية</span>
-      </div>
-    </div>
-
-    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">🔗 رابط الصورة:</div>
-    <div class="instant-row" style="margin-bottom:12px;">
-      <input id="bgImageUrl" type="text" class="s-input" placeholder="الصق رابط الصورة هنا (https://...)">
-      <button class="btn btn-green" onclick="saveBackgroundImage()"><i class="fa-solid fa-check"></i> حفظ</button>
-    </div>
-
-    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">⚡ صور جاهزة:</div>
-    <div class="quick-images">
-      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1280')"></div>
-      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1614851099175-e5b30eb6f696?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1614851099175-e5b30eb6f696?w=1280')"></div>
-      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280')"></div>
-      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?w=1280')"></div>
-      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1280')"></div>
-      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=1280')"></div>
-    </div>
-
-    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">🌊 نوع الحركة (اضغط لتطبيق):</div>
-    <div class="wave-options" id="waveOptions">
-      <div class="wave-btn" data-wave="breath" onclick="selectWave('breath', this)">
-        <span class="emoji">🌬️</span><span>تنفس</span>
-      </div>
-      <div class="wave-btn" data-wave="zoom" onclick="selectWave('zoom', this)">
-        <span class="emoji">🔍</span><span>تكبير</span>
-      </div>
-      <div class="wave-btn" data-wave="pan" onclick="selectWave('pan', this)">
-        <span class="emoji">↔️</span><span>تحريك</span>
-      </div>
-      <div class="wave-btn" data-wave="glow" onclick="selectWave('glow', this)">
-        <span class="emoji">✨</span><span>توهج</span>
-      </div>
-      <div class="wave-btn" data-wave="float" onclick="selectWave('float', this)">
-        <span class="emoji">☁️</span><span>عائم</span>
-      </div>
-      <div class="wave-btn" data-wave="none" onclick="selectWave('none', this)">
-        <span class="emoji">⏸️</span><span>ثابت</span>
-      </div>
-    </div>
-
-    <button class="btn btn-ghost" onclick="removeBackground()" style="margin-top:4px;">
-      <i class="fa-solid fa-trash"></i> إزالة الصورة
-    </button>
-  </div>
-
-  <!-- الإشعارات -->
+  <!-- إعلانات وسط الشاشة مع التكرار -->
   <div class="card notif-card">
     <div class="card-title">
       <div class="dot" style="background:var(--purple); box-shadow:0 0 8px var(--purple);"></div>
-      📢 إشعار وسط الشاشة
+      📢 إعلانات وسط الشاشة (تتكرر تلقائيًا)
       <div class="rt-indicator"><span class="rt-pulse"></span>فوري</div>
     </div>
     <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">⚡ قوالب جاهزة:</div>
@@ -345,7 +261,7 @@
       <div class="template-chip" onclick="useTemplate('🎁 مفاجأة قادمة!', 'surprise')">🎁 مفاجأة</div>
       <div class="template-chip" onclick="useTemplate('📱 تابعونا على انستغرام: 6.2nr', 'info')">📱 سوشيال</div>
     </div>
-    <textarea id="notifText" class="notif-textarea" placeholder="اكتب نص الإشعار..."></textarea>
+    <textarea id="notifText" class="notif-textarea" placeholder="اكتب نص الإعلان..."></textarea>
     <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">🎨 اختر النوع:</div>
     <div class="types-grid">
       <div class="type-btn active" data-type="info" onclick="selectType('info', this)"><span class="emoji">ℹ️</span><span>معلومة</span></div>
@@ -384,7 +300,7 @@
       </div>
     </div>
 
-    <!-- قسم التكرار على مدى أيام/أسابيع -->
+    <!-- قسم التكرار -->
     <div class="repeat-card">
       <div class="repeat-toggle-row" onclick="toggleRepeatMode()">
         <span class="opt-label">🔁 يتكرر تلقائيًا (ساعات/أيام/أسابيع)</span>
@@ -414,18 +330,64 @@
           </select>
         </div>
       </div>
-      <div class="repeat-hint">💡 الإعلان يظهر فورًا، ثم يعاد عرضه تلقائيًا بنفس المدة المختارة حتى تاريخ التوقف، بدون أي تدخل منك.</div>
+      <div class="repeat-hint">💡 الإعلان يظهر فورًا في وسط الشاشة، ثم يعاد عرضه تلقائيًا حتى تاريخ التوقف.</div>
     </div>
 
     <button class="send-notif-btn" onclick="sendNotification()">
       <i class="fa-solid fa-paper-plane"></i> إرسال للجميع فوراً
     </button>
     <div style="margin-top:16px;">
-      <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">📜 آخر الإشعارات:</div>
+      <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">📜 آخر الإعلانات:</div>
       <div class="history-list" id="historyList">
-        <div style="text-align:center; padding:10px; color:var(--text-dim); font-size:0.75rem;">لا يوجد إشعارات بعد</div>
+        <div style="text-align:center; padding:10px; color:var(--text-dim); font-size:0.75rem;">لا يوجد إعلانات بعد</div>
       </div>
     </div>
+  </div>
+
+  <!-- خلفية الشاشة -->
+  <div class="card bg-card">
+    <div class="card-title">
+      <div class="dot" style="background:var(--green); box-shadow:0 0 8px var(--green);"></div>
+      🖼️ خلفية شاشة البث
+      <div class="rt-indicator"><span class="rt-pulse"></span>فوري</div>
+    </div>
+
+    <div class="bg-preview" id="bgPreview">
+      <div class="bg-preview-empty" id="bgEmpty">
+        <i class="fa-solid fa-image"></i>
+        <span>لا توجد صورة - الخلفية افتراضية</span>
+      </div>
+    </div>
+
+    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">🔗 رابط الصورة:</div>
+    <div class="instant-row" style="margin-bottom:12px;">
+      <input id="bgImageUrl" type="text" class="s-input" placeholder="الصق رابط الصورة هنا (https://...)">
+      <button class="btn btn-green" onclick="saveBackgroundImage()"><i class="fa-solid fa-check"></i> حفظ</button>
+    </div>
+
+    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">⚡ صور جاهزة:</div>
+    <div class="quick-images">
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1280')"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1614851099175-e5b30eb6f696?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1614851099175-e5b30eb6f696?w=1280')"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280')"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?w=1280')"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1280')"></div>
+      <div class="quick-img" style="background-image:url('https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=400')" onclick="quickImage('https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=1280')"></div>
+    </div>
+
+    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">🌊 نوع الحركة (اضغط لتطبيق):</div>
+    <div class="wave-options" id="waveOptions">
+      <div class="wave-btn" data-wave="breath" onclick="selectWave('breath', this)"><span class="emoji">🌬️</span><span>تنفس</span></div>
+      <div class="wave-btn" data-wave="zoom" onclick="selectWave('zoom', this)"><span class="emoji">🔍</span><span>تكبير</span></div>
+      <div class="wave-btn" data-wave="pan" onclick="selectWave('pan', this)"><span class="emoji">↔️</span><span>تحريك</span></div>
+      <div class="wave-btn" data-wave="glow" onclick="selectWave('glow', this)"><span class="emoji">✨</span><span>توهج</span></div>
+      <div class="wave-btn" data-wave="float" onclick="selectWave('float', this)"><span class="emoji">☁️</span><span>عائم</span></div>
+      <div class="wave-btn" data-wave="none" onclick="selectWave('none', this)"><span class="emoji">⏸️</span><span>ثابت</span></div>
+    </div>
+
+    <button class="btn btn-ghost" onclick="removeBackground()" style="margin-top:4px;">
+      <i class="fa-solid fa-trash"></i> إزالة الصورة
+    </button>
   </div>
 
   <!-- بث فوري -->
@@ -462,7 +424,7 @@
       <div class="dot" style="background:var(--yellow);box-shadow:0 0 8px var(--yellow);"></div> شريط الأخبار السفلي
       <div class="rt-indicator"><span class="rt-pulse"></span>فوري</div>
     </div>
-    <div class="ticker-row">
+    <div class="instant-row">
       <input id="tickerInput" type="text" class="s-input" placeholder="نص الشريط السفلي للمشاهدين...">
       <button class="btn btn-red" onclick="saveTicker()"><i class="fa-solid fa-paper-plane"></i></button>
     </div>
@@ -501,71 +463,60 @@ function setConnStatus(online) {
   else { dot.classList.remove('green'); dot.classList.add('gray'); txt.textContent = 'يعيد الاتصال...'; document.querySelectorAll('.rt-indicator').forEach(e => e.classList.add('off')); }
 }
 
-// ═══ توثيق المستخدمين ═══
+// ═══ توليد كود سري عشوائي ═══
+function generateSecretCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 8; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+  return code;
+}
+
+// ═══ توثيق المستخدمين مع كود سري ═══
 async function verifyUser() {
   const username = document.getElementById('verifyUsername').value.trim();
   if (!username) { toast('⚠️ اكتب اسم المستخدم', true); return; }
   
-  const { error } = await sb.from('verified_users').insert([{ username }]);
-  if (error && error.code !== '23505') { toast('❌ خطأ: ' + error.message, true); return; }
+  const secretCode = generateSecretCode();
+  
+  const { error } = await sb.from('verified_users').insert([{ username, secret_code: secretCode }]);
+  if (error) {
+    if (error.code === '23505') { toast('⚠️ الاسم موثق بالفعل!', true); return; }
+    toast('❌ خطأ: ' + error.message, true);
+    return;
+  }
   
   document.getElementById('verifyUsername').value = '';
-  toast('✅ تم توثيق: ' + username);
+  toast('✅ تم التوثيق! الكود السري: ' + secretCode);
   await loadVerifiedUsers();
 }
 
 async function loadVerifiedUsers() {
-  const { data } = await sb.from('verified_users').select('*').order('created_at', { ascending: false }).limit(20);
+  const { data } = await sb.from('verified_users').select('*').order('created_at', { ascending: false }).limit(30);
   const box = document.getElementById('verifiedUsersList');
   if (!data || data.length === 0) { box.innerHTML = '<div style="text-align:center; padding:16px; color:var(--text-dim); font-size:0.8rem;">لا يوجد مستخدمون موثقون بعد</div>'; return; }
   let html = '';
   data.forEach(u => {
-    html += `<div class="p-row"><span class="p-type" style="background:rgba(0,230,118,0.15); color:#00e676;">✓</span><span class="p-url" style="color:#fff;">${u.username}</span><button class="del-btn" onclick="removeVerified('${u.username}')"><i class="fa-solid fa-xmark"></i></button></div>`;
+    html += `<div class="p-row">
+      <span class="p-type verified">✓ موثق</span>
+      <span class="p-url" style="color:#fff; font-family:'Tajawal',sans-serif;">${u.username}</span>
+      <button class="copy-code-btn" onclick="copyCode('${u.secret_code || ''}')" title="نسخ الكود السري">
+        <i class="fa-solid fa-key"></i> ${u.secret_code || '—'}
+      </button>
+      <button class="del-btn" onclick="removeVerified('${u.username}')" title="إزالة التوثيق"><i class="fa-solid fa-xmark"></i></button>
+    </div>`;
   });
   box.innerHTML = html;
+}
+
+function copyCode(code) {
+  if (!code) { toast('لا يوجد كود', true); return; }
+  navigator.clipboard.writeText(code).then(() => toast('✅ تم نسخ الكود: ' + code));
 }
 
 async function removeVerified(username) {
   await sb.from('verified_users').delete().eq('username', username);
   toast('تم إزالة التوثيق');
   await loadVerifiedUsers();
-}
-
-// ═══ إعلانات المستخدمين ═══
-function useUserTemplate(text) {
-  document.getElementById('userAnnounceText').value = text;
-  document.getElementById('userAnnounceText').focus();
-}
-
-async function sendUserAnnouncement() {
-  const text = document.getElementById('userAnnounceText').value.trim();
-  const username = document.getElementById('userAnnounceUsername').value.trim();
-  if (!text || !username) { toast('⚠️ اكتب النص واسم المستخدم', true); return; }
-  
-  const { error } = await sb.from('user_announcements').insert([{ username, text }]);
-  if (error) { toast('❌ خطأ: ' + error.message, true); return; }
-  
-  document.getElementById('userAnnounceText').value = '';
-  document.getElementById('userAnnounceUsername').value = '';
-  toast('🚀 تم إرسال الإعلان!');
-  await loadUserAnnouncements();
-}
-
-function renderUserAnnouncements(items) {
-  const box = document.getElementById('userAnnouncementHistory');
-  if (!items || items.length === 0) { box.innerHTML = '<div style="text-align:center; padding:10px; color:var(--text-dim); font-size:0.75rem;">لا يوجد إعلانات بعد</div>'; return; }
-  let html = '';
-  items.forEach(a => {
-    const time = new Date(a.created_at);
-    const timeStr = time.toLocaleTimeString('ar', { hour: '2-digit', minute: '2-digit' });
-    html += `<div class="history-item"><span class="history-type">📢</span><span class="history-text"><strong>${a.username}</strong>: ${a.text}</span><span class="history-time">${timeStr}</span></div>`;
-  });
-  box.innerHTML = html;
-}
-
-async function loadUserAnnouncements() {
-  const { data } = await sb.from('user_announcements').select('*').order('created_at', { ascending: false }).limit(10);
-  renderUserAnnouncements(data);
 }
 
 // ═══ خلفية الشاشة ═══
@@ -645,7 +596,6 @@ function useTemplate(text, type) {
   document.getElementById('notifText').focus();
 }
 
-// ═══ تكرار الإعلانات (ساعات/أيام/أسابيع) ═══
 function toggleRepeatMode() {
   repeatEnabled = !repeatEnabled;
   document.getElementById('repeatSwitch').classList.toggle('on', repeatEnabled);
@@ -654,7 +604,7 @@ function toggleRepeatMode() {
 
 async function sendNotification() {
   const text = document.getElementById('notifText').value.trim();
-  if (!text) { toast('⚠️ اكتب نص الإشعار أولاً', true); return; }
+  if (!text) { toast('⚠️ اكتب نص الإعلان أولاً', true); return; }
   if (text.length > 200) { toast('⚠️ النص طويل', true); return; }
   const fontSize = document.getElementById('notifFontSize').value;
   const duration = parseInt(document.getElementById('notifDuration').value);
@@ -675,7 +625,7 @@ async function sendNotification() {
   if (repeatEnabled) {
     toast('🚀 تم الإرسال + سيتكرر تلقائيًا!');
   } else {
-    toast('🚀 تم إرسال الإشعار!');
+    toast('🚀 تم إرسال الإعلان!');
   }
 }
 
@@ -692,7 +642,7 @@ function repeatLabel(n) {
 
 function renderHistory(items) {
   const box = document.getElementById('historyList');
-  if (!items || items.length === 0) { box.innerHTML = '<div style="text-align:center; padding:10px; color:var(--text-dim); font-size:0.75rem;">لا يوجد إشعارات بعد</div>'; return; }
+  if (!items || items.length === 0) { box.innerHTML = '<div style="text-align:center; padding:10px; color:var(--text-dim); font-size:0.75rem;">لا يوجد إعلانات بعد</div>'; return; }
   const typeEmoji = { info: 'ℹ️', urgent: '🚨', celebrate: '🎉', love: '❤️', song: '🎵', warn: '⚠️', surprise: '🎁', custom: '🎨' };
   let html = '';
   items.forEach(n => {
@@ -843,9 +793,6 @@ function subscribeRealtime() {
   sb.channel('admin-verified-users')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'verified_users' }, () => loadVerifiedUsers()).subscribe();
 
-  sb.channel('admin-user-announcements')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'user_announcements' }, () => loadUserAnnouncements()).subscribe();
-
   const viewersCh = sb.channel('viewers-live', { config: { presence: { key: adminSessionId } } });
   viewersCh
     .on('presence', { event: 'sync' }, () => updateViewersCount(Math.max(0, Object.keys(viewersCh.presenceState()).length - 1)))
@@ -878,7 +825,6 @@ async function loadStudio() {
   renderPlaylist(songsRes.data);
   await loadHistory();
   await loadVerifiedUsers();
-  await loadUserAnnouncements();
   subscribeRealtime();
 }
 
