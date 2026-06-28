@@ -132,6 +132,8 @@
   .quick-img { flex-shrink: 0; width: 80px; height: 50px; border-radius: 6px; background-size: cover; background-position: center; cursor: pointer; border: 2px solid var(--border); transition: all 0.2s; }
   .quick-img:hover { border-color: var(--green); transform: scale(1.05); }
 
+  .verified-badge { color: #0095F6; font-weight: 900; }
+
   @media (max-width: 600px) {
     .fader-section { grid-template-columns: 1fr; }
     .types-grid, .wave-options { grid-template-columns: repeat(2, 1fr); }
@@ -200,6 +202,54 @@
             <span style="color:var(--red); font-weight:900;">🔴 مباشر</span>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- توثيق المستخدمين -->
+  <div class="card" style="border-color:rgba(0, 230, 118, 0.25); background: linear-gradient(135deg, var(--card), rgba(0, 230, 118, 0.04));">
+    <div class="card-title">
+      <div class="dot" style="background:var(--green); box-shadow:0 0 8px var(--green);"></div>
+      ✅ إدارة توثيق المستخدمين
+      <div class="rt-indicator"><span class="rt-pulse"></span>فوري</div>
+    </div>
+    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">🔍 ابحث عن المستخدم:</div>
+    <div class="instant-row" style="margin-bottom:12px;">
+      <input id="verifyUsername" type="text" class="s-input" placeholder="اسم المستخدم (مثل: يقو)">
+      <button class="btn btn-green" onclick="verifyUser()"><i class="fa-solid fa-certificate"></i> وثّق</button>
+    </div>
+    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">👥 المستخدمون الموثقون:</div>
+    <div class="playlist-list" id="verifiedUsersList" style="max-height:200px;">
+      <div style="text-align:center; padding:16px; color:var(--text-dim); font-size:0.8rem;">جاري التحميل...</div>
+    </div>
+  </div>
+
+  <!-- إعلانات المستخدمين -->
+  <div class="card notif-card" style="border-color:rgba(0, 230, 118, 0.3); background: linear-gradient(135deg, var(--card), rgba(0, 230, 118, 0.05));">
+    <div class="card-title">
+      <div class="dot" style="background:var(--green); box-shadow:0 0 8px var(--green);"></div>
+      📢 إعلانات المستخدمين
+      <div class="rt-indicator"><span class="rt-pulse"></span>فوري</div>
+    </div>
+    <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">⚡ قوالب جاهزة:</div>
+    <div class="templates-row">
+      <div class="template-chip" onclick="useUserTemplate('🎖️ تم توثيق حسابك!')">🎖️ توثيق</div>
+      <div class="template-chip" onclick="useUserTemplate('👑 أنت مشرف الآن!')">👑 مشرف</div>
+      <div class="template-chip" onclick="useUserTemplate('🌟 صاحب محتوى معروف!')">🌟 محتوى</div>
+      <div class="template-chip" onclick="useUserTemplate('🎁 هدية خاصة لك!')">🎁 هدية</div>
+      <div class="template-chip" onclick="useUserTemplate('⭐ شكراً على الدعم!')">⭐ شكر</div>
+      <div class="template-chip" onclick="useUserTemplate('🚀 مرحباً بك الساعة!')">🚀 ترحيب</div>
+    </div>
+    <textarea id="userAnnounceText" class="notif-textarea" placeholder="اكتب إعلان للمستخدمين (علان، توثيق، شكر...)"></textarea>
+    <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">👤 اسم المستخدم:</div>
+    <div class="instant-row" style="margin-bottom:12px;">
+      <input id="userAnnounceUsername" type="text" class="s-input" placeholder="مثال: يقو">
+      <button class="btn btn-green" onclick="sendUserAnnouncement()"><i class="fa-solid fa-paper-plane"></i> إرسال</button>
+    </div>
+    <div style="margin-top:16px;">
+      <div style="font-size:0.7rem; color:var(--text-dim); margin-bottom:6px; font-weight:700;">📜 آخر الإعلانات:</div>
+      <div class="history-list" id="userAnnouncementHistory" style="max-height:200px;">
+        <div style="text-align:center; padding:10px; color:var(--text-dim); font-size:0.75rem;">لا يوجد إعلانات بعد</div>
       </div>
     </div>
   </div>
@@ -400,6 +450,73 @@ function setConnStatus(online) {
   else { dot.classList.remove('green'); dot.classList.add('gray'); txt.textContent = 'يعيد الاتصال...'; document.querySelectorAll('.rt-indicator').forEach(e => e.classList.add('off')); }
 }
 
+// ═══ توثيق المستخدمين ═══
+async function verifyUser() {
+  const username = document.getElementById('verifyUsername').value.trim();
+  if (!username) { toast('⚠️ اكتب اسم المستخدم', true); return; }
+  
+  const { error } = await sb.from('verified_users').insert([{ username }]);
+  if (error && error.code !== '23505') { toast('❌ خطأ: ' + error.message, true); return; }
+  
+  document.getElementById('verifyUsername').value = '';
+  toast('✅ تم توثيق: ' + username);
+  await loadVerifiedUsers();
+}
+
+async function loadVerifiedUsers() {
+  const { data } = await sb.from('verified_users').select('*').order('created_at', { ascending: false }).limit(20);
+  const box = document.getElementById('verifiedUsersList');
+  if (!data || data.length === 0) { box.innerHTML = '<div style="text-align:center; padding:16px; color:var(--text-dim); font-size:0.8rem;">لا يوجد مستخدمون موثقون بعد</div>'; return; }
+  let html = '';
+  data.forEach(u => {
+    html += `<div class="p-row"><span class="p-type" style="background:rgba(0,230,118,0.15); color:#00e676;">✓</span><span class="p-url" style="color:#fff;">${u.username}</span><button class="del-btn" onclick="removeVerified('${u.username}')"><i class="fa-solid fa-xmark"></i></button></div>`;
+  });
+  box.innerHTML = html;
+}
+
+async function removeVerified(username) {
+  await sb.from('verified_users').delete().eq('username', username);
+  toast('تم إزالة التوثيق');
+  await loadVerifiedUsers();
+}
+
+// ═══ إعلانات المستخدمين ═══
+function useUserTemplate(text) {
+  document.getElementById('userAnnounceText').value = text;
+  document.getElementById('userAnnounceText').focus();
+}
+
+async function sendUserAnnouncement() {
+  const text = document.getElementById('userAnnounceText').value.trim();
+  const username = document.getElementById('userAnnounceUsername').value.trim();
+  if (!text || !username) { toast('⚠️ اكتب النص واسم المستخدم', true); return; }
+  
+  const { error } = await sb.from('user_announcements').insert([{ username, text }]);
+  if (error) { toast('❌ خطأ: ' + error.message, true); return; }
+  
+  document.getElementById('userAnnounceText').value = '';
+  document.getElementById('userAnnounceUsername').value = '';
+  toast('🚀 تم إرسال الإعلان!');
+  await loadUserAnnouncements();
+}
+
+function renderUserAnnouncements(items) {
+  const box = document.getElementById('userAnnouncementHistory');
+  if (!items || items.length === 0) { box.innerHTML = '<div style="text-align:center; padding:10px; color:var(--text-dim); font-size:0.75rem;">لا يوجد إعلانات بعد</div>'; return; }
+  let html = '';
+  items.forEach(a => {
+    const time = new Date(a.created_at);
+    const timeStr = time.toLocaleTimeString('ar', { hour: '2-digit', minute: '2-digit' });
+    html += `<div class="history-item"><span class="history-type">📢</span><span class="history-text"><strong>${a.username}</strong>: ${a.text}</span><span class="history-time">${timeStr}</span></div>`;
+  });
+  box.innerHTML = html;
+}
+
+async function loadUserAnnouncements() {
+  const { data } = await sb.from('user_announcements').select('*').order('created_at', { ascending: false }).limit(10);
+  renderUserAnnouncements(data);
+}
+
 // ═══ خلفية الشاشة ═══
 function updateBgPreview(url) {
   const preview = document.getElementById('bgPreview');
@@ -434,37 +551,15 @@ async function removeBackground() {
   toast('🗑️ تم إزالة الخلفية');
 }
 
-// ═══ تغيير نوع الحركة - مصلحة ═══
 async function selectWave(wave, btn) {
-  // عرض حالة التحميل
   btn.classList.add('loading');
-
-  // تحديث الواجهة فوراً
   selectedWave = wave;
   document.querySelectorAll('.wave-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-
-  // إرسال للسيرفر مع انتظار النتيجة
-  const { error } = await sb.from('channel_settings')
-    .update({ wave_type: wave })
-    .eq('id', 'live_stream');
-
+  const { error } = await sb.from('channel_settings').update({ wave_type: wave }).eq('id', 'live_stream');
   btn.classList.remove('loading');
-
-  if (error) {
-    toast('❌ خطأ: ' + error.message, true);
-    console.error('خطأ بتحديث الحركة:', error);
-    return;
-  }
-
-  const names = {
-    breath: '🌬️ تنفس',
-    zoom: '🔍 تكبير',
-    pan: '↔️ تحريك',
-    glow: '✨ توهج',
-    float: '☁️ عائم',
-    none: '⏸️ ثابت'
-  };
+  if (error) { toast('❌ خطأ: ' + error.message, true); return; }
+  const names = { breath: '🌬️ تنفس', zoom: '🔍 تكبير', pan: '↔️ تحريك', glow: '✨ توهج', float: '☁️ عائم', none: '⏸️ ثابت' };
   toast('✅ تم: ' + (names[wave] || wave));
 }
 
@@ -626,7 +721,6 @@ function subscribeRealtime() {
     .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'channel_settings', filter: 'id=eq.live_stream' }, (payload) => {
       isUpdatingFromRemote = true;
       const config = payload.new;
-
       if (config.volume !== undefined) {
         const cur = parseInt(document.getElementById('volSlider').value);
         if (cur !== config.volume) { document.getElementById('volSlider').value = config.volume; document.getElementById('volNum').textContent = config.volume; animateVU(config.volume); }
@@ -642,7 +736,6 @@ function subscribeRealtime() {
       if (config.wave_type !== undefined) {
         updateWaveButtons(config.wave_type);
       }
-
       setTimeout(() => { isUpdatingFromRemote = false; }, 100);
     }).subscribe();
 
@@ -654,6 +747,12 @@ function subscribeRealtime() {
 
   sb.channel('admin-notifications')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, () => loadHistory()).subscribe();
+
+  sb.channel('admin-verified-users')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'verified_users' }, () => loadVerifiedUsers()).subscribe();
+
+  sb.channel('admin-user-announcements')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'user_announcements' }, () => loadUserAnnouncements()).subscribe();
 
   const viewersCh = sb.channel('viewers-live', { config: { presence: { key: adminSessionId } } });
   viewersCh
@@ -686,10 +785,12 @@ async function loadStudio() {
   }
   renderPlaylist(songsRes.data);
   await loadHistory();
+  await loadVerifiedUsers();
+  await loadUserAnnouncements();
   subscribeRealtime();
 }
 
 loadStudio();
 </script>
 </body>
-</html>
+  </html>
