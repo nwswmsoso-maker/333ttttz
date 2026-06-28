@@ -116,6 +116,9 @@
   .history-time { font-size: 0.65rem; color: var(--text-dim); flex-shrink: 0; }
   .history-resend { background: rgba(213, 0, 249, 0.15); border: 1px solid var(--purple); color: var(--purple); padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
   .history-resend:hover { background: var(--purple); color: #fff; }
+  .history-repeat-tag { font-size: 0.62rem; font-weight: 900; color: #64b5f6; background: rgba(80,140,255,0.15); border: 1px solid rgba(80,140,255,0.35); padding: 2px 6px; border-radius: 10px; flex-shrink: 0; white-space: nowrap; }
+  .history-stop-btn { background: rgba(255,42,59,0.15); border: 1px solid var(--red); color: var(--red); padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; cursor: pointer; flex-shrink: 0; }
+  .history-stop-btn:hover { background: var(--red); color: #fff; }
 
   /* قسم الخلفية */
   .bg-card { border: 1px solid rgba(0, 230, 118, 0.3); background: linear-gradient(135deg, var(--card), rgba(0, 230, 118, 0.04)); }
@@ -134,10 +137,23 @@
 
   .verified-badge { color: #0095F6; font-weight: 900; }
 
+  /* قسم التكرار للإعلانات */
+  .repeat-card { border: 1px solid rgba(80,140,255,0.3); background: var(--panel); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+  .repeat-toggle-row { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .repeat-toggle-row .opt-label { margin-bottom: 0; font-size: 0.78rem; color: var(--text); display: flex; align-items: center; gap: 6px; }
+  .repeat-switch { width: 42px; height: 24px; border-radius: 14px; background: var(--card); border: 1px solid var(--border); position: relative; transition: all 0.2s; flex-shrink: 0; }
+  .repeat-switch::after { content: ''; position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; border-radius: 50%; background: var(--text-dim); transition: all 0.2s; }
+  .repeat-switch.on { background: rgba(80,140,255,0.25); border-color: #64b5f6; }
+  .repeat-switch.on::after { background: #64b5f6; right: 22px; }
+  .repeat-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .repeat-fields.hidden { display: none; }
+  .repeat-hint { font-size: 0.68rem; color: var(--text-dim); margin-top: 8px; line-height: 1.5; }
+
   @media (max-width: 600px) {
     .fader-section { grid-template-columns: 1fr; }
     .types-grid, .wave-options { grid-template-columns: repeat(2, 1fr); }
     .notif-options { grid-template-columns: 1fr 1fr; }
+    .repeat-fields { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -354,7 +370,7 @@
         </select>
       </div>
       <div class="opt-group">
-        <div class="opt-label">⏱️ المدة</div>
+        <div class="opt-label">⏱️ مدة العرض</div>
         <select id="notifDuration" class="opt-select">
           <option value="3">3 ثواني</option><option value="5" selected>5 ثواني</option>
           <option value="7">7 ثواني</option><option value="10">10 ثواني</option><option value="15">15 ثانية</option>
@@ -367,6 +383,40 @@
         </div>
       </div>
     </div>
+
+    <!-- قسم التكرار على مدى أيام/أسابيع -->
+    <div class="repeat-card">
+      <div class="repeat-toggle-row" onclick="toggleRepeatMode()">
+        <span class="opt-label">🔁 يتكرر تلقائيًا (ساعات/أيام/أسابيع)</span>
+        <div class="repeat-switch" id="repeatSwitch"></div>
+      </div>
+      <div class="repeat-fields hidden" id="repeatFields">
+        <div class="opt-group" style="margin:0;">
+          <div class="opt-label">⏰ يتكرر كل</div>
+          <select id="repeatIntervalHours" class="opt-select">
+            <option value="1">ساعة</option>
+            <option value="3">3 ساعات</option>
+            <option value="6">6 ساعات</option>
+            <option value="12">12 ساعة</option>
+            <option value="24" selected>يوم كامل</option>
+            <option value="72">3 أيام</option>
+            <option value="168">أسبوع</option>
+          </select>
+        </div>
+        <div class="opt-group" style="margin:0;">
+          <div class="opt-label">📅 يتوقف بعد</div>
+          <select id="repeatUntilDays" class="opt-select">
+            <option value="1">يوم</option>
+            <option value="3">3 أيام</option>
+            <option value="7" selected>أسبوع</option>
+            <option value="14">أسبوعين</option>
+            <option value="30">شهر</option>
+          </select>
+        </div>
+      </div>
+      <div class="repeat-hint">💡 الإعلان يظهر فورًا، ثم يعاد عرضه تلقائيًا بنفس المدة المختارة حتى تاريخ التوقف، بدون أي تدخل منك.</div>
+    </div>
+
     <button class="send-notif-btn" onclick="sendNotification()">
       <i class="fa-solid fa-paper-plane"></i> إرسال للجميع فوراً
     </button>
@@ -431,6 +481,7 @@ let isUpdatingFromRemote = false;
 let selectedType = 'info';
 let selectedWave = 'breath';
 let soundEnabled = true;
+let repeatEnabled = false;
 
 let toastTimer;
 function toast(msg, isError = false) {
@@ -594,6 +645,13 @@ function useTemplate(text, type) {
   document.getElementById('notifText').focus();
 }
 
+// ═══ تكرار الإعلانات (ساعات/أيام/أسابيع) ═══
+function toggleRepeatMode() {
+  repeatEnabled = !repeatEnabled;
+  document.getElementById('repeatSwitch').classList.toggle('on', repeatEnabled);
+  document.getElementById('repeatFields').classList.toggle('hidden', !repeatEnabled);
+}
+
 async function sendNotification() {
   const text = document.getElementById('notifText').value.trim();
   if (!text) { toast('⚠️ اكتب نص الإشعار أولاً', true); return; }
@@ -601,10 +659,35 @@ async function sendNotification() {
   const fontSize = document.getElementById('notifFontSize').value;
   const duration = parseInt(document.getElementById('notifDuration').value);
   const customColor = (selectedType === 'custom') ? document.getElementById('customColor').value : '';
-  const { error } = await sb.from('notifications').insert([{ text, type: selectedType, color: customColor, font_size: fontSize, duration, sound: soundEnabled }]);
+
+  const row = { text, type: selectedType, color: customColor, font_size: fontSize, duration, sound: soundEnabled };
+
+  if (repeatEnabled) {
+    const intervalHours = parseInt(document.getElementById('repeatIntervalHours').value);
+    const untilDays = parseInt(document.getElementById('repeatUntilDays').value);
+    row.repeat_interval_hours = intervalHours;
+    row.repeat_until = new Date(Date.now() + untilDays * 24 * 60 * 60 * 1000).toISOString();
+  }
+
+  const { error } = await sb.from('notifications').insert([row]);
   if (error) { toast('❌ خطأ: ' + error.message, true); return; }
   document.getElementById('notifText').value = '';
-  toast('🚀 تم إرسال الإشعار!');
+  if (repeatEnabled) {
+    toast('🚀 تم الإرسال + سيتكرر تلقائيًا!');
+  } else {
+    toast('🚀 تم إرسال الإشعار!');
+  }
+}
+
+function repeatLabel(n) {
+  if (!n.repeat_interval_hours || !n.repeat_until) return '';
+  const untilTime = new Date(n.repeat_until).getTime();
+  if (Date.now() > untilTime) return '<span class="history-repeat-tag" style="color:var(--text-dim); background:rgba(255,255,255,0.05); border-color:var(--border);">⏹️ انتهى التكرار</span>';
+  const hours = n.repeat_interval_hours;
+  const everyText = hours >= 168 ? `كل ${Math.round(hours/168)} أسبوع` : hours >= 24 ? `كل ${Math.round(hours/24)} يوم` : `كل ${hours} ساعة`;
+  const remainingMs = untilTime - Date.now();
+  const remainingDays = Math.max(1, Math.round(remainingMs / (24*60*60*1000)));
+  return `<span class="history-repeat-tag">🔁 ${everyText} · باقي ${remainingDays} يوم</span>`;
 }
 
 function renderHistory(items) {
@@ -616,7 +699,9 @@ function renderHistory(items) {
     const time = new Date(n.created_at);
     const timeStr = time.toLocaleTimeString('ar', { hour: '2-digit', minute: '2-digit' });
     const escText = n.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-    html += `<div class="history-item"><span class="history-type">${typeEmoji[n.type] || 'ℹ️'}</span><span class="history-text">${n.text}</span><span class="history-time">${timeStr}</span><button class="history-resend" onclick="resendNotif('${escText}', '${n.type}', '${n.font_size}', ${n.duration}, ${n.sound}, '${n.color || ''}')"><i class="fa-solid fa-rotate-right"></i></button></div>`;
+    const isActiveRepeat = n.repeat_interval_hours && n.repeat_until && Date.now() <= new Date(n.repeat_until).getTime();
+    const stopBtn = isActiveRepeat ? `<button class="history-stop-btn" onclick="stopRepeat(${n.id})" title="إيقاف التكرار"><i class="fa-solid fa-stop"></i></button>` : '';
+    html += `<div class="history-item"><span class="history-type">${typeEmoji[n.type] || 'ℹ️'}</span><span class="history-text">${n.text}</span>${repeatLabel(n)}<span class="history-time">${timeStr}</span>${stopBtn}<button class="history-resend" onclick="resendNotif('${escText}', '${n.type}', '${n.font_size}', ${n.duration}, ${n.sound}, '${n.color || ''}')"><i class="fa-solid fa-rotate-right"></i></button></div>`;
   });
   box.innerHTML = html;
 }
@@ -624,6 +709,13 @@ function renderHistory(items) {
 async function resendNotif(text, type, fontSize, duration, sound, color) {
   await sb.from('notifications').insert([{ text, type, color, font_size: fontSize, duration, sound }]);
   toast('🔁 تم إعادة الإرسال!');
+}
+
+async function stopRepeat(id) {
+  const { error } = await sb.from('notifications').update({ repeat_until: new Date().toISOString() }).eq('id', id);
+  if (error) { toast('❌ خطأ: ' + error.message, true); return; }
+  toast('⏹️ تم إيقاف التكرار');
+  await loadHistory();
 }
 
 async function loadHistory() {
@@ -793,4 +885,4 @@ async function loadStudio() {
 loadStudio();
 </script>
 </body>
-  </html>
+</html>
